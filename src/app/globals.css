@@ -1,0 +1,81 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Sarabun:wght@400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    color: #111111;
+    background: #ffffff;
+    text-rendering: geometricPrecision;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+html:lang(th) body {
+    font-family: 'Sarabun', sans-serif;
+}
+
+.my-speech {
+  @apply text-right ml-16
+}
+
+.short-description {
+  @apply italic text-gray-700 text-lg text-center my-3
+}
+
+.body-bg-dark {
+  background-color: rgba(22, 31, 34, 1);
+}
+
+
+.aurora-text {
+  font-weight: 800;
+  line-height: 1.1;
+  text-transform: lowercase;
+
+  color: transparent;
+
+  background:
+    radial-gradient(circle at 20% 30%, #7fffd4, transparent 45%),
+    radial-gradient(circle at 80% 25%, #e876ff, transparent 50%),
+    radial-gradient(circle at 50% 80%, #00ffff, transparent 45%);
+
+  background-size: 200% 200%;
+  animation: aurora-flow 10s linear infinite;
+
+  background-clip: text;
+  -webkit-background-clip: text;
+}
+
+@keyframes aurora-flow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+.animate-float {
+  animation: float 8s ease-in-out infinite;
+}
+
+::selection {
+  background: rgba(79, 140, 255, 0.18);
+}
