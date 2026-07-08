@@ -6,9 +6,6 @@ export function TerminalVisual() {
       <div className="relative min-h-[420px] overflow-hidden rounded-[24px] bg-[linear-gradient(180deg,#fffaf2,#ffffff)]">
         <div className="absolute left-1/2 top-10 h-64 w-64 -translate-x-1/2 rounded-full bg-[#f5efe6]" />
         <div className="absolute right-8 top-16 h-16 w-20 rotate-12 border-t-2 border-[#ea721f] opacity-70 before:absolute before:right-2 before:top-0 before:h-10 before:w-10 before:rotate-45 before:border-r-2 before:border-t-2 before:border-[#ea721f]" />
-        <div className="absolute right-7 top-7 max-w-[140px] text-center text-lg font-semibold leading-snug text-[#303030]">
-          ไม่ใช่ทำแทน<br />แต่สอนให้ทำเป็น
-        </div>
         <div className="absolute left-6 top-20 rounded-[22px] bg-[linear-gradient(90deg,#fff,#ffe3ad)] px-4 py-3 shadow-[0_14px_34px_rgba(48,48,48,0.1)]">
           <p className="text-xs font-semibold uppercase text-[#ea721f]">For</p>
           <p className="mt-1 text-xl font-semibold text-[#303030]">All Paths</p>
