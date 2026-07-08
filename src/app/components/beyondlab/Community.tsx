@@ -8,7 +8,7 @@ export function Community() {
         <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
           <div>
             <p className="text-sm font-semibold text-[#ea721f]">Contact</p>
-            <h2 className="mt-2 text-3xl font-semibold leading-tight text-[#303030] sm:text-4xl">
+            <h2 className="mt-2 pt-1 text-2xl font-semibold leading-tight text-[#303030] sm:text-3xl">
               คุยกับ BeyondLab ได้จากช่องทางที่สะดวก
             </h2>
             <p className="mt-4 max-w-xl text-sm leading-7 text-[#555]">

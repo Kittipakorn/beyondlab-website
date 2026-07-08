@@ -5,7 +5,7 @@ export const contentType = "image/png";
 
 const TITLE = "BeyondLab";
 const TAGLINE = "ห้องทดลองของคนที่อยากก้าวข้ามขีดจำกัด";
-const CREDIT = "ติวโดยพี่โม & พี่มิก · วิศวะคอม (CEDT) จุฬาฯ";
+const CREDIT = "ติวโดยพี่โม & พี่มิคค์ · วิศวะคอม (CEDT) จุฬาฯ";
 
 async function loadIbmPlexSansThaiSemiBold() {
   const cssRes = await fetch(

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowIcon } from "./icons";
 import { portfolioPreview } from "./data";
 
@@ -9,8 +10,8 @@ export function ProjectShowcase() {
         <div className="mb-7 grid gap-4 lg:grid-cols-[0.8fr_1fr] lg:items-end">
           <div>
             <p className="text-sm font-semibold text-[#ea721f]">Projects</p>
-            <h2 className="mt-2 text-3xl font-semibold leading-tight text-[#303030] sm:text-4xl">
-              โปรเจกต์ เดโม และกรณีศึกษาจากการลงมือทำ
+            <h2 className="mt-2 pt-1 text-2xl font-semibold leading-tight text-[#303030] sm:text-3xl">
+              ผลงานและกรณีศึกษา
             </h2>
           </div>
           <p className="max-w-2xl text-sm leading-7 text-[#555]">
@@ -25,9 +26,21 @@ export function ProjectShowcase() {
 
             const content = (
               <>
-                <div className="flex items-center justify-between bg-[#fff4df] px-5 py-3">
-                  <span className="text-xs font-semibold text-[#8b5a2b]">BeyondLab projects</span>
-                  <span className="h-2.5 w-2.5 rounded-full bg-[#ea721f]" />
+                {/* ส่วนหัวภาพผลงาน / Shimmer */}
+                <div className="relative aspect-[2/1] w-full overflow-hidden">
+                  {item.image ? (
+                    <Image
+                      src={item.image}
+                      alt={item.title}
+                      fill
+                      sizes="(min-width: 1280px) 30vw, (min-width: 768px) 45vw, 95vw"
+                      className="object-cover object-top"
+                    />
+                  ) : (
+                    <div className="absolute inset-0 animate-shimmer" />
+                  )}
+                  {/* ไล่สีขาวเฟดกลมกลืนด้านล่าง */}
+                  <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-white to-transparent pointer-events-none" />
                 </div>
                 <div className="min-h-[180px] bg-white p-5">
                   <span

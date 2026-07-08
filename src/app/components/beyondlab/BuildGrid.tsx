@@ -11,7 +11,7 @@ export function BuildGrid() {
         <div className="mb-6 grid gap-3 lg:grid-cols-[0.78fr_1fr] lg:items-end">
           <div>
             <p className="text-sm font-semibold text-[#ea721f]">Courses</p>
-            <h2 className="mt-2 text-3xl font-semibold leading-tight text-[#303030] sm:text-4xl">
+            <h2 className="mt-2 pt-1 text-2xl font-semibold leading-tight text-[#303030] sm:text-3xl">
               คอร์สที่เปิดขายตอนนี้
             </h2>
           </div>
@@ -86,8 +86,8 @@ export function BuildGrid() {
                     {course.cta}
                     <ArrowIcon />
                   </a>
-                  <span className="inline-flex h-9 items-center rounded-full bg-[#fff4df] px-3 text-xs font-semibold text-[#ea721f]">
-                    ผู้เรียน {course.students}
+                  <span className="text-xs text-neutral-500">
+                    ลงทะเบียนแล้ว {course.students}
                   </span>
                 </div>
               </div>

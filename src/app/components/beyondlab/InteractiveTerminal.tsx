@@ -4,7 +4,7 @@ export function InteractiveTerminal() {
       <div className="mx-auto grid max-w-7xl gap-6 rounded-[24px] bg-[#303030] p-6 text-white shadow-[0_18px_52px_rgba(48,48,48,0.15)] lg:grid-cols-[1fr_1fr] lg:items-center lg:p-8">
         <div>
           <p className="text-sm font-semibold text-[#f7c56d]">Build Something Real</p>
-          <h2 className="mt-2 text-3xl font-semibold leading-tight sm:text-4xl">
+          <h2 className="mt-2 pt-1 text-2xl font-semibold leading-tight sm:text-3xl">
             เรียนแล้วต้องพาไปสู่ของที่จับต้องได้
           </h2>
           <p className="mt-4 max-w-xl text-sm leading-7 text-[#f0e8dc]">
