@@ -6,14 +6,14 @@ export function BuildGrid() {
       <div className="mx-auto max-w-7xl">
         <div className="mb-12 flex flex-col justify-between gap-6 md:flex-row md:items-end">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#4F8CFF]">What You'll Build</p>
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#4F8CFF]">What You&apos;ll Learn</p>
             <h2 className="mt-4 max-w-2xl text-4xl font-black tracking-[-0.05em] sm:text-6xl">
-              ห้องแล็บสำหรับคนที่อยากสร้างจริง
+              ห้องแล็บสำหรับคนที่อยากแข่งจริง
             </h2>
           </div>
           <p className="max-w-md text-base leading-7 text-gray-600">
-            BeyondLab เปลี่ยนการเรียนเขียนโปรแกรมให้เป็น practice ของนักสร้าง:
-            คิดเป็นระบบ ใช้ AI เป็น และส่งผลงานจริงออกไปสู่โลก
+            BeyondLab ปูพื้นฐาน C++ โครงสร้างข้อมูล อัลกอริทึม และกลยุทธ์การแข่งขัน
+            ให้พร้อมลงสนามโอลิมปิกคอมพิวเตอร์จริง
           </p>
         </div>
         <div className="grid gap-5 lg:grid-cols-4">

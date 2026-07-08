@@ -1,62 +1,148 @@
 export const navItems = [
-  { label: "คอร์ส", href: "#courses" },
-  { label: "โปรเจกต์", href: "#projects" },
-  { label: "คอมมูนิตี้", href: "#community" },
-  { label: "โรดแมป", href: "#roadmap" },
-  { label: "เกี่ยวกับ", href: "#about" },
+  { label: "คอร์ส", href: "/#courses" },
+  { label: "ผลงาน", href: "/portfolio" },
+  { label: "บริการ", href: "/services" },
+  { label: "คอมมูนิตี้", href: "/#community" },
+  { label: "เกี่ยวกับ", href: "/#about" },
 ];
 
-export const proofItems = [
-  ["3,000+", "นักเรียนที่เริ่มสร้างของจริง"],
-  ["Olympiad", "ฐานคิดแบบแข่งขันและวิศวกรรม"],
-  ["24/7", "คอมมูนิตี้นักสร้างยุค AI"],
+export const aboutStats = [
+  ["2", "ติวเตอร์ผู้ก่อตั้ง วิศวะคอม (CEDT) จุฬาฯ"],
+  ["2 ปีซ้อน", "ผู้แทนศูนย์ สอวน. โอลิมปิกคอมพิวเตอร์"],
+  ["C++", "ภาษาหลักที่ใช้ติวเข้มสายโอลิมปิก"],
+];
+
+export const tutors = [
+  {
+    name: "พี่โม",
+    handle: "@kittmkrn_",
+    role: "ติวเตอร์ผู้ก่อตั้ง BeyondLab",
+    credentials: [
+      "วิศวกรรมคอมพิวเตอร์ (CEDT) จุฬาลงกรณ์มหาวิทยาลัย",
+      "ผู้แทนศูนย์ สอวน. โอลิมปิกคอมพิวเตอร์ 2 ปีซ้อน",
+    ],
+  },
+  {
+    name: "พี่มิก",
+    handle: "@onyou_exe",
+    role: "ติวเตอร์ผู้ก่อตั้ง BeyondLab",
+    credentials: [
+      "วิศวกรรมคอมพิวเตอร์ (CEDT) จุฬาลงกรณ์มหาวิทยาลัย",
+      "ผู้แทนศูนย์ สอวน. โอลิมปิกคอมพิวเตอร์ 2 ปีซ้อน",
+    ],
+  },
 ];
 
 export const buildCards = [
   {
-    title: "สร้างแอป",
-    text: "เรียนจากการออกแบบระบบจริง ต่อ API ทำ UI และ deploy ให้คนใช้งานได้",
-    meta: "Next.js / APIs / Deploy",
+    title: "พื้นฐาน C++ ที่แน่น",
+    text: "เขียนโค้ดเป็น อ่านโจทย์ออก เข้าใจหลักการทำงานของภาษา C++ ตั้งแต่รากฐาน ไม่ท่องจำแบบผิวเผิน",
+    meta: "Syntax / Logic / Debug",
     gradient: "from-blue-50 via-white to-white",
   },
   {
-    title: "สร้าง AI Tools",
-    text: "เปลี่ยน AI ให้กลายเป็น workflow, copilot, automation และเครื่องมือที่ใช้งานได้จริง",
-    meta: "LLMs / Agents / AI UX",
+    title: "โครงสร้างข้อมูล & อัลกอริทึม",
+    text: "เจาะลึก data structures และ algorithm ที่ใช้แข่งขันจริง ตั้งแต่พื้นฐานจนถึงระดับที่ใช้สอบคัดตัว",
+    meta: "DSA / Complexity / Problem Solving",
     gradient: "from-white via-sky-50 to-white",
   },
   {
-    title: "สร้างโปรเจกต์จริง",
-    text: "ไม่หยุดที่บทเรียน แต่จบด้วยผลงานที่โชว์ได้ อธิบายได้ และพัฒนาต่อได้",
-    meta: "Product / Systems / Git",
+    title: "กลยุทธ์การแข่งขัน",
+    text: "ฝึกวิเคราะห์โจทย์ บริหารเวลาในห้องสอบ และเทคนิคเลือกโจทย์ให้ทำคะแนนได้ทันเวลา",
+    meta: "Contest Strategy / Time Management",
     gradient: "from-gray-50 via-white to-blue-50",
   },
   {
-    title: "สร้างอนาคตตัวเอง",
-    text: "สะสม portfolio ที่บอกได้ว่าคุณคิดเป็น สร้างเป็น และพร้อมเข้าสู่โลกนักพัฒนา",
-    meta: "Portfolio / Career / Community",
+    title: "พร้อมลงสนามจริง",
+    text: "ฝึกแข่งกับโจทย์จากสนามจริง จำลองบรรยากาศห้องสอบ สะสมผลงานที่พร้อมต่อยอด",
+    meta: "Mock Contest / Practice / Portfolio",
     gradient: "from-white via-gray-50 to-white",
   },
 ];
 
 export const roadmapItems = [
-  ["01", "Zero To Code", "เริ่มจากพื้นฐาน เครื่องมือ syntax และความมั่นใจจาก command แรก"],
-  ["02", "Builder Mindset", "คิดแบบนักสร้าง แก้ปัญหาเป็น prototype เป็น และรับ feedback เป็น"],
-  ["03", "Real Projects", "สร้างแอปจริงจากโจทย์จริง พร้อมระบบ Git และ workflow แบบทีม dev"],
-  ["04", "AI Workflow", "ใช้ AI เป็นคู่คิดในการเขียนโค้ด โดยยังรักษา judgment แบบวิศวกร"],
-  ["05", "Beyond", "เข้าสู่ ecosystem ของคนสร้าง แลกเปลี่ยน mentor และต่อยอดไอเดียใหญ่ขึ้น"],
+  ["01", "พื้นฐาน C++", "เริ่มจาก syntax ตัวแปร การรับส่งค่า และความมั่นใจในการเขียนโค้ดบรรทัดแรก"],
+  ["02", "โครงสร้างข้อมูล & อัลกอริทึม", "เจาะลึก data structures และ algorithm ที่เป็นแกนหลักของการแข่งขันโอลิมปิกคอมพิวเตอร์"],
+  ["03", "กลยุทธ์การแข่งขัน", "ฝึกวิเคราะห์โจทย์ บริหารเวลา และเทคนิคทำข้อสอบให้ครบและทันเวลา"],
+  ["04", "ลงสนามจริง", "จำลองบรรยากาศห้องสอบ ฝึกแข่งกับโจทย์จากสนามจริงอย่างสม่ำเสมอ"],
+  ["05", "Beyond", "ต่อยอดสู่เส้นทางสาย CS พร้อมเครือข่ายรุ่นพี่ เมนเทอร์ และคอมมูนิตี้นักแข่ง"],
 ];
 
-export const projects = [
-  ["AI Dashboard", "หน้าควบคุม insight, model usage และ workflow metrics"],
-  ["Expense Tracker", "แอปจัดการรายรับรายจ่ายพร้อมกราฟและหมวดหมู่อัจฉริยะ"],
-  ["Portfolio Website", "เว็บตัวตนนักพัฒนาที่ดูจริงจัง สะอาด และพร้อมส่งต่อ"],
-  ["Cafe POS", "ระบบขายหน้าร้าน จัดการ order และ inventory สำหรับธุรกิจเล็ก"],
-  ["IoT Dashboard", "หน้าดู telemetry และควบคุมอุปกรณ์แบบ real-time"],
+export const portfolioPreview = [
+  ["ผลการแข่งขัน", "รวบรวมผลงานและรางวัลจากสนามแข่งของนักเรียน BeyondLab"],
+  ["คอร์สที่เคยสอน", "สรุปคอร์สและรุ่นติวที่ผ่านมา พร้อมไฮไลต์ของแต่ละรุ่น"],
+  ["กิจกรรม & ภาพบรรยากาศ", "ภาพและเรื่องราวจากคลาสเรียน แคมป์ และกิจกรรมต่าง ๆ"],
 ];
 
-export const communityItems = [
-  "คอมมูนิตี้นักพัฒนา",
-  "ระบบนิเวศของนักสร้าง",
-  "เครือข่าย future creators",
+export const portfolioCategories = [
+  {
+    title: "ผลการแข่งขัน",
+    description: "รางวัลและผลงานการแข่งขันของนักเรียน BeyondLab จะถูกรวบรวมไว้ที่นี่",
+  },
+  {
+    title: "คอร์สที่เคยสอน",
+    description: "สรุปคอร์สและรุ่นติวที่ผ่านมา พร้อมไฮไลต์ของแต่ละรุ่น",
+  },
+  {
+    title: "กิจกรรม & ภาพบรรยากาศ",
+    description: "ภาพและเรื่องราวจากคลาสเรียน แคมป์ และกิจกรรมต่าง ๆ ของ BeyondLab",
+  },
+];
+
+export const services = [
+  {
+    title: "สอนเขียนโปรแกรมโอลิมปิก C++",
+    tag: "Teaching",
+    description:
+      "ปูพื้นฐาน C++ โครงสร้างข้อมูล อัลกอริทึม และกลยุทธ์การแข่งขัน ตั้งแต่เริ่มต้นจนพร้อมลงสนามจริง ทั้งแบบตัวต่อตัวและกลุ่มเล็ก",
+    points: [
+      "เนื้อหาเข้มข้นแบบสาย สอวน. / โอลิมปิก",
+      "ฝึกทำโจทย์จริงพร้อมรีวิวโค้ดรายคน",
+      "ปรับหลักสูตรตามระดับผู้เรียน",
+    ],
+    status: "open",
+  },
+  {
+    title: "รับให้คำปรึกษา",
+    tag: "Consulting",
+    description:
+      "ให้คำปรึกษาด้านการเตรียมตัวแข่งขัน วางแผนเส้นทางสาย CS/โอลิมปิก หรือรีวิวแนวทางแก้โจทย์เป็นรายบุคคล",
+    points: [
+      "วางแผนเตรียมสอบและเตรียมแข่งขัน",
+      "รีวิวแนวทางแก้โจทย์และโค้ด",
+      "แนะแนวเส้นทางสาย computer science",
+    ],
+    status: "open",
+  },
+  {
+    title: "งานอื่น ๆ ที่เปิดรับ",
+    tag: "Coming Soon",
+    description: "เรากำลังเตรียมเปิดบริการใหม่ ๆ เพิ่มเติม ติดตามอัปเดตได้ทางช่องทางคอมมูนิตี้ด้านล่าง",
+    points: [],
+    status: "coming-soon",
+  },
+];
+
+export const contactChannels = [
+  {
+    label: "Instagram",
+    handle: "@beyondlab.official",
+    href: "https://www.instagram.com/beyondlab.official/?hl=th",
+    status: "active",
+    description: "ติดตามคอนเทนต์ อัปเดตคอร์ส และผลงานนักเรียน",
+  },
+  {
+    label: "LINE Official",
+    handle: "เร็วๆ นี้",
+    href: null,
+    status: "coming-soon",
+    description: "ช่องทางแชทพูดคุยและสอบถามคอร์สโดยตรง",
+  },
+  {
+    label: "Discord Community",
+    handle: "เร็วๆ นี้",
+    href: null,
+    status: "coming-soon",
+    description: "คอมมูนิตี้พูดคุย แลกเปลี่ยนโจทย์ และติดตามข่าวสาร",
+  },
 ];
