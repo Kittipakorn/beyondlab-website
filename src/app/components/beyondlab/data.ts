@@ -1,15 +1,50 @@
+type ServiceItem = {
+  title: string;
+  tag: string;
+  description: string;
+  points: string[];
+  status: "open" | "coming-soon";
+  href?: string;
+  hidden?: boolean;
+};
+
+type ContactChannel = {
+  label: string;
+  handle: string;
+  href: string;
+  status: "active";
+  description: string;
+  logo?: string;
+};
+
+type CourseItem = {
+  title: string;
+  label: string;
+  subtitle: string;
+  description: string;
+  audience: string;
+  format: string;
+  price: string;
+  originalPrice: string;
+  duration: string;
+  students: string;
+  image: string;
+  cta: string;
+  status: "open" | "soon";
+  points: string[];
+};
+
 export const navItems = [
-  { label: "คอร์ส", href: "/#courses" },
-  { label: "ผลงาน", href: "/portfolio" },
-  { label: "บริการ", href: "/services" },
-  { label: "คอมมูนิตี้", href: "/#community" },
-  { label: "เกี่ยวกับ", href: "/#about" },
+  { label: "Courses", href: "/#courses" },
+  { label: "Services", href: "/#services" },
+  { label: "Projects", href: "/#projects" },
+  { label: "Contact", href: "/#contact" },
 ];
 
 export const aboutStats = [
-  ["2", "ติวเตอร์ผู้ก่อตั้ง วิศวะคอม (CEDT) จุฬาฯ"],
-  ["2 ปีซ้อน", "ผู้แทนศูนย์ สอวน. โอลิมปิกคอมพิวเตอร์"],
-  ["C++", "ภาษาหลักที่ใช้ติวเข้มสายโอลิมปิก"],
+  ["Learning", "คอร์สเรียนพื้นฐานและคอร์สต่อยอดสำหรับคนอยากสร้างผลงาน"],
+  ["Building", "พื้นที่ทดลองทำโปรเจกต์ เดโม และผลงานที่จับต้องได้"],
+  ["Sharing", "แชร์วิธีคิด เครื่องมือ และกระบวนการทำงานจริงแบบเข้าใจง่าย"],
 ];
 
 export const tutors = [
@@ -33,50 +68,42 @@ export const tutors = [
   },
 ];
 
-export const buildCards = [
+export const courses: CourseItem[] = [
   {
-    title: "พื้นฐาน C++ ที่แน่น",
-    text: "เขียนโค้ดเป็น อ่านโจทย์ออก เข้าใจหลักการทำงานของภาษา C++ ตั้งแต่รากฐาน ไม่ท่องจำแบบผิวเผิน",
-    meta: "Syntax / Logic / Debug",
-    gradient: "from-blue-50 via-white to-white",
-  },
-  {
-    title: "โครงสร้างข้อมูล & อัลกอริทึม",
-    text: "เจาะลึก data structures และ algorithm ที่ใช้แข่งขันจริง ตั้งแต่พื้นฐานจนถึงระดับที่ใช้สอบคัดตัว",
-    meta: "DSA / Complexity / Problem Solving",
-    gradient: "from-white via-sky-50 to-white",
-  },
-  {
-    title: "กลยุทธ์การแข่งขัน",
-    text: "ฝึกวิเคราะห์โจทย์ บริหารเวลาในห้องสอบ และเทคนิคเลือกโจทย์ให้ทำคะแนนได้ทันเวลา",
-    meta: "Contest Strategy / Time Management",
-    gradient: "from-gray-50 via-white to-blue-50",
-  },
-  {
-    title: "พร้อมลงสนามจริง",
-    text: "ฝึกแข่งกับโจทย์จากสนามจริง จำลองบรรยากาศห้องสอบ สะสมผลงานที่พร้อมต่อยอด",
-    meta: "Mock Contest / Practice / Portfolio",
-    gradient: "from-white via-gray-50 to-white",
+    title: "ZERO TO CODE",
+    label: "คอร์สออนไลน์",
+    subtitle: "เขียนโปรแกรม C++ พื้นฐาน จาก 0",
+    description:
+      "ปูพื้นฐาน C++ แบบเป็นขั้นตอน สำหรับคนเริ่มจากศูนย์",
+    audience: "มือใหม่ / ไม่มีพื้นฐาน / เตรียมสอบ",
+    format: "ออนไลน์ 8 ชั่วโมง + กลุ่มถามตอบ",
+    price: "688.-",
+    originalPrice: "990.-",
+    duration: "8 hr.",
+    students: "80+",
+    image: "/courses/zero-to-code.png",
+    cta: "สมัครเรียน 688.-",
+    status: "open",
+    points: ["เริ่มจาก 0 เขียนโค้ดได้จริง", "เรียนซ้ำได้ในกลุ่ม Facebook", "ใช้แท็บเล็ตหรือ iPad เรียนได้"],
   },
 ];
 
 export const roadmapItems = [
-  ["01", "พื้นฐาน C++", "เริ่มจาก syntax ตัวแปร การรับส่งค่า และความมั่นใจในการเขียนโค้ดบรรทัดแรก"],
-  ["02", "โครงสร้างข้อมูล & อัลกอริทึม", "เจาะลึก data structures และ algorithm ที่เป็นแกนหลักของการแข่งขันโอลิมปิกคอมพิวเตอร์"],
-  ["03", "กลยุทธ์การแข่งขัน", "ฝึกวิเคราะห์โจทย์ บริหารเวลา และเทคนิคทำข้อสอบให้ครบและทันเวลา"],
-  ["04", "ลงสนามจริง", "จำลองบรรยากาศห้องสอบ ฝึกแข่งกับโจทย์จากสนามจริงอย่างสม่ำเสมอ"],
-  ["05", "Beyond", "ต่อยอดสู่เส้นทางสาย CS พร้อมเครือข่ายรุ่นพี่ เมนเทอร์ และคอมมูนิตี้นักแข่ง"],
+  ["01", "เลือกเป้าหมาย", "เริ่มจากสิ่งที่อยากทำ ไม่ว่าจะเรียนพื้นฐาน ทำโครงงาน หรืออยากมีผลงานไว้ต่อยอด"],
+  ["02", "แตกเป็นแผน", "วางลำดับเนื้อหา เครื่องมือ และ milestone ให้เห็นว่าต้องลงมืออะไรทีละขั้น"],
+  ["03", "ลงมือทดลอง", "เรียนจากโจทย์ ตัวอย่าง และโปรเจกต์จริง เพื่อให้เข้าใจทั้งแนวคิดและการใช้งานจริง"],
+  ["04", "ปรับและต่อยอด", "รีวิวสิ่งที่ทำ แก้ปัญหา และจัดผลงานให้เล่าเรื่องได้ชัดขึ้น"],
 ];
 
 export const portfolioPreview = [
-  { title: "ผลการแข่งขัน", text: "รวบรวมผลงานและรางวัลจากสนามแข่งของนักเรียน BeyondLab", badge: "เร็วๆ นี้" },
+  { title: "Project Demos", text: "เดโมและตัวอย่างโปรเจกต์ที่ใช้เล่าแนวคิด วิธีทำ และผลลัพธ์จากการลงมือจริง", badge: "เร็วๆ นี้" },
   {
-    title: "คอร์สที่เคยสอน",
+    title: "ZERO TO CODE",
     text: "ZERO TO CODE คอร์สปูพื้นฐานที่มีผู้เรียนแล้วกว่า 80+ คน",
-    badge: "80+ คนเรียน",
+    badge: "ผู้เรียน 80+",
     href: "/portfolio/zero-to-code",
   },
-  { title: "กิจกรรม & ภาพบรรยากาศ", text: "ภาพและเรื่องราวจากคลาสเรียน แคมป์ และกิจกรรมต่าง ๆ", badge: "เร็วๆ นี้" },
+  { title: "Learning Notes", text: "บันทึกวิธีคิด เครื่องมือ และสิ่งที่เรียนรู้จากการทดลองทำโปรเจกต์", badge: "เร็วๆ นี้" },
 ];
 
 export const pastCourses = [
@@ -90,64 +117,90 @@ export const pastCourses = [
 
 export const portfolioCategories = [
   {
-    title: "ผลการแข่งขัน",
-    description: "รางวัลและผลงานการแข่งขันของนักเรียน BeyondLab จะถูกรวบรวมไว้ที่นี่",
+    title: "Project Demos",
+    description: "เดโมและตัวอย่างโปรเจกต์จากการทดลองทำจริงของ BeyondLab จะถูกรวบรวมไว้ที่นี่",
   },
   {
-    title: "กิจกรรม & ภาพบรรยากาศ",
-    description: "ภาพและเรื่องราวจากคลาสเรียน แคมป์ และกิจกรรมต่าง ๆ ของ BeyondLab",
+    title: "Learning Notes",
+    description: "บันทึกแนวคิด เครื่องมือ และกระบวนการทำงานจริงจากคอร์สและโปรเจกต์ของ BeyondLab",
   },
 ];
 
-export const services = [
+export const services: ServiceItem[] = [
   {
-    title: "สอนเขียนโปรแกรมโอลิมปิก C++",
-    tag: "Teaching",
+    title: "คอร์สเรียน",
+    tag: "Courses",
     description:
-      "ปูพื้นฐาน C++ โครงสร้างข้อมูล อัลกอริทึม และกลยุทธ์การแข่งขัน ตั้งแต่เริ่มต้นจนพร้อมลงสนามจริง ทั้งแบบตัวต่อตัวและกลุ่มเล็ก",
+      "คอร์ส ZERO TO CODE สำหรับมือใหม่ที่อยากเริ่มเขียนโปรแกรม C++ จากพื้นฐานและนำไปต่อยอดได้จริง",
     points: [
-      "เนื้อหาเข้มข้นแบบสาย สอวน. / โอลิมปิก",
-      "ฝึกทำโจทย์จริงพร้อมรีวิวโค้ดรายคน",
-      "ปรับหลักสูตรตามระดับผู้เรียน",
+      "เรียนออนไลน์ 8 ชั่วโมง",
+      "ราคา 688.- จากปกติ 990.-",
+      "เหมาะกับผู้เริ่มต้นและคนไม่มีพื้นฐาน",
     ],
     status: "open",
   },
   {
-    title: "รับให้คำปรึกษา",
+    title: "รับปรึกษาโปรเจกต์",
     tag: "Consulting",
     description:
-      "ให้คำปรึกษาด้านการเตรียมตัวแข่งขัน วางแผนเส้นทางสาย CS/โอลิมปิก หรือรีวิวแนวทางแก้โจทย์เป็นรายบุคคล",
+      "ช่วยดูไอเดีย วางแผน เลือกเทคโนโลยี และจัดทางเดินให้โปรเจกต์หรือพอร์ตไปต่อได้จริง",
     points: [
-      "วางแผนเตรียมสอบและเตรียมแข่งขัน",
-      "รีวิวแนวทางแก้โจทย์และโค้ด",
-      "แนะแนวเส้นทางสาย computer science",
+      "ปรึกษาโครงงานและโปรเจกต์",
+      "รีวิวไอเดีย แผนงาน หรือพอร์ต",
+      "แนะนำลำดับการเรียนรู้และเครื่องมือ",
     ],
     status: "open",
   },
   {
-    title: "งานอื่น ๆ ที่เปิดรับ",
-    tag: "Coming Soon",
-    description: "เรากำลังเตรียมเปิดบริการใหม่ ๆ เพิ่มเติม ติดตามอัปเดตได้ทางช่องทางคอมมูนิตี้ด้านล่าง",
-    points: [],
+    title: "QuizFlow",
+    tag: "Product",
+    description:
+      "สร้างข้อสอบพร้อมเฉลยในไม่กี่นาที แก้ไขได้ทันที และส่งออกเป็น PDF พร้อมใช้งาน",
+    points: [
+      "ช่วยออกโจทย์ให้ตรงห้องเรียน ครูกำหนดวิชา หัวข้อ ระดับชั้น จำนวนข้อ และความยากได้ตามแผนการสอนจริง",
+      "ช่วยปรับก่อนนำไปใช้ แก้โจทย์ ตัวเลือก เฉลย และคำอธิบายได้ในหน้าเดียว ก่อนส่งให้นักเรียน",
+      "ช่วยจัดไฟล์ให้พร้อมแจก ส่งออกข้อสอบและเฉลยเป็น PDF ที่พร้อมพิมพ์หรือส่งต่อได้ทันที",
+    ],
+    status: "open",
+    href: "https://quizflow.kittipakorn.com/dashboard",
+  },
+  {
+    title: "IoT Kit / ชุดโครงงาน",
+    tag: "Future",
+    description:
+      "ชุดอุปกรณ์ โค้ด เอกสาร และคลิปสอนสำหรับซื้อไปทำตามได้ทันที เช่น Smart Farm หรือถังขยะอัตโนมัติ",
+    points: ["อยู่ในแผนพัฒนา", "เหมาะกับโครงงานและการเรียนแบบลงมือทำ"],
     status: "coming-soon",
+    hidden: true,
+  },
+  {
+    title: "LINE Bot",
+    tag: "Future",
+    description:
+      "บริการออกแบบและพัฒนา LINE Bot สำหรับธุรกิจหรือโปรเจกต์ เช่น FAQ จองคิว แจ้งเตือน และเชื่อมระบบหลังบ้าน",
+    points: ["วางเป็นบริการอนาคต", "ยังไม่ใช่บริการหลักในตอนนี้"],
+    status: "coming-soon",
+    hidden: true,
   },
 ];
 
-export const contactChannels = [
+export const visibleServices = services.filter((service) => !service.hidden);
+
+export const contactChannels: ContactChannel[] = [
   {
     label: "Instagram",
     handle: "@beyondlab.official",
-    href: "https://www.instagram.com/beyondlab.official/?hl=th",
+    href: "https://www.instagram.com/beyondlab.official/",
     status: "active",
     description: "ติดตามคอนเทนต์ อัปเดตคอร์ส และผลงานนักเรียน",
     logo: "/logos/instagram.png",
   },
   {
     label: "LINE Official",
-    handle: "@546tmxqp",
-    href: "https://lin.ee/813cTe5",
+    handle: "BeyondLab",
+    href: "http://lin.ee/VbDTcyo",
     status: "active",
-    description: "ช่องทางแชทพูดคุยและสอบถามคอร์สโดยตรง",
+    description: "ช่องทางแชทพูดคุย สอบถามคอร์ส และปรึกษาโปรเจกต์",
     logo: "/logos/line.png",
   },
   {

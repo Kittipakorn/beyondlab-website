@@ -1,25 +1,24 @@
 export function InteractiveTerminal() {
   return (
-    <section className="border-y border-gray-200 bg-[#FAFAFA] px-5 py-24 sm:px-8">
-      <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[1fr_1fr] lg:items-center">
+    <section className="px-5 py-8 sm:px-8">
+      <div className="mx-auto grid max-w-7xl gap-6 rounded-[24px] bg-[#303030] p-6 text-white shadow-[0_18px_52px_rgba(48,48,48,0.15)] lg:grid-cols-[1fr_1fr] lg:items-center lg:p-8">
         <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#4F8CFF]">Judge Terminal</p>
-          <h2 className="mt-4 text-4xl font-black tracking-[-0.05em] sm:text-6xl">
-            ทุกโจทย์ต้องกลายเป็น Accepted
+          <p className="text-sm font-semibold text-[#f7c56d]">Build Something Real</p>
+          <h2 className="mt-2 text-3xl font-semibold leading-tight sm:text-4xl">
+            เรียนแล้วต้องพาไปสู่ของที่จับต้องได้
           </h2>
-          <p className="mt-6 max-w-xl text-base leading-7 text-gray-600">
-            ฝึกทำโจทย์ compile และ submit ซ้ำ ๆ จนคุ้นเคยกับบรรยากาศห้องแข่งจริง
-            เพราะทักษะเกิดจากการลงมือแก้โจทย์ซ้ำ ๆ ไม่ใช่แค่ฟังทฤษฎี
+          <p className="mt-4 max-w-xl text-sm leading-7 text-[#f0e8dc]">
+            BeyondLab ไม่ได้เป็นแค่หน้ารวมคอร์ส แต่เป็นพื้นที่ที่ช่วยให้คนเรียนรู้ ลองทำจริง
+            ได้ feedback และต่อยอดเป็นผลงานหรือเส้นทางของตัวเอง
           </p>
         </div>
-        <div className="rounded-[24px] border border-gray-200 bg-[#0d1117] p-6 font-mono text-sm text-gray-200 shadow-[0_30px_90px_rgba(17,17,17,0.18)]">
-          <p className="text-gray-500">/ beyondlab judge</p>
-          <p className="mt-6">&gt; g++ solution.cpp -o solution</p>
-          <p className="mt-2 text-emerald-300">&gt; ✓ compiled</p>
-          <p className="mt-6">&gt; submit solution.cpp</p>
-          <p className="mt-2 text-emerald-300">&gt; ✓ Accepted</p>
-          <p className="mt-6">&gt; join beyondlab</p>
-          <p className="mt-2 text-emerald-300">&gt; ✓ contest mode activated</p>
+        <div className="grid gap-4 sm:grid-cols-2">
+          {["คอร์สเรียน", "รับปรึกษา", "QuizFlow", "โปรเจกต์"].map((item) => (
+            <div key={item} className="rounded-xl bg-white/10 p-4 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.1)]">
+              <p className="text-xl font-semibold text-[#f7c56d]">{item}</p>
+              <p className="mt-2 text-sm leading-6 text-[#f0e8dc]">เชื่อมกับแนวทาง Learning + Building + Sharing</p>
+            </div>
+          ))}
         </div>
       </div>
     </section>

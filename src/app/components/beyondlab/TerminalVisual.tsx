@@ -1,60 +1,40 @@
+import { tutors } from "./data";
+
 export function TerminalVisual() {
   return (
-    <div className="relative mx-auto mt-16 w-full max-w-5xl animate-float">
-      <div className="absolute -inset-10 rounded-[44px] bg-[radial-gradient(circle_at_50%_0%,rgba(79,140,255,0.18),transparent_52%)] blur-2xl" />
-      <div className="relative overflow-hidden rounded-[24px] border border-gray-200 bg-white/88 shadow-[0_30px_100px_rgba(17,17,17,0.14)] backdrop-blur-xl">
-        <div className="flex items-center justify-between border-b border-gray-200 bg-[#FAFAFA]/80 px-5 py-3">
-          <div className="flex items-center gap-2">
-            <span className="h-3 w-3 rounded-full bg-[#ff5f57]" />
-            <span className="h-3 w-3 rounded-full bg-[#ffbd2e]" />
-            <span className="h-3 w-3 rounded-full bg-[#28c840]" />
-          </div>
-          <div className="text-xs font-medium text-gray-400">beyondlab.official</div>
+    <div className="relative mx-auto w-full max-w-2xl">
+      <div className="relative min-h-[420px] overflow-hidden rounded-[24px] bg-[linear-gradient(180deg,#fffaf2,#ffffff)]">
+        <div className="absolute left-1/2 top-10 h-64 w-64 -translate-x-1/2 rounded-full bg-[#f5efe6]" />
+        <div className="absolute right-8 top-16 h-16 w-20 rotate-12 border-t-2 border-[#ea721f] opacity-70 before:absolute before:right-2 before:top-0 before:h-10 before:w-10 before:rotate-45 before:border-r-2 before:border-t-2 before:border-[#ea721f]" />
+        <div className="absolute right-7 top-7 max-w-[140px] text-center text-lg font-semibold leading-snug text-[#303030]">
+          ไม่ใช่ทำแทน<br />แต่สอนให้ทำเป็น
         </div>
-        <div className="grid gap-0 lg:grid-cols-[1.08fr_0.92fr]">
-          <div className="border-b border-gray-200 p-5 sm:p-8 lg:border-b-0 lg:border-r">
-            <div className="rounded-2xl border border-gray-200 bg-[#0d1117] p-5 font-mono text-sm text-gray-200 shadow-inner">
-              <p>
-                <span className="text-[#4F8CFF]">beyondlab</span> g++ solution.cpp
-              </p>
-              <p className="mt-3 text-emerald-300">✓ compiled</p>
-              <p className="mt-6">
-                <span className="text-[#4F8CFF]">beyondlab</span> submit solution.cpp
-              </p>
-              <p className="mt-3 text-emerald-300">✓ Accepted</p>
-              <p className="mt-6">
-                <span className="text-[#4F8CFF]">beyondlab</span> join beyondlab
-              </p>
-              <p className="mt-3 text-emerald-300">✓ contest mode activated</p>
+        <div className="absolute left-6 top-20 rounded-[22px] bg-[linear-gradient(90deg,#fff,#ffe3ad)] px-4 py-3 shadow-[0_14px_34px_rgba(48,48,48,0.1)]">
+          <p className="text-xs font-semibold uppercase text-[#ea721f]">For</p>
+          <p className="mt-1 text-xl font-semibold text-[#303030]">All Paths</p>
+          <p className="text-sm text-[#555]">เรียน ปรึกษา สร้างผลงาน</p>
+        </div>
+        <div className="absolute bottom-36 left-1/2 h-44 w-32 -translate-x-[35%] rounded-t-full bg-[linear-gradient(180deg,#303030,#76543a)] opacity-95 shadow-[0_22px_44px_rgba(48,48,48,0.18)]" />
+        <div className="absolute bottom-44 left-1/2 h-20 w-20 -translate-x-[35%] rounded-full bg-[linear-gradient(180deg,#f1d0b0,#e8b184)] shadow-[0_16px_28px_rgba(48,48,48,0.1)]">
+          <div className="absolute left-4 top-10 h-2 w-2 rounded-full bg-[#303030]" />
+          <div className="absolute right-4 top-10 h-2 w-2 rounded-full bg-[#303030]" />
+          <div className="absolute left-7 top-16 h-1 w-10 rounded-full bg-[#8f5f45]" />
+        </div>
+        <div className="absolute bottom-24 left-6 right-6 grid gap-3 sm:grid-cols-2">
+          {tutors.map((tutor) => (
+            <div key={tutor.name} className="rounded-2xl bg-white/95 p-4 shadow-[0_14px_34px_rgba(48,48,48,0.12)]">
+              <p className="text-xs font-semibold uppercase text-[#ea721f]">Mentor</p>
+              <h3 className="mt-1 text-xl font-semibold text-[#303030]">{tutor.name}</h3>
+              <p className="mt-1 text-sm text-[#555]">วิศวะคอม จุฬาฯ (CEDT)</p>
             </div>
-          </div>
-          <div className="grid gap-4 bg-[linear-gradient(135deg,#fff,rgba(79,140,255,0.06))] p-5 sm:p-8">
-            <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-[0_18px_50px_rgba(17,17,17,0.07)]">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">Solve streak</span>
-                <span className="rounded-full bg-blue-50 px-2.5 py-1 text-xs font-semibold text-[#4F8CFF]">Live</span>
-              </div>
-              <div className="mt-7 flex items-end gap-2">
-                {[42, 58, 46, 72, 66, 88, 76].map((height, index) => (
-                  <div
-                    key={index}
-                    className="flex-1 rounded-t-lg bg-gradient-to-t from-[#4F8CFF] to-[#B9D2FF]"
-                    style={{ height }}
-                  />
-                ))}
-              </div>
+          ))}
+        </div>
+        <div className="absolute bottom-5 left-6 right-6 grid grid-cols-3 gap-2 text-center">
+          {["Learn", "Build", "Grow"].map((item) => (
+            <div key={item} className="rounded-xl bg-[#fff7ef] px-3 py-3 text-xs font-semibold text-[#ea721f] shadow-[0_10px_24px_rgba(48,48,48,0.07)]">
+              {item}
             </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-[0_18px_50px_rgba(17,17,17,0.06)]">
-                <p className="text-3xl font-bold tracking-[-0.04em] text-[#111111]">C++</p>
-                <p className="mt-1 text-sm text-gray-500">ภาษาหลักที่ใช้ติว</p>
-              </div>
-              <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-[0_18px_50px_rgba(17,17,17,0.06)]">
-                <p className="text-3xl font-bold tracking-[-0.04em] text-[#111111]">สอวน.</p>
-                <p className="mt-1 text-sm text-gray-500">มาตรฐานเนื้อหาที่ใช้ติว</p>
-              </div>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
     </div>

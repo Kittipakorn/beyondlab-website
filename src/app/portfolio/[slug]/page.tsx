@@ -24,11 +24,11 @@ export default async function PortfolioDetailPage({ params }: { params: Promise<
   if (!course) notFound();
 
   return (
-    <section className="px-5 py-24 sm:px-8">
+    <section className="px-5 py-16 sm:px-8">
       <div className="mx-auto max-w-3xl">
         <Link
           href="/portfolio"
-          className="inline-flex items-center gap-2 text-sm font-semibold text-gray-500 transition hover:text-[#111111]"
+          className="inline-flex items-center gap-2 text-sm font-semibold text-gray-500 transition hover:text-[#ea721f]"
         >
           <span className="rotate-180">
             <ArrowIcon />
@@ -37,24 +37,24 @@ export default async function PortfolioDetailPage({ params }: { params: Promise<
         </Link>
 
         <div className="mt-8">
-          <span className="inline-flex items-center rounded-full border border-blue-100 bg-blue-50 px-3 py-1 text-xs font-semibold text-[#4F8CFF]">
-            {course.students} คนเรียน
+          <span className="inline-flex items-center rounded-full bg-[#fff4df] px-3 py-1 text-xs font-semibold text-[#ea721f]">
+            ผู้เรียน {course.students}
           </span>
-          <h1 className="mt-4 text-4xl font-black tracking-[-0.05em] sm:text-6xl">{course.name}</h1>
-          <p className="mt-6 max-w-2xl text-lg leading-8 text-gray-600">{course.description}</p>
+          <h1 className="mt-3 text-3xl font-semibold text-[#303030] sm:text-5xl">{course.name}</h1>
+          <p className="mt-4 max-w-2xl text-base leading-7 text-gray-600">{course.description}</p>
         </div>
 
-        <div className="mt-10 rounded-[24px] border border-dashed border-gray-200 bg-[#FAFAFA] p-7">
+        <div className="mt-8 rounded-[22px] border border-dashed border-[#f0dfc8] bg-white p-5">
           <p className="text-sm leading-6 text-gray-500">
             รายละเอียดเนื้อหาคอร์ส ไฮไลต์ และภาพบรรยากาศกำลังทยอยอัปเดต ติดตามได้ทาง Instagram
-            หรือช่องทางคอมมูนิตี้ของเรา
+            หรือช่องทางติดต่อของเรา
           </p>
         </div>
 
         <div className="mt-10">
           <Link
-            href="/#community"
-            className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-[#111111] px-6 text-sm font-semibold text-white shadow-[0_14px_40px_rgba(17,17,17,0.18)] transition hover:-translate-y-0.5"
+            href="/#contact"
+            className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-[#303030] px-4 text-sm font-semibold text-white shadow-[0_10px_24px_rgba(48,48,48,0.16)] transition hover:-translate-y-0.5"
           >
             สอบถามคอร์สนี้
             <ArrowIcon />

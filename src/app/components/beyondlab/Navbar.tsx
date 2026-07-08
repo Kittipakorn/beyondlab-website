@@ -10,7 +10,7 @@ export function Navbar() {
   const [open, setOpen] = useState(false);
 
   return (
-    <nav className="sticky top-0 z-50 border-b border-gray-200/70 bg-white/80 backdrop-blur-2xl">
+    <nav className="sticky top-0 z-50 border-b border-[#f0dfc8]/90 bg-white/88 backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5 sm:px-8">
         <Link href="/" onClick={() => setOpen(false)}>
           <Logo />
@@ -20,7 +20,7 @@ export function Navbar() {
             <Link
               key={item.label}
               href={item.href}
-              className="text-sm font-medium text-gray-500 transition hover:text-[#111111]"
+              className="rounded-xl px-2 py-2 text-sm font-semibold text-[#5c5148] transition hover:bg-[#fff4df] hover:text-[#303030]"
             >
               {item.label}
             </Link>
@@ -28,8 +28,8 @@ export function Navbar() {
         </div>
         <div className="flex items-center gap-2">
           <Link
-            href="/#community"
-            className="hidden h-10 items-center gap-2 rounded-full border border-gray-200 bg-[#111111] px-4 text-sm font-semibold text-white shadow-[0_10px_30px_rgba(17,17,17,0.16)] transition hover:-translate-y-0.5 hover:bg-black sm:inline-flex"
+            href="/#contact"
+            className="hidden h-11 items-center gap-2 rounded-2xl bg-[#303030] px-4 text-sm font-semibold text-white shadow-[0_12px_28px_rgba(48,48,48,0.18)] transition hover:-translate-y-0.5 hover:bg-[#1f1f1f] sm:inline-flex"
           >
             ติดต่อเรา
             <ArrowIcon />
@@ -39,29 +39,29 @@ export function Navbar() {
             aria-label={open ? "ปิดเมนู" : "เปิดเมนู"}
             aria-expanded={open}
             onClick={() => setOpen((value) => !value)}
-            className="grid h-10 w-10 place-items-center rounded-full border border-gray-200 text-[#111111] transition hover:border-gray-300 md:hidden"
+            className="grid h-11 w-11 place-items-center rounded-2xl border border-[#f0dfc8] bg-white text-[#303030] transition hover:border-[#ea721f] md:hidden"
           >
             {open ? <CloseIcon /> : <MenuIcon />}
           </button>
         </div>
       </div>
       {open && (
-        <div className="border-t border-gray-200 bg-white px-5 py-4 sm:px-8 md:hidden">
+        <div className="border-t border-[#f0dfc8] bg-white px-5 py-4 sm:px-8 md:hidden">
           <div className="flex flex-col gap-1">
             {navItems.map((item) => (
               <Link
                 key={item.label}
                 href={item.href}
                 onClick={() => setOpen(false)}
-                className="rounded-xl px-3 py-3 text-base font-medium text-gray-600 transition hover:bg-[#FAFAFA] hover:text-[#111111]"
+                className="rounded-2xl px-3 py-3 text-base font-semibold text-[#5c5148] transition hover:bg-[#fff4df] hover:text-[#303030]"
               >
                 {item.label}
               </Link>
             ))}
             <Link
-              href="/#community"
+              href="/#contact"
               onClick={() => setOpen(false)}
-              className="mt-2 inline-flex h-11 items-center justify-center gap-2 rounded-full bg-[#111111] px-4 text-sm font-semibold text-white shadow-[0_10px_30px_rgba(17,17,17,0.16)] sm:hidden"
+              className="mt-2 inline-flex h-11 items-center justify-center gap-2 rounded-2xl bg-[#303030] px-4 text-sm font-semibold text-white sm:hidden"
             >
               ติดต่อเรา
               <ArrowIcon />

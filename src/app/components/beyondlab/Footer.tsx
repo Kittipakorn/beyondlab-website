@@ -5,15 +5,15 @@ import { contactChannels, navItems } from "./data";
 
 export function Footer() {
   return (
-    <footer className="border-t border-gray-200 px-5 py-14 sm:px-8">
+    <footer className="border-t border-[#f0dfc8] bg-white px-5 py-14 sm:px-8">
       <div className="mx-auto grid max-w-7xl gap-10 md:grid-cols-[1.2fr_1fr_1fr]">
         <div>
           <Link href="/">
             <Logo />
           </Link>
           <p className="mt-4 max-w-xs text-sm leading-6 text-gray-500">
-            ติวเขียนโปรแกรมโอลิมปิก C++ โดยพี่โมและพี่มิก วิศวะคอม (CEDT) จุฬาฯ
-            ผู้แทนศูนย์ สอวน. โอลิมปิกคอมพิวเตอร์ 2 ปีซ้อน
+            ห้องทดลองของคนที่อยากก้าวข้ามขีดจำกัด เริ่มจากคอร์สเรียน รับปรึกษา
+            และโปรเจกต์ที่ต่อยอดเป็นผลงานจริง
           </p>
         </div>
         <div>
@@ -23,7 +23,7 @@ export function Footer() {
               <Link
                 key={item.label}
                 href={item.href}
-                className="text-sm font-medium text-gray-500 transition hover:text-[#111111]"
+                className="text-sm font-semibold text-gray-500 transition hover:text-[#ea721f]"
               >
                 {item.label}
               </Link>
@@ -40,20 +40,32 @@ export function Footer() {
                   href={channel.href}
                   target="_blank"
                   rel="noreferrer"
-                  className="flex items-center gap-2 text-sm font-medium text-gray-500 transition hover:text-[#111111]"
+                  className="flex items-center gap-2 text-sm font-semibold text-gray-500 transition hover:text-[#ea721f]"
                 >
-                  <Image src={channel.logo} alt="" width={16} height={16} className="h-4 w-4 object-contain" />
+                  {channel.logo ? (
+                    <Image src={channel.logo} alt="" width={16} height={16} className="h-4 w-4 object-contain" />
+                  ) : (
+                    <span className="grid h-4 w-4 place-items-center rounded bg-[#fff4df] text-[8px] font-semibold text-[#ea721f]">
+                      W
+                    </span>
+                  )}
                   {channel.label}
                 </a>
               ) : (
-                <span key={channel.label} className="flex items-center gap-2 text-sm font-medium text-gray-400">
-                  <Image
-                    src={channel.logo}
-                    alt=""
-                    width={16}
-                    height={16}
-                    className="h-4 w-4 object-contain opacity-40 grayscale"
-                  />
+                <span key={channel.label} className="flex items-center gap-2 text-sm font-semibold text-gray-400">
+                  {channel.logo ? (
+                    <Image
+                      src={channel.logo}
+                      alt=""
+                      width={16}
+                      height={16}
+                      className="h-4 w-4 object-contain opacity-40 grayscale"
+                    />
+                  ) : (
+                    <span className="grid h-4 w-4 place-items-center rounded bg-gray-100 text-[8px] font-semibold text-gray-400">
+                      W
+                    </span>
+                  )}
                   {channel.label} · เร็วๆ นี้
                 </span>
               )
@@ -61,7 +73,7 @@ export function Footer() {
           </div>
         </div>
       </div>
-      <div className="mx-auto mt-12 max-w-7xl border-t border-gray-200 pt-6 text-xs text-gray-400">
+      <div className="mx-auto mt-12 max-w-7xl border-t border-[#f0dfc8] pt-6 text-xs text-gray-400">
         © {new Date().getFullYear()} BeyondLab. All rights reserved.
       </div>
     </footer>

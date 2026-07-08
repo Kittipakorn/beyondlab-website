@@ -5,7 +5,7 @@ import { FinalCta } from "./components/beyondlab/FinalCta";
 import { Hero } from "./components/beyondlab/Hero";
 import { InteractiveTerminal } from "./components/beyondlab/InteractiveTerminal";
 import { ProjectShowcase } from "./components/beyondlab/ProjectShowcase";
-import { Roadmap } from "./components/beyondlab/Roadmap";
+import { ServicesSection } from "./components/beyondlab/ServicesSection";
 
 export default function Home() {
   return (
@@ -13,7 +13,7 @@ export default function Home() {
       <Hero />
       <AboutTutors />
       <BuildGrid />
-      <Roadmap />
+      <ServicesSection />
       <ProjectShowcase />
       <InteractiveTerminal />
       <Community />

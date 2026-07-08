@@ -18,7 +18,7 @@ export default function Icon() {
           borderRadius: 7,
           color: "#ffffff",
           fontSize: 20,
-          fontWeight: 900,
+          fontWeight: 700,
         }}
       >
         B

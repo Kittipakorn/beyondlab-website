@@ -4,12 +4,12 @@ export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
 const TITLE = "BeyondLab";
-const TAGLINE = "เรียนเขียนโปรแกรมโอลิมปิก C++";
+const TAGLINE = "ห้องทดลองของคนที่อยากก้าวข้ามขีดจำกัด";
 const CREDIT = "ติวโดยพี่โม & พี่มิก · วิศวะคอม (CEDT) จุฬาฯ";
 
-async function loadSarabunBold() {
+async function loadIbmPlexSansThaiSemiBold() {
   const cssRes = await fetch(
-    `https://fonts.googleapis.com/css2?family=Sarabun:wght@800&text=${encodeURIComponent(
+    `https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@700&text=${encodeURIComponent(
       TITLE + TAGLINE + CREDIT
     )}`
   );
@@ -21,7 +21,7 @@ async function loadSarabunBold() {
 }
 
 export default async function OpengraphImage() {
-  const fontData = await loadSarabunBold();
+  const fontData = await loadIbmPlexSansThaiSemiBold();
 
   return new ImageResponse(
     (
@@ -33,9 +33,10 @@ export default async function OpengraphImage() {
           flexDirection: "column",
           justifyContent: "center",
           padding: "80px",
-          background: "#111111",
+          fontFamily: "IBM Plex Sans Thai",
+          background: "#303030",
           backgroundImage:
-            "radial-gradient(circle at 15% 20%, rgba(79,140,255,0.35), transparent 55%)",
+            "radial-gradient(circle at 15% 20%, rgba(234,114,31,0.32), transparent 55%)",
         }}
       >
         <div
@@ -45,28 +46,27 @@ export default async function OpengraphImage() {
             justifyContent: "center",
             width: 84,
             height: 84,
-            borderRadius: 20,
             background: "#ffffff",
-            color: "#111111",
+            color: "#303030",
             fontSize: 44,
-            fontWeight: 800,
+            fontWeight: 700,
             marginBottom: 40,
           }}
         >
           B
         </div>
-        <div style={{ display: "flex", color: "#ffffff", fontSize: 88, fontWeight: 800 }}>{TITLE}</div>
-        <div style={{ display: "flex", color: "#4F8CFF", fontSize: 40, fontWeight: 800, marginTop: 20 }}>
+        <div style={{ display: "flex", color: "#ffffff", fontSize: 88, fontWeight: 700 }}>{TITLE}</div>
+        <div style={{ display: "flex", color: "#f7c56d", fontSize: 40, fontWeight: 700, marginTop: 20 }}>
           {TAGLINE}
         </div>
-        <div style={{ display: "flex", color: "#9CA3AF", fontSize: 28, fontWeight: 800, marginTop: 24 }}>
+        <div style={{ display: "flex", color: "#9CA3AF", fontSize: 28, fontWeight: 700, marginTop: 24 }}>
           {CREDIT}
         </div>
       </div>
     ),
     {
       ...size,
-      fonts: fontData ? [{ name: "Sarabun", data: fontData, style: "normal", weight: 800 }] : undefined,
+      fonts: fontData ? [{ name: "IBM Plex Sans Thai", data: fontData, style: "normal", weight: 700 }] : undefined,
     }
   );
 }

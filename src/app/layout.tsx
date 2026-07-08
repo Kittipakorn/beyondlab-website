@@ -1,11 +1,12 @@
 import "./globals.css";
+import { IBM_Plex_Sans_Thai } from "next/font/google";
 import { FloatingContact } from "./components/beyondlab/FloatingContact";
 import { Footer } from "./components/beyondlab/Footer";
 import { Navbar } from "./components/beyondlab/Navbar";
 
-const title = "BeyondLab | เรียนเขียนโปรแกรมโอลิมปิก C++";
+const title = "BeyondLab | ห้องทดลองของคนที่อยากก้าวข้ามขีดจำกัด";
 const description =
-  "BeyondLab ติวเข้มเขียนโปรแกรมโอลิมปิก C++ โดยพี่โมและพี่มิก วิศวะคอม (CEDT) จุฬาฯ ผู้แทนศูนย์ สอวน. โอลิมปิกคอมพิวเตอร์ 2 ปีซ้อน";
+  "BeyondLab ห้องทดลองของคนที่อยากก้าวข้ามขีดจำกัด รวมคอร์สเรียน รับปรึกษา QuizFlow และโปรเจกต์สำหรับคนที่อยากสร้างผลงานจริง";
 
 export const metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
@@ -25,13 +26,26 @@ export const metadata = {
   },
 };
 
+const ibmPlexSansThai = IBM_Plex_Sans_Thai({
+  subsets: ["latin", "thai"],
+  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-ibm-plex-sans-thai",
+  display: "swap",
+});
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="th">
-      <body className="overflow-x-hidden bg-white font-sans text-[#111111] transition-colors duration-500">
-        <div className="pointer-events-none fixed inset-0 -z-10 bg-[linear-gradient(to_right,rgba(17,17,17,0.045)_1px,transparent_1px),linear-gradient(to_bottom,rgba(17,17,17,0.045)_1px,transparent_1px)] bg-[size:72px_72px] [mask-image:linear-gradient(to_bottom,black,transparent_82%)]" />
+    <html lang="th" className={ibmPlexSansThai.variable}>
+      <body className="overflow-x-hidden bg-[#f3f4f6] font-sans text-[#303030] transition-colors duration-500">
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-[#303030] focus:px-4 focus:py-3 focus:text-sm focus:font-semibold focus:text-white"
+        >
+          ข้ามไปยังเนื้อหา
+        </a>
+        <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.95),rgba(243,244,246,0.92)_56%,rgba(226,229,233,0.95))]" />
         <Navbar />
-        <main className="min-h-screen">{children}</main>
+        <main id="main-content" className="min-h-screen">{children}</main>
         <Footer />
         <FloatingContact />
       </body>

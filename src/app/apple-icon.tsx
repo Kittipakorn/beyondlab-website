@@ -17,7 +17,7 @@ export default function AppleIcon() {
           backgroundImage: "radial-gradient(circle at 30% 20%, rgba(79,140,255,0.55), transparent 60%)",
           color: "#ffffff",
           fontSize: 108,
-          fontWeight: 900,
+          fontWeight: 700,
         }}
       >
         B

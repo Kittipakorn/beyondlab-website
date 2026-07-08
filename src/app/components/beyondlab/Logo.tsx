@@ -1,11 +1,10 @@
 export function Logo() {
   return (
     <div className="flex items-center gap-3">
-      <div className="relative grid h-9 w-9 place-items-center overflow-hidden rounded-xl border border-gray-200 bg-white shadow-[0_10px_30px_rgba(17,17,17,0.08)]">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(79,140,255,0.38),transparent_42%)]" />
-        <span className="relative text-sm font-black tracking-[-0.04em] text-[#111111]">B</span>
+      <div className="grid h-11 w-11 place-items-center border-2 border-[#303030] bg-white p-1">
+        <span className="text-center text-[9px] font-semibold leading-[0.9] text-[#303030]">BEYOND<br />LAB</span>
       </div>
-      <span className="text-sm font-semibold tracking-[-0.02em] text-[#111111]">BeyondLab</span>
+      <span className="text-sm font-semibold leading-tight text-[#303030]">BeyondLab<br />Learning Lab</span>
     </div>
   );
 }
