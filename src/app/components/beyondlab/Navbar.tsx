@@ -20,7 +20,7 @@ export function Navbar() {
             <Link
               key={item.label}
               href={item.href}
-              className="rounded-xl px-2 py-2 text-sm font-semibold text-[#5c5148] transition hover:bg-[#fff4df] hover:text-[#303030]"
+              className="px-2 py-2 text-sm font-semibold text-[#5c5148] transition hover:text-[#ea721f]"
             >
               {item.label}
             </Link>
@@ -53,7 +53,7 @@ export function Navbar() {
                 key={item.label}
                 href={item.href}
                 onClick={() => setOpen(false)}
-                className="rounded-2xl px-3 py-3 text-base font-semibold text-[#5c5148] transition hover:bg-[#fff4df] hover:text-[#303030]"
+                className="py-3 text-base font-semibold text-[#5c5148] transition hover:text-[#ea721f]"
               >
                 {item.label}
               </Link>

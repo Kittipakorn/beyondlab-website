@@ -5,6 +5,8 @@ type ServiceItem = {
   points: string[];
   status: "open" | "coming-soon";
   href?: string;
+  cta?: string;
+  image?: string;
   hidden?: boolean;
 };
 
@@ -35,10 +37,10 @@ type CourseItem = {
 };
 
 export const navItems = [
-  { label: "Courses", href: "/#courses" },
-  { label: "Services", href: "/#services" },
-  { label: "Projects", href: "/#projects" },
-  { label: "Contact", href: "/#contact" },
+  { label: "บริการ", href: "/#services" },
+  { label: "คอร์สเรียน", href: "/#courses" },
+  { label: "ผลงาน", href: "/#projects" },
+  { label: "ติดต่อเรา", href: "/#contact" },
 ];
 
 export const aboutStats = [
@@ -51,16 +53,18 @@ export const tutors = [
   {
     name: "พี่โม",
     handle: "@kittmkrn_",
-    role: "ติวเตอร์ผู้ก่อตั้ง BeyondLab",
+    image: "/mo-profile.png",
+    role: "นักพัฒนาซอฟต์แวร์",
     credentials: [
       "วิศวกรรมคอมพิวเตอร์ (CEDT) จุฬาลงกรณ์มหาวิทยาลัย",
       "ผู้แทนศูนย์ สอวน. โอลิมปิกคอมพิวเตอร์ 2 ปีซ้อน",
     ],
   },
   {
-    name: "พี่มิก",
+    name: "พี่มิคค์",
     handle: "@onyou_exe",
-    role: "ติวเตอร์ผู้ก่อตั้ง BeyondLab",
+    image: "/mick-profile.png",
+    role: "นักพัฒนาซอฟต์แวร์",
     credentials: [
       "วิศวกรรมคอมพิวเตอร์ (CEDT) จุฬาลงกรณ์มหาวิทยาลัย",
       "ผู้แทนศูนย์ สอวน. โอลิมปิกคอมพิวเตอร์ 2 ปีซ้อน",
@@ -102,6 +106,7 @@ export const portfolioPreview = [
     text: "ZERO TO CODE คอร์สปูพื้นฐานที่มีผู้เรียนแล้วกว่า 80+ คน",
     badge: "ผู้เรียน 80+",
     href: "/portfolio/zero-to-code",
+    image: "/courses/zero-to-code.png",
   },
   { title: "Learning Notes", text: "บันทึกวิธีคิด เครื่องมือ และสิ่งที่เรียนรู้จากการทดลองทำโปรเจกต์", badge: "เร็วๆ นี้" },
 ];
@@ -131,13 +136,16 @@ export const services: ServiceItem[] = [
     title: "คอร์สเรียน",
     tag: "Courses",
     description:
-      "คอร์ส ZERO TO CODE สำหรับมือใหม่ที่อยากเริ่มเขียนโปรแกรม C++ จากพื้นฐานและนำไปต่อยอดได้จริง",
+      "รวบรวมคอร์สเรียนเขียนโปรแกรมและเทคโนโลยีที่ปูพื้นฐานตั้งแต่เริ่มต้น เน้นการลงมือปฏิบัติจริงเพื่อนำไปต่อยอด",
     points: [
-      "เรียนออนไลน์ 8 ชั่วโมง",
-      "ราคา 688.- จากปกติ 990.-",
-      "เหมาะกับผู้เริ่มต้นและคนไม่มีพื้นฐาน",
+      "มีหลักสูตรหลากหลายครอบคลุมทักษะจำเป็น",
+      "เน้นการคิดวิเคราะห์ แก้โจทย์ และทำโปรเจกต์จริง",
+      "ดูแลใกล้ชิดพร้อมกลุ่มคอมมูนิตี้คอยถามตอบ",
     ],
     status: "open",
+    href: "/#courses",
+    cta: "ดูคอร์สเรียน",
+    image: "/services/courses.png",
   },
   {
     title: "รับปรึกษาโปรเจกต์",
@@ -150,6 +158,8 @@ export const services: ServiceItem[] = [
       "แนะนำลำดับการเรียนรู้และเครื่องมือ",
     ],
     status: "open",
+    href: "http://lin.ee/VbDTcyo",
+    cta: "ติดต่อผ่าน LINE",
   },
   {
     title: "QuizFlow",
@@ -161,7 +171,9 @@ export const services: ServiceItem[] = [
       "ส่งออกเป็น PDF พร้อมพิมพ์หรือแจกได้ทันที",
     ],
     status: "open",
-    href: "https://quizflow.kittipakorn.com/dashboard",
+    href: "https://quizflow.kittipakorn.com/",
+    cta: "ลองใช้งานฟรี",
+    image: "/services/quizflow.png",
   },
   {
     title: "IoT Kit / ชุดโครงงาน",

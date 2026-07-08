@@ -1,6 +1,6 @@
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowIcon } from "./icons";
-import { TerminalVisual } from "./TerminalVisual";
 
 export function Hero() {
   return (
@@ -30,22 +30,43 @@ export function Hero() {
           </p>
           <div className="mt-6 flex flex-col gap-3 sm:flex-row">
             <Link
-              href="/#courses"
+              href="/#services"
               className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#303030] px-5 text-sm font-semibold text-white shadow-[0_10px_24px_rgba(48,48,48,0.18)] transition hover:-translate-y-0.5 sm:w-auto"
             >
-              ดูคอร์สเรียน
+              ดูบริการ
               <ArrowIcon />
             </Link>
-            <a
-              href="#services"
+            <Link
+              href="/#courses"
               className="inline-flex h-11 w-full items-center justify-center rounded-xl border border-[#eeeeee] bg-white px-5 text-sm font-semibold text-[#303030] shadow-[0_10px_24px_rgba(48,48,48,0.07)] transition hover:-translate-y-0.5 sm:w-auto"
             >
-              ดูบริการ
-            </a>
+              ดูคอร์สเรียน
+            </Link>
           </div>
         </div>
-        <div className="relative">
-          <TerminalVisual />
+        <div className="relative w-full max-w-md mx-auto">
+          {/* ส่วนของรูปภาพที่มีการเฟดจางโดยใช้ CSS Mask */}
+          <div className="relative aspect-[802/732] w-full bg-transparent [mask-image:linear-gradient(to_top,rgba(0,0,0,0)_0%,rgba(0,0,0,0.25)_12%,rgba(0,0,0,0.85)_45%,rgba(0,0,0,1)_60%)] [-webkit-mask-image:linear-gradient(to_top,rgba(0,0,0,0)_0%,rgba(0,0,0,0.25)_12%,rgba(0,0,0,0.85)_45%,rgba(0,0,0,1)_60%)]">
+            <Image
+              src="/hero-tutors-v2.png"
+              alt="BeyondLab Tutors"
+              fill
+              priority
+              sizes="(min-width: 1024px) 50vw, 95vw"
+              className="object-contain"
+            />
+          </div>
+          
+          {/* ป้ายชื่อลอยแบบมินิมอล อยู่นอกเฟดเพื่อให้อ่านได้คมชัด 100% */}
+          <div className="absolute left-[2%] top-[55%] z-20 rounded-xl bg-white/90 px-3 py-1.5 shadow-[0_8px_20px_rgba(48,48,48,0.08)] border border-[#f0dfc8]/50 backdrop-blur-sm transition hover:scale-105">
+            <p className="text-[11px] font-bold text-[#303030] leading-none">พี่โม</p>
+            <p className="text-[9px] text-[#ea721f] font-bold leading-none mt-1">CEDT Chula</p>
+          </div>
+
+          <div className="absolute right-[2%] top-[48%] z-20 rounded-xl bg-white/90 px-3 py-1.5 shadow-[0_8px_20px_rgba(48,48,48,0.08)] border border-[#f0dfc8]/50 backdrop-blur-sm transition hover:scale-105">
+            <p className="text-[11px] font-bold text-[#303030] leading-none">พี่มิคค์</p>
+            <p className="text-[9px] text-[#ea721f] font-bold leading-none mt-1">CEDT Chula</p>
+          </div>
         </div>
       </div>
     </section>
