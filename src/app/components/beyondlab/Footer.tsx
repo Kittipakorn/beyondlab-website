@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { Logo } from "./Logo";
 import { contactChannels, navItems } from "./data";
@@ -39,12 +40,20 @@ export function Footer() {
                   href={channel.href}
                   target="_blank"
                   rel="noreferrer"
-                  className="text-sm font-medium text-gray-500 transition hover:text-[#111111]"
+                  className="flex items-center gap-2 text-sm font-medium text-gray-500 transition hover:text-[#111111]"
                 >
+                  <Image src={channel.logo} alt="" width={16} height={16} className="h-4 w-4 object-contain" />
                   {channel.label}
                 </a>
               ) : (
-                <span key={channel.label} className="text-sm font-medium text-gray-400">
+                <span key={channel.label} className="flex items-center gap-2 text-sm font-medium text-gray-400">
+                  <Image
+                    src={channel.logo}
+                    alt=""
+                    width={16}
+                    height={16}
+                    className="h-4 w-4 object-contain opacity-40 grayscale"
+                  />
                   {channel.label} · เร็วๆ นี้
                 </span>
               )

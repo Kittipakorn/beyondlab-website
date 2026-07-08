@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { contactChannels } from "./data";
 
 export function Community() {
@@ -19,9 +20,16 @@ export function Community() {
                   href={channel.href}
                   target="_blank"
                   rel="noreferrer"
-                  className="flex items-center justify-between rounded-2xl border border-gray-200 bg-[#FAFAFA] p-5 transition hover:border-gray-300"
+                  className="flex items-center gap-4 rounded-2xl border border-gray-200 bg-[#FAFAFA] p-5 transition hover:border-gray-300"
                 >
-                  <div>
+                  <Image
+                    src={channel.logo}
+                    alt={`${channel.label} logo`}
+                    width={44}
+                    height={44}
+                    className="h-11 w-11 flex-none object-contain"
+                  />
+                  <div className="flex-1">
                     <span className="text-lg font-bold tracking-[-0.03em]">{channel.label}</span>
                     <p className="mt-1 text-sm text-gray-500">{channel.description}</p>
                   </div>
@@ -30,9 +38,16 @@ export function Community() {
               ) : (
                 <div
                   key={channel.label}
-                  className="flex items-center justify-between rounded-2xl border border-dashed border-gray-200 bg-[#FAFAFA] p-5"
+                  className="flex items-center gap-4 rounded-2xl border border-dashed border-gray-200 bg-[#FAFAFA] p-5"
                 >
-                  <div>
+                  <Image
+                    src={channel.logo}
+                    alt={`${channel.label} logo`}
+                    width={44}
+                    height={44}
+                    className="h-11 w-11 flex-none object-contain opacity-40 grayscale"
+                  />
+                  <div className="flex-1">
                     <span className="text-lg font-bold tracking-[-0.03em] text-gray-400">{channel.label}</span>
                     <p className="mt-1 text-sm text-gray-400">{channel.description}</p>
                   </div>

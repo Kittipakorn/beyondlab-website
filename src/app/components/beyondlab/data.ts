@@ -69,19 +69,29 @@ export const roadmapItems = [
 ];
 
 export const portfolioPreview = [
-  ["ผลการแข่งขัน", "รวบรวมผลงานและรางวัลจากสนามแข่งของนักเรียน BeyondLab"],
-  ["คอร์สที่เคยสอน", "สรุปคอร์สและรุ่นติวที่ผ่านมา พร้อมไฮไลต์ของแต่ละรุ่น"],
-  ["กิจกรรม & ภาพบรรยากาศ", "ภาพและเรื่องราวจากคลาสเรียน แคมป์ และกิจกรรมต่าง ๆ"],
+  { title: "ผลการแข่งขัน", text: "รวบรวมผลงานและรางวัลจากสนามแข่งของนักเรียน BeyondLab", badge: "เร็วๆ นี้" },
+  {
+    title: "คอร์สที่เคยสอน",
+    text: "ZERO TO CODE คอร์สปูพื้นฐานที่มีผู้เรียนแล้วกว่า 80+ คน",
+    badge: "80+ คนเรียน",
+    href: "/portfolio/zero-to-code",
+  },
+  { title: "กิจกรรม & ภาพบรรยากาศ", text: "ภาพและเรื่องราวจากคลาสเรียน แคมป์ และกิจกรรมต่าง ๆ", badge: "เร็วๆ นี้" },
+];
+
+export const pastCourses = [
+  {
+    slug: "zero-to-code",
+    name: "ZERO TO CODE",
+    students: "80+",
+    description: "คอร์สปูพื้นฐานเขียนโปรแกรมสำหรับผู้เริ่มต้น ตั้งแต่ศูนย์จนเขียนโค้ดเป็น",
+  },
 ];
 
 export const portfolioCategories = [
   {
     title: "ผลการแข่งขัน",
     description: "รางวัลและผลงานการแข่งขันของนักเรียน BeyondLab จะถูกรวบรวมไว้ที่นี่",
-  },
-  {
-    title: "คอร์สที่เคยสอน",
-    description: "สรุปคอร์สและรุ่นติวที่ผ่านมา พร้อมไฮไลต์ของแต่ละรุ่น",
   },
   {
     title: "กิจกรรม & ภาพบรรยากาศ",
@@ -130,19 +140,22 @@ export const contactChannels = [
     href: "https://www.instagram.com/beyondlab.official/?hl=th",
     status: "active",
     description: "ติดตามคอนเทนต์ อัปเดตคอร์ส และผลงานนักเรียน",
+    logo: "/logos/instagram.png",
   },
   {
     label: "LINE Official",
-    handle: "เร็วๆ นี้",
-    href: null,
-    status: "coming-soon",
+    handle: "@546tmxqp",
+    href: "https://lin.ee/813cTe5",
+    status: "active",
     description: "ช่องทางแชทพูดคุยและสอบถามคอร์สโดยตรง",
+    logo: "/logos/line.png",
   },
   {
     label: "Discord Community",
-    handle: "เร็วๆ นี้",
-    href: null,
-    status: "coming-soon",
+    handle: "เข้าร่วมเซิร์ฟเวอร์",
+    href: "https://discord.gg/D4u2GBM4Mn",
+    status: "active",
     description: "คอมมูนิตี้พูดคุย แลกเปลี่ยนโจทย์ และติดตามข่าวสาร",
+    logo: "/logos/discord.png",
   },
 ];
