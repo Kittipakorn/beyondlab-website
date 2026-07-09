@@ -22,12 +22,12 @@ const serviceUnits = [
 ];
 
 function getUnitImage(serviceTitle: string) {
-  if (serviceTitle === "คอร์สเรียน") return "/courses/zero-to-code.png";
+  if (serviceTitle === "BeyondLab Academy") return "/courses/zero-to-code.png";
   return null;
 }
 
 function getImageClassName(serviceTitle: string) {
-  if (serviceTitle === "คอร์สเรียน" || serviceTitle === "QuizFlow") return "object-contain object-center p-3";
+  if (serviceTitle === "BeyondLab Academy" || serviceTitle === "QuizFlow") return "object-contain object-center p-3";
   return "object-cover object-top";
 }
 

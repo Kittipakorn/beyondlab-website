@@ -230,7 +230,7 @@ export const portfolioCategories = [
 
 export const services: ServiceItem[] = [
   {
-    title: "คอร์สเรียน",
+    title: "BeyondLab Academy",
     tag: "Courses",
     description:
       "รวบรวมคอร์สเรียนเขียนโปรแกรมและเทคโนโลยีที่ปูพื้นฐานตั้งแต่เริ่มต้น เน้นการลงมือปฏิบัติจริงเพื่อนำไปต่อยอด",
@@ -245,7 +245,7 @@ export const services: ServiceItem[] = [
     image: "/services/courses.png",
   },
   {
-    title: "รับปรึกษาโปรเจกต์",
+    title: "BeyondLab Project Mentor",
     tag: "Consulting",
     description:
       "ช่วยดูไอเดีย วางแผน เลือกเทคโนโลยี และจัดทางเดินให้โปรเจกต์หรือพอร์ตไปต่อได้จริง",
