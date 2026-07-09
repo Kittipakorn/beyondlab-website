@@ -49,6 +49,25 @@ export const aboutStats = [
   ["Sharing", "แชร์วิธีคิด เครื่องมือ และกระบวนการทำงานจริงแบบเข้าใจง่าย"],
 ];
 
+export const mentorStats = [
+  {
+    value: "15+",
+    label: "โปรเจกต์ที่ให้คำปรึกษา",
+  },
+  {
+    value: "4+ ปี",
+    label: "ประสบการณ์พัฒนาโปรเจกต์",
+  },
+  {
+    value: "20+",
+    label: "โปรเจกต์ Web, AI และ IoT",
+  },
+  {
+    value: "10+",
+    label: "ประสบการณ์แข่งขัน Hackathon และนวัตกรรม",
+  },
+];
+
 export const tutors = [
   {
     name: "พี่โม",
@@ -56,8 +75,30 @@ export const tutors = [
     image: "/mo-profile.png",
     role: "นักพัฒนาซอฟต์แวร์",
     credentials: [
-      "วิศวกรรมคอมพิวเตอร์ (CEDT) จุฬาลงกรณ์มหาวิทยาลัย",
-      "ผู้แทนศูนย์ สอวน. โอลิมปิกคอมพิวเตอร์ 2 ปีซ้อน",
+      {
+        highlight: "CEDT จุฬาฯ",
+        text: "วิศวกรรมคอมพิวเตอร์และเทคโนโลยีดิจิทัล",
+      },
+      {
+        highlight: "TOI 2 ปีซ้อน",
+        text: "ผู้แทนศูนย์ สอวน. คอมพิวเตอร์โอลิมปิกระดับชาติ (TOI 19, TOI 20)",
+      },
+      {
+        highlight: "เหรียญทองแดง",
+        text: "Online International Math Challenge 2023",
+      },
+      {
+        highlight: "Thailand Cyber Top Talent 2024",
+        text: "ตัวแทนภาคตะวันออกเฉียงเหนือ",
+      },
+      {
+        highlight: "ชนะเลิศระดับภูมิภาค",
+        text: "การแข่งขันเขียนโปรแกรมด้วยภาษา C คอมพิวเตอร์ 2 ปีซ้อน",
+      },
+      {
+        highlight: "ที่ปรึกษา 5+ โครงการ",
+        text: "โครงงานคอมพิวเตอร์และนวัตกรรม",
+      },
     ],
   },
   {
@@ -66,8 +107,30 @@ export const tutors = [
     image: "/mick-profile.png",
     role: "นักพัฒนาซอฟต์แวร์",
     credentials: [
-      "วิศวกรรมคอมพิวเตอร์ (CEDT) จุฬาลงกรณ์มหาวิทยาลัย",
-      "ผู้แทนศูนย์ สอวน. โอลิมปิกคอมพิวเตอร์ 2 ปีซ้อน",
+      {
+        highlight: "CEDT จุฬาฯ",
+        text: "วิศวกรรมคอมพิวเตอร์และเทคโนโลยีดิจิทัล",
+      },
+      {
+        highlight: "TOI 2 ปีซ้อน",
+        text: "ผู้แทนศูนย์ สอวน. คอมพิวเตอร์โอลิมปิกระดับชาติ (TOI 19, TOI 20)",
+      },
+      {
+        highlight: "เหรียญทองแดง",
+        text: "NCSA CTF Boot Camp 2024",
+      },
+      {
+        highlight: "รองชนะเลิศ",
+        text: "AI Thailand Hackathon 2024 EP.2 AI for Thai 'APIs on Shelf'",
+      },
+      {
+        highlight: "BangMod Hackathon",
+        text: "ผ่านเข้ารอบการแข่งขัน",
+      },
+      {
+        highlight: "ที่ปรึกษา 5+ โครงการ",
+        text: "โครงงานคอมพิวเตอร์และนวัตกรรม",
+      },
     ],
   },
 ];
@@ -77,8 +140,7 @@ export const courses: CourseItem[] = [
     title: "ZERO TO CODE",
     label: "คอร์สออนไลน์",
     subtitle: "เขียนโปรแกรม C++ พื้นฐาน จาก 0",
-    description:
-      "ปูพื้นฐาน C++ แบบเป็นขั้นตอน สำหรับคนเริ่มจากศูนย์",
+    description: "",
     audience: "มือใหม่ / ไม่มีพื้นฐาน / เตรียมสอบ",
     format: "ออนไลน์ 8 ชั่วโมง + กลุ่มถามตอบ",
     price: "688.-",
@@ -88,20 +150,31 @@ export const courses: CourseItem[] = [
     image: "/courses/zero-to-code.png",
     cta: "สมัครเรียน 688.-",
     status: "open",
-    points: ["เริ่มจาก 0 เขียนโค้ดได้จริง", "เรียนซ้ำได้ในกลุ่ม Facebook", "ใช้แท็บเล็ตหรือ iPad เรียนได้"],
+    points: ["เรียนซ้ำได้ในกลุ่ม Facebook", "ใช้แท็บเล็ตหรือ iPad เรียนได้"],
   },
 ];
 
 export const portfolioPreview = [
-  { title: "Project Demos", text: "เดโมและตัวอย่างโปรเจกต์ที่ใช้เล่าแนวคิด วิธีทำ และผลลัพธ์จากการลงมือจริง", badge: "เร็วๆ นี้" },
+  {
+    title: "ให้คำปรึกษาโปรเจกต์กล่องฆ่าเชื้อ UV",
+    text: "ช่วยวางแนวทางการออกแบบวงจร เลือกอุปกรณ์ และเขียนโปรแกรมควบคุมด้วยไมโครคอนโทรลเลอร์",
+    badge: "Consulting",
+    image: "/project/uv.jpg",
+  },
   {
     title: "ZERO TO CODE",
-    text: "ZERO TO CODE คอร์สปูพื้นฐานที่มีผู้เรียนแล้วกว่า 80+ คน",
+    text: "ZERO TO CODE มีผู้เรียนแล้วกว่า 80+ คน",
     badge: "ผู้เรียน 80+",
     href: "/portfolio/zero-to-code",
-    image: "/courses/zero-to-code.png",
+    image: "/courses/zero-to-code-landing.png",
   },
-  { title: "Learning Notes", text: "บันทึกวิธีคิด เครื่องมือ และสิ่งที่เรียนรู้จากการทดลองทำโปรเจกต์", badge: "เร็วๆ นี้" },
+  {
+    title: "QuizFlow",
+    text: "เครื่องมือช่วยครูและติวเตอร์สร้างข้อสอบพร้อมเฉลย แก้ไข และส่งออกเป็น PDF ได้ทันที",
+    badge: "Product",
+    href: "https://quizflow.kittipakorn.com/",
+    image: "/services/quizflow.png",
+  },
 ];
 
 export const pastCourses = [
@@ -109,18 +182,49 @@ export const pastCourses = [
     slug: "zero-to-code",
     name: "ZERO TO CODE",
     students: "80+",
-    description: "คอร์สปูพื้นฐานเขียนโปรแกรมสำหรับผู้เริ่มต้น ตั้งแต่ศูนย์จนเขียนโค้ดเป็น",
+    description: "",
   },
 ];
 
 export const portfolioCategories = [
   {
-    title: "Project Demos",
-    description: "เดโมและตัวอย่างโปรเจกต์จากการทดลองทำจริงของ BeyondLab จะถูกรวบรวมไว้ที่นี่",
+    title: "Consulting",
+    description: "งานให้คำปรึกษาโปรเจกต์ ตั้งแต่ช่วยวางแนวทาง เลือกอุปกรณ์ ไปจนถึงแนวคิดการเขียนโปรแกรมควบคุม",
+    items: [
+      {
+        title: "ให้คำปรึกษาโปรเจกต์กล่องฆ่าเชื้อ UV",
+        description:
+          "ช่วยวางแนวทางการออกแบบวงจร เลือกอุปกรณ์ และเขียนโปรแกรมควบคุมด้วยไมโครคอนโทรลเลอร์ สำหรับโปรเจกต์กล่องฆ่าเชื้ออัตโนมัติด้วยแสง UV",
+        badge: "Microcontroller / Ultrasonic Sensor / Relay",
+        image: "/project/uv.jpg",
+      },
+    ],
   },
   {
-    title: "Learning Notes",
-    description: "บันทึกแนวคิด เครื่องมือ และกระบวนการทำงานจริงจากคอร์สและโปรเจกต์ของ BeyondLab",
+    title: "Courses",
+    description: "คอร์สเรียนที่ BeyondLab ออกแบบเพื่อปูพื้นฐานและพาผู้เรียนต่อยอดไปสู่การสร้างผลงานจริง",
+    items: [
+      {
+        title: "ZERO TO CODE",
+        description: "",
+        badge: "ผู้เรียน 80+",
+        href: "/portfolio/zero-to-code",
+        image: "/courses/zero-to-code-landing.png",
+      },
+    ],
+  },
+  {
+    title: "Products",
+    description: "เครื่องมือและโปรดักต์ที่ BeyondLab สร้างเพื่อช่วยให้การเรียน การสอน และการทำงานสะดวกขึ้น",
+    items: [
+      {
+        title: "QuizFlow",
+        description: "เครื่องมือช่วยครูและติวเตอร์สร้างข้อสอบพร้อมเฉลย แก้ไข และส่งออกเป็น PDF ได้ทันที",
+        badge: "Question Generator / PDF Export",
+        href: "https://quizflow.kittipakorn.com/",
+        image: "/services/quizflow.png",
+      },
+    ],
   },
 ];
 
@@ -153,6 +257,7 @@ export const services: ServiceItem[] = [
     status: "open",
     href: "http://lin.ee/VbDTcyo",
     cta: "ติดต่อผ่าน LINE",
+    image: "/services/project-mentor.png",
   },
   {
     title: "QuizFlow",

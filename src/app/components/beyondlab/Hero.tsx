@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowIcon } from "./icons";
+import { mentorStats } from "./data";
 
 export function Hero() {
   return (
@@ -42,6 +43,17 @@ export function Hero() {
             >
               ดูคอร์สเรียน
             </Link>
+          </div>
+          <div className="mt-5 flex flex-wrap">
+            {mentorStats.map((stat) => (
+              <div
+                key={stat.label}
+                className="relative w-1/2 px-4 py-2 text-center sm:w-1/4 sm:after:absolute sm:after:right-0 sm:after:top-1/2 sm:after:h-14 sm:after:w-px sm:after:-translate-y-1/2 sm:after:bg-[#f0dfc8] sm:last:after:hidden"
+              >
+                <p className="text-2xl font-semibold leading-none text-[#303030]">{stat.value}</p>
+                <p className="mx-auto mt-2 max-w-[8rem] text-[11px] leading-4 text-[#666]">{stat.label}</p>
+              </div>
+            ))}
           </div>
         </div>
         <div className="relative w-full max-w-md mx-auto">

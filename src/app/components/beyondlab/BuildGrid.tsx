@@ -8,16 +8,11 @@ export function BuildGrid() {
   return (
     <section className="px-5 py-10 sm:px-8" id="courses">
       <div className="mx-auto max-w-7xl">
-        <div className="mb-6 grid gap-3 lg:grid-cols-[0.78fr_1fr] lg:items-end">
-          <div>
-            <p className="text-sm font-semibold text-[#ea721f]">Courses</p>
-            <h2 className="mt-2 pt-1 text-2xl font-semibold leading-tight text-[#303030] sm:text-3xl">
-              คอร์สที่เปิดขายตอนนี้
-            </h2>
-          </div>
-          <p className="max-w-2xl text-sm leading-6 text-[#555]">
-            คอร์ส C++ พื้นฐานสำหรับมือใหม่ เริ่มจาก 0 จนเขียนโค้ดได้จริง
-          </p>
+        <div className="mb-6">
+          <p className="text-sm font-semibold text-[#ea721f]">Courses</p>
+          <h2 className="mt-2 pt-1 text-2xl font-semibold leading-tight text-[#303030] sm:text-3xl">
+            คอร์สที่เปิดขายตอนนี้
+          </h2>
         </div>
 
         <article className="overflow-hidden rounded-[24px] bg-white shadow-[0_18px_52px_rgba(48,48,48,0.1)]">
@@ -47,7 +42,9 @@ export function BuildGrid() {
               <div className="mt-4">
                 <h3 className="text-3xl font-semibold leading-none text-[#303030] sm:text-4xl">{course.title}</h3>
                 <p className="mt-2 text-lg font-semibold leading-tight text-[#5c5148] sm:text-xl">{course.subtitle}</p>
-                <p className="mt-2 max-w-2xl text-sm leading-6 text-[#555]">{course.description}</p>
+                {course.description && (
+                  <p className="mt-2 max-w-2xl text-sm leading-6 text-[#555]">{course.description}</p>
+                )}
               </div>
 
               <div className="mt-4 flex flex-wrap gap-2">

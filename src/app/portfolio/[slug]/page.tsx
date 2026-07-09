@@ -13,7 +13,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!course) return {};
   return {
     title: `${course.name} | ผลงาน BeyondLab`,
-    description: course.description,
+    description: course.description || `${course.name} | BeyondLab`,
   };
 }
 
@@ -41,7 +41,9 @@ export default async function PortfolioDetailPage({ params }: { params: Promise<
             ผู้เรียน {course.students}
           </span>
           <h1 className="mt-3 text-3xl font-semibold text-[#303030] sm:text-5xl">{course.name}</h1>
-          <p className="mt-4 max-w-2xl text-base leading-7 text-gray-600">{course.description}</p>
+          {course.description && (
+            <p className="mt-4 max-w-2xl text-base leading-7 text-gray-600">{course.description}</p>
+          )}
         </div>
 
         <div className="mt-8 rounded-[22px] border border-dashed border-[#f0dfc8] bg-white p-5">

@@ -49,7 +49,11 @@ export function AboutTutors() {
                 <div className="flex-1 min-w-0">
                   <div className="flex flex-wrap items-center justify-between gap-3">
                     <h3 className="text-xl font-semibold text-[#303030]">{tutor.name}</h3>
-                    <span className="rounded-full bg-[#fff4df] px-3 py-1 text-sm font-semibold text-[#ea721f]">{tutor.handle}</span>
+                    <div className="flex flex-wrap gap-2">
+                      <span className="rounded-full bg-[#fff4df] px-3 py-1 text-sm font-semibold text-[#ea721f]">
+                        {tutor.handle}
+                      </span>
+                    </div>
                   </div>
                   <p className="mt-1 text-sm font-semibold text-[#555]">{tutor.role}</p>
                 </div>
@@ -58,9 +62,12 @@ export function AboutTutors() {
               {/* ส่วนรายการประวัติขยับมาชิดซ้ายด้านล่างรูปภาพ */}
               <ul className="mt-4 grid gap-2 border-t border-gray-200 pt-4">
                 {tutor.credentials.map((credential) => (
-                  <li key={credential} className="flex items-start gap-3 text-sm leading-6 text-[#555]">
+                  <li key={credential.highlight} className="flex items-start gap-3 text-sm leading-6 text-[#555]">
                     <span className="mt-2 h-2 w-2 flex-none rounded-full bg-[#ea721f]" />
-                    {credential}
+                    <span>
+                      <strong className="font-semibold text-[#ea721f]">{credential.highlight}</strong>
+                      <span className="text-[#777]"> — {credential.text}</span>
+                    </span>
                   </li>
                 ))}
               </ul>
