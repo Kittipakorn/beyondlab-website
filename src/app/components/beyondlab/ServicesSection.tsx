@@ -104,6 +104,16 @@ export function ServicesSection() {
             </article>
           ))}
         </div>
+
+        <div className="mt-10 text-center">
+          <Link
+            href="/services"
+            className="inline-flex h-10 items-center justify-center gap-2 rounded-xl border border-[#f0dfc8] bg-white px-4 text-sm font-semibold text-[#303030] shadow-[0_10px_24px_rgba(48,48,48,0.07)] transition hover:-translate-y-0.5"
+          >
+            ดูบริการทั้งหมด
+            <ArrowIcon />
+          </Link>
+        </div>
       </div>
     </section>
   );

@@ -45,13 +45,15 @@ export function ReviewsMarquee() {
           <div className="mb-6">
             <div className="flex items-center gap-2">
               <p className="text-sm font-semibold text-[#ea721f]">Testimonials</p>
-              <span className="rounded-full bg-neutral-100 px-2.5 py-0.5 text-[9px] font-bold text-neutral-400 uppercase tracking-wider">Demo</span>
+              <span className="rounded-full bg-amber-100 px-2.5 py-0.5 text-[10px] font-bold text-amber-700 uppercase tracking-wider">
+                ตัวอย่าง Demo
+              </span>
             </div>
             <h2 className="mt-2 pt-1 text-2xl font-semibold leading-tight text-[#303030] sm:text-3xl">
               เสียงตอบรับจากผู้เรียนและผู้ใช้บริการ
             </h2>
-            <p className="mt-1.5 text-xs text-neutral-400 font-medium">
-              *ข้อความรีวิวและข้อมูลด้านล่างนี้เป็นข้อมูลจำลองสำหรับทดสอบการแสดงผลระบบ (Demo Purposes Only)
+            <p className="mt-2 inline-flex items-center gap-1.5 rounded-lg bg-amber-50 px-3 py-1.5 text-xs font-semibold text-amber-700">
+              ⚠️ รีวิวด้านล่างนี้เป็นข้อมูลตัวอย่างสำหรับทดสอบการแสดงผล ยังไม่ใช่รีวิวจริงจากผู้เรียน
             </p>
           </div>
         </div>
@@ -82,7 +84,7 @@ export function ReviewsMarquee() {
               
               {/* ความคิดเห็นรีวิว */}
               <p className="text-[13px] leading-6 text-[#5c5148] min-h-[72px]">
-                "{review.content}"
+                &ldquo;{review.content}&rdquo;
               </p>
 
               {/* ข้อมูลผู้เขียน */}
