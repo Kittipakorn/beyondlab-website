@@ -36,6 +36,20 @@ type CourseItem = {
   points: string[];
 };
 
+export type PortfolioCategoryItem = {
+  title: string;
+  description: string;
+  badge: string;
+  href?: string;
+  image?: string;
+};
+
+export type PortfolioCategory = {
+  title: string;
+  description: string;
+  items: PortfolioCategoryItem[];
+};
+
 export const navItems = [
   { label: "บริการ", href: "/#services" },
   { label: "คอร์สเรียน", href: "/#courses" },
@@ -186,7 +200,42 @@ export const pastCourses = [
   },
 ];
 
-export const portfolioCategories = [
+export const portfolioCategories: PortfolioCategory[] = [
+  {
+    title: "ผลงานที่เคยทำ",
+    description: "รวมผลงานและโปรเจกต์ต่างๆ ที่ทีม BeyondLab เคยลงมือทำจริง",
+    items: [
+      {
+        title: "A.group Air & Network",
+        description:
+          "พัฒนาเว็บไซต์ให้ธุรกิจติดตั้งแอร์ ล้างแอร์ และงานไฟฟ้าครบวงจร ให้บริการในนครราชสีมาและจังหวัดใกล้เคียง พร้อมช่องทางโทรจองคิวและขอคำปรึกษาฟรีผ่าน Messenger ได้ทันที",
+        badge: "Next.js",
+        href: "https://agroup-air.vercel.app/",
+        image: "/project/agroup-air.webp",
+      },
+      {
+        title: "Nightmare",
+        description:
+          "เกมสยองขวัญ (Horror) ที่พัฒนาด้วย Unreal Engine ผู้เล่นต้องสำรวจด่านเพื่อเก็บไอเทมภารกิจ ปลดล็อกประตู และผ่านด่านไปเรื่อยๆ ระหว่างทางมีทั้งไอเทมเสริมพลังและไอเทมฟื้นฟูเลือดให้เก็บสะสม พร้อมผีที่ไล่ล่าผู้เล่นด้วยระบบ AI ตรวจจับระยะสายตา ผู้เล่นสามารถป้องกันตัวด้วยระบบยิงผี ใช้ไฟฉายส่องทาง และกด F เพื่อเก็บของ ครบทั้งระบบอินเตอร์เฟสแสดงเลือดและออกแบบแมพให้เข้ากับธีมเกมสยองขวัญ",
+        badge: "Unreal Engine / C++",
+        image: "/project/nightmare.webp",
+      },
+      {
+        title: "Discord Bot",
+        description:
+          "ชุดบอท Discord ที่พัฒนาด้วย Python เพื่อช่วยจัดการเซิร์ฟเวอร์แบบครบวงจร ทั้งระบบพนักงาน ระบบคะแนน และฟังก์ชันตามวัตถุประสงค์ของแต่ละเซิร์ฟเวอร์ พร้อมบอทบันทึกกิจกรรม (Log) เช่น การเข้าออก การแก้ไขข้อความ และการเปลี่ยนชื่อ นอกจากนี้ยังมีบอทผ่อนคลาย อย่างบอทเปิดเพลงและบอทแชทด้วยระบบ AI โดยทุกบอททำงานออนไลน์ตลอด 24 ชั่วโมง",
+        badge: "Python",
+        image: "/project/discord-bot.webp",
+      },
+      {
+        title: "โปรแกรมจัดตารางเรียน",
+        description:
+          "โปรแกรมจัดตารางเรียนที่ช่วยจัดสรรตารางสอนแต่ละห้อง/ระดับชั้นให้มีประสิทธิภาพ ลดการเดินทางย้ายอาคารหรือย้ายห้องของทั้งครูผู้สอนและนักเรียนให้น้อยที่สุด แสดงผลเป็นตารางรายสัปดาห์แยกตามห้องเรียน พร้อมฟีเจอร์ส่งออกตารางเป็นรูปภาพให้ใช้งานและแชร์ต่อได้ทันที",
+        badge: "Python",
+        image: "/project/class-schedule.webp",
+      },
+    ],
+  },
   {
     title: "Consulting",
     description: "งานให้คำปรึกษาโปรเจกต์ ตั้งแต่ช่วยวางแนวทาง เลือกอุปกรณ์ ไปจนถึงแนวคิดการเขียนโปรแกรมควบคุม",
