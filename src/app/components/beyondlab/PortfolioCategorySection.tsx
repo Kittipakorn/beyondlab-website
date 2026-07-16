@@ -3,24 +3,54 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowIcon } from "./icons";
+import { ArrowIcon, CloseIcon, ExpandIcon } from "./icons";
 import type { PortfolioCategory, PortfolioCategoryItem } from "./data";
 
 const VISIBLE_LIMIT = 3;
 
-function PortfolioCard({ item }: { item: PortfolioCategoryItem }) {
+function PortfolioCard({
+  item,
+  onImageClick,
+}: {
+  item: PortfolioCategoryItem;
+  onImageClick: (item: PortfolioCategoryItem) => void;
+}) {
   const content = (
     <>
       {item.image && (
         <div className="relative aspect-[16/9] overflow-hidden">
-          <Image
-            src={item.image}
-            alt={item.title}
-            fill
-            sizes="(min-width: 1280px) 30vw, (min-width: 768px) 45vw, 95vw"
-            className="object-cover object-top transition duration-500 group-hover:scale-[1.03]"
-          />
-          <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-white to-transparent" />
+          {item.href ? (
+            <Image
+              src={item.image}
+              alt={item.title}
+              fill
+              sizes="(min-width: 1280px) 30vw, (min-width: 768px) 45vw, 95vw"
+              className="object-cover object-top transition duration-500 group-hover:scale-[1.03]"
+            />
+          ) : (
+            <button
+              type="button"
+              aria-label={`ขยายรูป ${item.title}`}
+              onClick={(event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                onImageClick(item);
+              }}
+              className="group/image relative block h-full w-full cursor-zoom-in"
+            >
+              <Image
+                src={item.image}
+                alt={item.title}
+                fill
+                sizes="(min-width: 1280px) 30vw, (min-width: 768px) 45vw, 95vw"
+                className="object-cover object-top transition duration-500 group-hover/image:scale-[1.03]"
+              />
+              <span className="absolute bottom-3 right-3 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-[#303030] opacity-0 shadow-[0_8px_20px_rgba(48,48,48,0.18)] transition group-hover/image:opacity-100">
+                <ExpandIcon />
+              </span>
+            </button>
+          )}
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-white to-transparent" />
         </div>
       )}
       <div className={`flex flex-col p-5 ${item.image ? "min-h-[205px]" : "min-h-[300px]"}`}>
@@ -67,9 +97,19 @@ function PortfolioCard({ item }: { item: PortfolioCategoryItem }) {
 
 export function PortfolioCategorySection({ category }: { category: PortfolioCategory }) {
   const [expanded, setExpanded] = useState(false);
+  const [lightboxItem, setLightboxItem] = useState<PortfolioCategoryItem | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const hasOverflow = category.items.length > VISIBLE_LIMIT;
   const showGrid = !hasOverflow || expanded;
+
+  useEffect(() => {
+    if (!lightboxItem) return;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setLightboxItem(null);
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [lightboxItem]);
 
   const scrollByPage = (direction: 1 | -1) => {
     const el = scrollRef.current;
@@ -99,7 +139,7 @@ export function PortfolioCategorySection({ category }: { category: PortfolioCate
       {showGrid ? (
         <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
           {category.items.map((item) => (
-            <PortfolioCard key={item.title} item={item} />
+            <PortfolioCard key={item.title} item={item} onImageClick={setLightboxItem} />
           ))}
         </div>
       ) : (
@@ -110,7 +150,7 @@ export function PortfolioCategorySection({ category }: { category: PortfolioCate
           >
             {category.items.map((item) => (
               <div key={item.title} className="w-[85%] flex-none sm:w-[45%] lg:w-[31%]">
-                <PortfolioCard item={item} />
+                <PortfolioCard item={item} onImageClick={setLightboxItem} />
               </div>
             ))}
           </div>
@@ -144,6 +184,34 @@ export function PortfolioCategorySection({ category }: { category: PortfolioCate
             {expanded ? "ย่อกลับ" : "ดูทั้งหมด"}
             <ArrowIcon className={`h-4 w-4 transition-transform ${expanded ? "-rotate-90" : "rotate-90"}`} />
           </button>
+        </div>
+      )}
+
+      {lightboxItem?.image && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 p-4"
+          onClick={() => setLightboxItem(null)}
+        >
+          <button
+            type="button"
+            aria-label="ปิด"
+            onClick={() => setLightboxItem(null)}
+            className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20"
+          >
+            <CloseIcon className="h-5 w-5" />
+          </button>
+          <div
+            className="relative h-[80vh] w-full max-w-4xl"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <Image
+              src={lightboxItem.image}
+              alt={lightboxItem.title}
+              fill
+              sizes="90vw"
+              className="object-contain"
+            />
+          </div>
         </div>
       )}
     </section>
