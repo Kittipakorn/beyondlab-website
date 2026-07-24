@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Sarabun:wght@400;500;600;700;800&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -13,16 +11,23 @@ html {
 }
 
 body {
-    font-family: 'Inter', sans-serif;
-    color: #111111;
-    background: #ffffff;
+    font-family: var(--font-ibm-plex-sans-thai), 'IBM Plex Sans Thai', sans-serif;
+    color: #303030;
+    background: #f3f4f6;
     text-rendering: geometricPrecision;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
 
-html:lang(th) body {
-    font-family: 'Sarabun', sans-serif;
+body.grader-page-active,
+body.scratch-page-active,
+html:has(.scratch-workspace),
+body:has(.scratch-workspace),
+html:has(.grader-workspace),
+body:has(.grader-workspace) {
+  overflow: hidden !important;
+  height: 100vh !important;
+  max-height: 100vh !important;
 }
 
 .my-speech {
@@ -39,7 +44,7 @@ html:lang(th) body {
 
 
 .aurora-text {
-  font-weight: 800;
+  font-weight: 700;
   line-height: 1.1;
   text-transform: lowercase;
 
@@ -77,5 +82,575 @@ html:lang(th) body {
 }
 
 ::selection {
-  background: rgba(79, 140, 255, 0.18);
+  background: rgba(234, 114, 31, 0.24);
+}
+
+:focus-visible {
+  outline: 3px solid rgba(234, 114, 31, 0.35);
+  outline-offset: 3px;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, #f5f5f5 25%, #e5e5e5 50%, #f5f5f5 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite linear;
+}
+
+/* Grader night theme */
+.grader-workspace {
+  transition: background-color 200ms ease, color 200ms ease;
+}
+
+.grader-workspace,
+.grader-workspace * {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.grader-workspace::-webkit-scrollbar,
+.grader-workspace *::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+.grader-logo-dark {
+  filter: brightness(0) invert(1);
+}
+
+.grader-code-font {
+  font-size: var(--grader-code-font-size, 14px);
+}
+
+.grader-dark .grader-font-controls {
+  background: #202936 !important;
+  border-color: #364152 !important;
+}
+
+.grader-dark .grader-font-controls button {
+  color: #dce4ee !important;
+}
+
+.grader-dark .grader-font-controls span {
+  color: #9ca8b8 !important;
+}
+
+.grader-font-controls {
+  background: transparent !important;
+  border-color: transparent !important;
+}
+
+.grader-dark .grader-font-controls {
+  background: transparent !important;
+  border-color: transparent !important;
+}
+
+.grader-font-controls button,
+.grader-header .grader-font-controls button,
+.grader-dark .grader-header .grader-font-controls button {
+  background: transparent !important;
+}
+
+.grader-font-controls button:hover,
+.grader-header .grader-font-controls button:hover,
+.grader-dark .grader-header .grader-font-controls button:hover {
+  background: transparent !important;
+  color: #ea721f !important;
+}
+
+.grader-dark {
+  background: #0c111b !important;
+  color-scheme: dark;
+}
+
+.grader-dark .grader-sidebar,
+.grader-dark .grader-header,
+.grader-dark .grader-problem {
+  background: #151b25 !important;
+  border-color: #2b3442 !important;
+}
+
+.grader-dark .grader-sidebar > div,
+.grader-dark .grader-problem > div:first-child {
+  border-color: #2b3442 !important;
+}
+
+.grader-dark .grader-sidebar a,
+.grader-dark .grader-header h1,
+.grader-dark .grader-problem h2,
+.grader-dark .grader-problem pre {
+  color: #f1f5f9 !important;
+}
+
+.grader-dark .grader-course-label {
+  color: #9ca8b8 !important;
+}
+
+.grader-dark .grader-course-title {
+  color: #f1f5f9 !important;
+}
+
+.grader-dark .grader-progress {
+  background: #343e4d !important;
+}
+
+.grader-dark .grader-problem-number[data-solved="false"] {
+  background: #303a49 !important;
+  color: #dce4ee !important;
+  border: 1px solid #465367;
+}
+
+.grader-dark .grader-problem-number[data-active="true"][data-solved="false"] {
+  background: #3a2a20 !important;
+  color: #f4a46d !important;
+  border-color: #8a4b25;
+}
+
+.grader-dark .grader-problem-number[data-solved="true"] {
+  background: #19382a !important;
+  color: #86d7a5 !important;
+}
+
+.grader-sidebar-collapsed .grader-problem-item[aria-current="page"] {
+  background: transparent !important;
+}
+
+.grader-dark .grader-sidebar.grader-sidebar-collapsed button.grader-problem-item[aria-current="page"] {
+  background: transparent !important;
+}
+
+.grader-sidebar-collapsed .grader-problem-item:hover {
+  background: transparent !important;
+}
+
+.grader-dark .grader-sidebar.grader-sidebar-collapsed button.grader-problem-item:hover {
+  background: transparent !important;
+}
+
+.grader-sidebar-collapsed .grader-problem-item:hover .grader-problem-number {
+  border-color: #ea721f !important;
+}
+
+.grader-sidebar-collapsed .grader-problem-number[data-active="true"] {
+  box-shadow: 0 0 0 2px #ea721f;
+}
+
+.grader-dark .grader-sidebar-collapsed .grader-problem-number[data-active="true"] {
+  box-shadow: 0 0 0 2px #f28a42;
+}
+
+.grader-dark .grader-sidebar-footer {
+  background: #151b25;
+  border-color: #2b3442 !important;
+}
+
+.grader-dark .grader-ide-link {
+  background: #202936 !important;
+  border-color: #3b4758 !important;
+  color: #f1f5f9 !important;
+}
+
+.grader-dark .grader-ide-link:hover {
+  background: #293445 !important;
+  border-color: #ea721f !important;
+  color: #f4a46d !important;
+}
+
+.grader-dark .grader-sidebar button:not([aria-current="page"]):hover,
+.grader-dark .grader-sidebar button[aria-current="page"] {
+  background: #232b38 !important;
+}
+
+.grader-dark .grader-sidebar button span,
+.grader-dark .grader-header div,
+.grader-dark .grader-problem article,
+.grader-dark .grader-problem p {
+  color: #c2cad5;
+}
+
+.grader-sidebar button span.grader-pro-label,
+.grader-dark .grader-sidebar button span.grader-pro-label,
+.grader-sidebar button.grader-pro-problem span.grader-pro-label,
+.grader-dark .grader-sidebar button.grader-pro-problem span.grader-pro-label {
+  background: transparent !important;
+  color: #eab308 !important;
+  font-weight: 800 !important;
+}
+
+.grader-sidebar button.grader-pro-problem {
+  border: 1px solid #f3d58a;
+  background: linear-gradient(135deg, #fffbeb 0%, #fff7d6 100%) !important;
+  box-shadow: 0 2px 8px rgb(146 95 14 / 8%);
+}
+
+.grader-sidebar button.grader-pro-problem:hover {
+  border-color: #e9b949;
+  background: linear-gradient(135deg, #fff8dc 0%, #ffedb5 100%) !important;
+  box-shadow: 0 5px 14px rgb(146 95 14 / 14%);
+}
+
+.grader-sidebar button.grader-pro-problem[aria-current="page"] {
+  border-color: #d99a19;
+  background: linear-gradient(135deg, #fff4c2 0%, #ffe69a 100%) !important;
+  box-shadow: inset 3px 0 #d99000, 0 4px 12px rgb(146 95 14 / 14%);
+}
+
+.grader-sidebar button.grader-pro-problem .grader-problem-title {
+  color: #4a3515 !important;
+}
+
+.grader-sidebar button.grader-pro-problem .grader-problem-meta,
+.grader-sidebar button.grader-pro-problem .grader-problem-meta > span:not(.grader-pro-label) {
+  color: #79623c !important;
+}
+
+.grader-dark .grader-sidebar button.grader-pro-problem,
+.grader-dark .grader-sidebar button.grader-pro-problem[aria-current="page"] {
+  border-color: #5c481d;
+  background: linear-gradient(135deg, #292315 0%, #332916 100%) !important;
+  box-shadow: inset 3px 0 #d99a19, 0 3px 12px rgb(0 0 0 / 18%);
+}
+
+.grader-dark .grader-sidebar button.grader-pro-problem:hover {
+  border-color: #8a6923;
+  background: linear-gradient(135deg, #332a17 0%, #40331a 100%) !important;
+}
+
+.grader-dark .grader-sidebar button.grader-pro-problem .grader-problem-title {
+  color: #fff3c4 !important;
+}
+
+.grader-dark .grader-sidebar button.grader-pro-problem .grader-problem-meta,
+.grader-dark .grader-sidebar button.grader-pro-problem .grader-problem-meta > span:not(.grader-pro-label) {
+  color: #cbbb8b !important;
+}
+
+
+
+.grader-dark .grader-sidebar input,
+.grader-dark .grader-theme-toggle,
+.grader-dark .grader-header button:not(:last-child),
+.grader-dark .grader-problem [class*="bg-[#f8f5f1]"],
+.grader-dark .grader-problem [class*="bg-[#f4f1ed]"] {
+  background: #1c2430 !important;
+  border-color: #364152 !important;
+  color: #e6ebf2 !important;
+}
+
+.grader-dark .grader-problem [class*="border-[#e7ded4]"],
+.grader-dark .grader-problem [class*="border-[#e8dfd5]"] {
+  border-color: #364152 !important;
+}
+
+.grader-dark .grader-problem button[class*="bg-[#fff8ef]"] {
+  background: #2b211b !important;
+  border-color: #624024 !important;
+  color: #f2a66e !important;
+}
+
+/* Grader editor follows the selected theme */
+.grader-code-panel {
+  background: #fffdf9;
+  border-color: #ddd4ca;
+}
+
+.grader-code-toolbar,
+.grader-console {
+  background: #f6f2ed;
+  border-color: #ddd4ca;
+}
+
+.grader-code-title {
+  color: #292725;
+}
+
+.grader-code-control {
+  color: #655d56;
+}
+
+.grader-code-control:hover {
+  background: #eae4dc;
+  color: #c65412;
+}
+
+.grader-code-select,
+.grader-console-input {
+  background: #fffdf9;
+  border-color: #d7cec4;
+  color: #292725;
+}
+
+.grader-code-surface,
+.grader-line-numbers {
+  background: #fffdf9;
+}
+
+.grader-line-numbers,
+.grader-console-tabs {
+  border-color: #e2d9cf;
+}
+
+.grader-line-numbers {
+  color: #9b9086;
+}
+
+.grader-console {
+  color: #514a44;
+}
+
+.grader-console-tabs button {
+  color: #746a61;
+}
+
+.grader-console-tabs button[class*="border-[#f28a42]"],
+.grader-console-tabs button[class*="border-[#ea721f]"] {
+  color: #ea721f;
+}
+
+.syntax-plain { color: #1e293b; }
+.syntax-comment { color: #475569; }
+.syntax-string { color: #d97706; }
+.syntax-preprocessor { color: #7c3aed; }
+.syntax-type { color: #0284c7; }
+.syntax-number { color: #ea580c; }
+.syntax-keyword { color: #db2777; }
+
+.grader-dark .grader-code-panel {
+  background: #111722;
+  border-color: #2d3442;
+}
+
+.grader-dark .grader-code-toolbar,
+.grader-dark .grader-console {
+  background: #171e29;
+  border-color: #29303c;
+}
+
+.grader-dark .grader-code-title {
+  color: #e7ebf0;
+}
+
+.grader-dark .grader-code-control {
+  color: #aeb7c4;
+}
+
+.grader-dark .grader-code-control:hover {
+  background: #252d39;
+  color: #fff;
+}
+
+.grader-dark .grader-code-select,
+.grader-dark .grader-console-input {
+  background: #202936;
+  border-color: #354050;
+  color: #eef1f5;
+}
+
+.grader-dark .grader-code-surface,
+.grader-dark .grader-line-numbers {
+  background: #111722;
+}
+
+.grader-dark .grader-line-numbers,
+.grader-dark .grader-console-tabs {
+  border-color: #29303c;
+}
+
+.grader-dark .grader-line-numbers {
+  color: #536071;
+}
+
+.grader-dark .grader-console {
+  color: #dbe2eb;
+}
+
+.grader-dark .grader-console-tabs button {
+  color: #8f9aaa;
+}
+
+.grader-dark .grader-console-tabs button[class*="border-[#f28a42]"],
+.grader-dark .grader-console-tabs button[class*="border-[#ea721f]"] {
+  color: #fff;
+}
+
+.grader-dark .syntax-plain, .scratch-dark .syntax-plain { color: #f1f5f9; }
+.grader-dark .syntax-comment, .scratch-dark .syntax-comment { color: #818cf8; }
+.grader-dark .syntax-string, .scratch-dark .syntax-string { color: #fde047; }
+.grader-dark .syntax-preprocessor, .scratch-dark .syntax-preprocessor { color: #c084fc; }
+.grader-dark .syntax-type, .scratch-dark .syntax-type { color: #38bdf8; }
+.grader-dark .syntax-number, .scratch-dark .syntax-number { color: #fb923c; }
+.grader-dark .syntax-keyword, .scratch-dark .syntax-keyword { color: #f472b6; }
+
+.grader-resize-handle {
+  position: relative;
+  touch-action: none;
+}
+
+.grader-resize-handle::after {
+  content: "";
+  position: absolute;
+  border-radius: 999px;
+  background: transparent;
+  transition: background-color 150ms ease;
+}
+
+.grader-resize-handle-vertical::after {
+  inset-block: 8px;
+  left: 50%;
+  width: 3px;
+  transform: translateX(-50%);
+}
+
+.grader-resize-handle-horizontal::after {
+  top: 50%;
+  inset-inline: 12px;
+  height: 3px;
+  transform: translateY(-50%);
+}
+
+.grader-resize-handle:hover::after,
+.grader-resize-handle:active::after {
+  background: #ea721f;
+}
+
+.grader-main-split > * {
+  min-width: 0;
+}
+
+@media (min-width: 1024px) {
+  .grader-sidebar-resizable {
+    width: var(--grader-sidebar-width) !important;
+  }
+
+  .grader-main-split {
+    grid-template-columns: minmax(260px, var(--grader-problem-width)) 6px minmax(360px, 1fr);
+  }
+
+  .grader-code-panel {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .grader-code-surface {
+    min-height: 160px !important;
+    flex: 1 1 auto;
+  }
+
+  .grader-console {
+    display: flex;
+    flex-direction: column;
+    height: var(--grader-console-height);
+    min-height: 96px;
+    flex: 0 0 auto;
+    overflow: hidden;
+  }
+
+  .scratch-main-split {
+    grid-template-columns: minmax(360px, var(--scratch-editor-width)) 6px minmax(280px, 1fr);
+  }
+
+  .scratch-io-split {
+    grid-template-rows: minmax(140px, var(--scratch-input-height)) 6px minmax(140px, 1fr);
+  }
+}
+
+.scratch-code-font {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: var(--scratch-font-size);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .grader-workspace {
+    transition: none;
+  }
+}
+
+/* Keep both font-size controls visually consistent in every theme. */
+.grader-header .grader-font-controls button,
+.grader-dark .grader-header .grader-font-controls button,
+.grader-font-controls button {
+  background: #f3eee8 !important;
+}
+
+.grader-dark .grader-header .grader-font-controls button,
+.grader-dark .grader-font-controls button {
+  background: #202936 !important;
+}
+
+.grader-header .grader-font-controls button:hover,
+.grader-dark .grader-header .grader-font-controls button:hover,
+.grader-font-controls button:hover {
+  background: #f3eee8 !important;
+  color: #ea721f !important;
+}
+
+.grader-dark .grader-header .grader-font-controls button:hover,
+.grader-dark .grader-font-controls button:hover {
+  background: #202936 !important;
+}
+
+/* Font size control uses the same single-pill treatment as the language select. */
+.grader-font-controls,
+.grader-dark .grader-font-controls {
+  border: 1px solid #ded6cc !important;
+  background: #fff !important;
+  overflow: hidden;
+}
+
+.grader-font-controls button,
+.grader-header .grader-font-controls button,
+.grader-dark .grader-header .grader-font-controls button,
+.grader-dark .grader-font-controls button {
+  background: transparent !important;
+}
+
+.grader-font-controls button:hover,
+.grader-header .grader-font-controls button:hover,
+.grader-dark .grader-header .grader-font-controls button:hover,
+.grader-dark .grader-font-controls button:hover {
+  background: rgba(234, 114, 31, 0.1) !important;
+  color: #ea721f !important;
+}
+
+.grader-dark .grader-font-controls {
+  border-color: #364152 !important;
+  background: #202936 !important;
+}
+
+.scratch-dark .grader-font-controls {
+  border-color: #364152 !important;
+  background: #202936 !important;
+}
+
+.scratch-dark .grader-font-controls button {
+  background: transparent !important;
+  color: #dce4ee !important;
+}
+
+.scratch-dark .grader-font-controls button:hover {
+  background: rgba(234, 114, 31, 0.1) !important;
+  color: #ea721f !important;
+}
+
+/* Hide scrollbars in Code Playground */
+.scratch-workspace ::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+.scratch-workspace,
+.scratch-workspace * {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
 }

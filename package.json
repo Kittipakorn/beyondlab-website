@@ -3,13 +3,17 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -H 0.0.0.0 -p 3000",
+    "dev": "node dev-server.js",
+    "dev:backend": "node --env-file=../backend/.env.local ../backend/server.mjs",
+    "dev:compiler": "node ../project-compiler/server.js",
     "build": "next build",
     "start": "next start",
+    "start:backend": "node --env-file=../backend/.env.local ../backend/server.mjs",
+    "start:compiler": "node ../project-compiler/server.js",
     "lint": "next lint"
   },
   "dependencies": {
-    "next": "16.1.1",
+    "next": "^16.2.10",
     "react": "18.2.0",
     "react-dom": "18.2.0"
   },

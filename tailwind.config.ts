@@ -9,8 +9,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Inter', 'Sarabun', 'sans-serif'],
-        sarabun: ['Sarabun', 'sans-serif'],
+        sans: ['var(--font-ibm-plex-sans-thai)', 'IBM Plex Sans Thai', 'sans-serif'],
+        ibm: ['var(--font-ibm-plex-sans-thai)', 'IBM Plex Sans Thai', 'sans-serif'],
     },
       colors: {
         background: "var(--background)",
