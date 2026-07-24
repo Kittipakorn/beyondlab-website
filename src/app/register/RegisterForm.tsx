@@ -120,7 +120,11 @@ export function RegisterForm({ returnTo, backendUrl }: RegisterFormProps) {
           required
           className="h-12 w-full rounded-2xl border border-[#e4d7c6] bg-white px-4 text-[#303030] outline-none transition placeholder:text-[#a49a91] focus:border-[#ea721f] focus:ring-4 focus:ring-[#ea721f]/10"
           placeholder="8–12 ตัว: a-z, A-Z และ 0-9"
+          aria-describedby="password-requirements"
         />
+        <p id="password-requirements" className="mt-2 text-xs leading-5 text-[#766b61]">
+          รหัสผ่านต้องมี 8–12 ตัว และประกอบด้วยตัวพิมพ์เล็กตัว, พิมพ์ใหญ่, และตัวเลข
+        </p>
       </div>
       <div>
         <label
