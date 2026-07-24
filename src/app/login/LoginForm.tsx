@@ -22,9 +22,8 @@ export function LoginForm({ returnTo, backendUrl }: LoginFormProps) {
     const formData = new FormData(event.currentTarget);
 
     try {
-      const response = await fetch(`${backendUrl}/auth/login`, {
+      const response = await fetch(`/api/auth/login`, {
         method: "POST",
-        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           identifier: formData.get("identifier"),
