@@ -41,3 +41,17 @@ export function CloseIcon({ className = "h-5 w-5" }: IconProps) {
     </svg>
   );
 }
+
+export function ExpandIcon({ className = "h-4 w-4" }: IconProps) {
+  return (
+    <svg aria-hidden="true" className={className} viewBox="0 0 16 16" fill="none">
+      <path
+        d="M6 2H2v4M10 2h4v4M6 14H2v-4M10 14h4v-4"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
