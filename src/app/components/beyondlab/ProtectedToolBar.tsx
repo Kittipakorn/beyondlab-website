@@ -70,7 +70,7 @@ export function UserMenu({
           </p>
         </div>
         <form
-          action={`${backendUrl}/auth/logout?returnTo=${returnTo}`}
+          action={`/api/auth/logout?returnTo=${encodeURIComponent(returnTo)}`}
           method="post"
           className="pt-3"
         >
