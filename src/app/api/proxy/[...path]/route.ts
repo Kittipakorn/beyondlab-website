@@ -29,7 +29,19 @@ async function proxy(request: NextRequest, { params }: { params: Promise<{ path:
     fetchOptions.body = await request.arrayBuffer();
   }
 
-  const backendRes = await fetch(url.toString(), fetchOptions);
+  let backendRes: Response;
+  try {
+    backendRes = await fetch(url.toString(), fetchOptions);
+  } catch (error) {
+    console.error(`Backend unavailable: ${url.origin}`, error);
+    return NextResponse.json(
+      {
+        error: "SERVER_UNAVAILABLE",
+        message: "สัญญาณขาดหาย สงสัยพี่มิคค์เดินเตะปลั๊กไฟ\nพักหน้าจอสักครู่ แล้วค่อยมาลองใหม่อีกครั้งนะ",
+      },
+      { status: 503 },
+    );
+  }
 
   const responseHeaders = new Headers();
   const contentType = backendRes.headers.get("Content-Type");
