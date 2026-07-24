@@ -579,6 +579,17 @@ export function GraderWorkspace({
     const textarea = event.currentTarget;
     const start = textarea.selectionStart;
     const end = textarea.selectionEnd;
+    const closingPair: Record<string, string> = { "(": ")", "[": "]", "{": "}", "\"": "\"", "'": "'", "`": "`" };
+    if (closingPair[event.key]) {
+      event.preventDefault();
+      const pair = `${event.key}${closingPair[event.key]}`;
+      setCode(`${code.slice(0, start)}${pair}${code.slice(end)}`);
+      requestAnimationFrame(() => {
+        textarea.setSelectionRange(start + 1, start + 1);
+        setCursorPosition(start + 1);
+      });
+      return;
+    }
     if (suggestions.length > 0 && event.key === "ArrowDown") {
       event.preventDefault();
       setSelectedSuggestion((value) => (value + 1) % suggestions.length);
