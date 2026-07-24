@@ -239,10 +239,9 @@ export function GraderWorkspace({
     setSlipError("");
     setSlipSuccess("");
     try {
-      const response = await fetch(`${backendUrl}/api/user/upload-slip`, {
+      const response = await fetch(`/api/proxy/user/upload-slip`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        credentials: "include",
         body: JSON.stringify({ slipImage: slipPreview }),
       });
       const data = await response.json();
@@ -270,10 +269,9 @@ export function GraderWorkspace({
     setStudentFormError("");
     setStudentFormSuccess("");
     try {
-      const response = await fetch(`${backendUrl}/api/user/request-student-code`, {
+      const response = await fetch(`/api/proxy/user/request-student-code`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        credentials: "include",
         body: JSON.stringify({ email: studentEmail.trim(), fullName: studentFullName.trim() }),
       });
       const data = await response.json();
@@ -311,15 +309,14 @@ export function GraderWorkspace({
   async function handleUpgradePro() {
     setUpgrading(true);
     try {
-      const response = await fetch(`${backendUrl}/api/user/upgrade-pro`, {
+      const response = await fetch(`/api/proxy/user/upgrade-pro`, {
         method: "POST",
-        credentials: "include",
       });
       const data = await response.json();
       if (response.ok && data?.success) {
         setUserPlan("pro");
         if (data?.planExpiresAt) setPlanExpiresAt(data.planExpiresAt);
-        const problemRes = await fetch(`${backendUrl}/api/problems`, { credentials: "include" });
+        const problemRes = await fetch(`/api/proxy/problems`);
         if (problemRes.ok) {
           const problemResult = await problemRes.json();
           if (problemResult?.problems?.length) setProblems(problemResult.problems);
@@ -377,7 +374,7 @@ export function GraderWorkspace({
   }
 
   useEffect(() => {
-    fetch(`${backendUrl}/api/problems`, { credentials: "include" })
+    fetch(`/api/proxy/problems`)
       .then((response) => response.ok ? response.json() : null)
       .then((result) => {
         if (result?.plan) setUserPlan(result.plan);
@@ -393,7 +390,7 @@ export function GraderWorkspace({
   }, []);
 
   useEffect(() => {
-    fetch(`${backendUrl}/api/submissions?problemId=${selectedProblem}`, { credentials: "include" })
+    fetch(`/api/proxy/submissions?problemId=${selectedProblem}`)
       .then((response) => response.ok ? response.json() : null)
       .then((result) => {
         const history = (result?.submissions ?? []) as Submission[];
@@ -439,22 +436,18 @@ export function GraderWorkspace({
     setConsoleTab("result");
     setSelectedTestCase(null);
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL ?? "http://localhost:4000"}/api/compile`,
-        {
-          method: "POST",
-          credentials: "include",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            language: "cpp",
-            code,
-            input: customInput,
-            submit,
-            problemId: selectedProblem,
-            isCustom: false,
-          }),
-        },
-      );
+      const response = await fetch(`/api/proxy/compile`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          language: "cpp",
+          code,
+          input: customInput,
+          submit,
+          problemId: selectedProblem,
+          isCustom: false,
+        }),
+      });
       const result = (await response.json()) as {
         status?: string;
         error?: string;
@@ -481,13 +474,13 @@ export function GraderWorkspace({
       setTestResults(result.testResults ?? []);
 
       if (submit && response.ok) {
-        const history = await fetch(`${backendUrl}/api/submissions?problemId=${selectedProblem}`, { credentials: "include" });
+        const history = await fetch(`/api/proxy/submissions?problemId=${selectedProblem}`);
         if (history.ok) {
           const submissionHistory = ((await history.json()).submissions ?? []) as Submission[];
           setSubmissions(submissionHistory);
           reconcilePassedSubmission(selectedProblem, submissionHistory);
         }
-        const problemResponse = await fetch(`${backendUrl}/api/problems`, { credentials: "include" });
+        const problemResponse = await fetch(`/api/proxy/problems`);
         if (problemResponse.ok) {
           const problemResult = await problemResponse.json();
           if (problemResult?.plan === "pro") setUserPlan("pro");
@@ -506,10 +499,9 @@ export function GraderWorkspace({
     setCompileError(null);
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL ?? "http://localhost:4000"}/api/compile`,
+        `/api/proxy/compile`,
         {
           method: "POST",
-          credentials: "include",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             language: "cpp",
