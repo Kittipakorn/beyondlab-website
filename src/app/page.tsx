@@ -13,7 +13,7 @@ export default function Home() {
     <>
       <Hero />
       <AboutTutors />
-      <ReviewsMarquee />
+      {/* <ReviewsMarquee /> */}
       <ServicesSection />
       <BuildGrid />
       <ProjectShowcase />

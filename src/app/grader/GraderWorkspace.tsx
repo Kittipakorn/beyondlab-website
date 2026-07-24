@@ -189,6 +189,9 @@ export function GraderWorkspace({
   const [selectedSuggestion, setSelectedSuggestion] = useState(0);
   const [submissions, setSubmissions] = useState<Submission[]>([]);
   const [problems, setProblems] = useState<Problem[]>([]);
+  const [problemsError, setProblemsError] = useState("");
+  const [problemsLoading, setProblemsLoading] = useState(true);
+  const [problemsReloadKey, setProblemsReloadKey] = useState(0);
   const [userPlan, setUserPlan] = useState<"free" | "pro">("free");
   const [planExpiresAt, setPlanExpiresAt] = useState<string | null>(null);
   const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
@@ -239,10 +242,9 @@ export function GraderWorkspace({
     setSlipError("");
     setSlipSuccess("");
     try {
-      const response = await fetch(`${backendUrl}/api/user/upload-slip`, {
+      const response = await fetch(`/api/proxy/user/upload-slip`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        credentials: "include",
         body: JSON.stringify({ slipImage: slipPreview }),
       });
       const data = await response.json();
@@ -270,10 +272,9 @@ export function GraderWorkspace({
     setStudentFormError("");
     setStudentFormSuccess("");
     try {
-      const response = await fetch(`${backendUrl}/api/user/request-student-code`, {
+      const response = await fetch(`/api/proxy/user/request-student-code`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        credentials: "include",
         body: JSON.stringify({ email: studentEmail.trim(), fullName: studentFullName.trim() }),
       });
       const data = await response.json();
@@ -311,15 +312,14 @@ export function GraderWorkspace({
   async function handleUpgradePro() {
     setUpgrading(true);
     try {
-      const response = await fetch(`${backendUrl}/api/user/upgrade-pro`, {
+      const response = await fetch(`/api/proxy/user/upgrade-pro`, {
         method: "POST",
-        credentials: "include",
       });
       const data = await response.json();
       if (response.ok && data?.success) {
         setUserPlan("pro");
         if (data?.planExpiresAt) setPlanExpiresAt(data.planExpiresAt);
-        const problemRes = await fetch(`${backendUrl}/api/problems`, { credentials: "include" });
+        const problemRes = await fetch(`/api/proxy/problems`);
         if (problemRes.ok) {
           const problemResult = await problemRes.json();
           if (problemResult?.problems?.length) setProblems(problemResult.problems);
@@ -377,15 +377,30 @@ export function GraderWorkspace({
   }
 
   useEffect(() => {
-    fetch(`${backendUrl}/api/problems`, { credentials: "include" })
-      .then((response) => response.ok ? response.json() : null)
+    setProblemsLoading(true);
+    setProblemsError("");
+    fetch(`/api/proxy/problems`)
+      .then(async (response) => {
+        const result = await response.json().catch(() => null);
+        if (!response.ok) {
+          throw new Error(result?.message || "สัญญาณขาดหาย สงสัยพี่มิคค์เดินเตะปลั๊กไฟ\nพักหน้าจอสักครู่ แล้วค่อยมาลองใหม่อีกครั้งนะ");
+        }
+        return result;
+      })
       .then((result) => {
         if (result?.plan) setUserPlan(result.plan);
         if (result?.planExpiresAt) setPlanExpiresAt(result.planExpiresAt);
         if (result?.problems?.length) setProblems(result.problems);
       })
-      .catch(() => {});
-  }, [backendUrl]);
+      .catch((error: unknown) => {
+        setProblemsError(
+          error instanceof Error
+            ? error.message
+            : "สัญญาณขาดหาย สงสัยพี่มิคค์เดินเตะปลั๊กไฟ\nพักหน้าจอสักครู่ แล้วค่อยมาลองใหม่อีกครั้งนะ",
+        );
+      })
+      .finally(() => setProblemsLoading(false));
+  }, [backendUrl, problemsReloadKey]);
 
   useEffect(() => {
     const savedTheme = window.localStorage.getItem("beyondlab-grader-theme");
@@ -393,7 +408,7 @@ export function GraderWorkspace({
   }, []);
 
   useEffect(() => {
-    fetch(`${backendUrl}/api/submissions?problemId=${selectedProblem}`, { credentials: "include" })
+    fetch(`/api/proxy/submissions?problemId=${selectedProblem}`)
       .then((response) => response.ok ? response.json() : null)
       .then((result) => {
         const history = (result?.submissions ?? []) as Submission[];
@@ -439,22 +454,18 @@ export function GraderWorkspace({
     setConsoleTab("result");
     setSelectedTestCase(null);
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL ?? "http://localhost:4000"}/api/compile`,
-        {
-          method: "POST",
-          credentials: "include",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            language: "cpp",
-            code,
-            input: customInput,
-            submit,
-            problemId: selectedProblem,
-            isCustom: false,
-          }),
-        },
-      );
+      const response = await fetch(`/api/proxy/compile`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          language: "cpp",
+          code,
+          input: customInput,
+          submit,
+          problemId: selectedProblem,
+          isCustom: false,
+        }),
+      });
       const result = (await response.json()) as {
         status?: string;
         error?: string;
@@ -481,13 +492,13 @@ export function GraderWorkspace({
       setTestResults(result.testResults ?? []);
 
       if (submit && response.ok) {
-        const history = await fetch(`${backendUrl}/api/submissions?problemId=${selectedProblem}`, { credentials: "include" });
+        const history = await fetch(`/api/proxy/submissions?problemId=${selectedProblem}`);
         if (history.ok) {
           const submissionHistory = ((await history.json()).submissions ?? []) as Submission[];
           setSubmissions(submissionHistory);
           reconcilePassedSubmission(selectedProblem, submissionHistory);
         }
-        const problemResponse = await fetch(`${backendUrl}/api/problems`, { credentials: "include" });
+        const problemResponse = await fetch(`/api/proxy/problems`);
         if (problemResponse.ok) {
           const problemResult = await problemResponse.json();
           if (problemResult?.plan === "pro") setUserPlan("pro");
@@ -506,10 +517,9 @@ export function GraderWorkspace({
     setCompileError(null);
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL ?? "http://localhost:4000"}/api/compile`,
+        `/api/proxy/compile`,
         {
           method: "POST",
-          credentials: "include",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             language: "cpp",
@@ -622,8 +632,30 @@ export function GraderWorkspace({
 
   if (!activeProblem) {
     return (
-      <div className="fixed inset-0 grid place-items-center bg-[#f7f3ed] text-sm font-semibold text-[#71675f]">
-        กำลังโหลดโจทย์...
+      <div className="fixed inset-0 grid place-items-center bg-[#f7f3ed] p-5">
+        {problemsError ? (
+          <div
+            role="alert"
+            className="w-full max-w-md rounded-3xl border border-[#eadfce] bg-white p-8 text-center shadow-[0_18px_50px_rgba(62,46,30,.10)]"
+          >
+            <span className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-[#fff0df] text-[#d85f13]">
+              <Icon name="terminal" className="h-7 w-7" />
+            </span>
+            <h1 className="mt-5 text-xl font-bold text-[#292725]">เซิร์ฟเวอร์มีปัญหา</h1>
+            <p className="mt-2 whitespace-pre-line text-sm leading-6 text-[#71675f]">{problemsError}</p>
+            <button
+              type="button"
+              onClick={() => setProblemsReloadKey((current) => current + 1)}
+              className="mt-6 inline-flex min-h-11 cursor-pointer items-center justify-center rounded-xl bg-[#ea721f] px-5 text-sm font-bold text-white shadow-[0_8px_20px_rgba(234,114,31,.25)] transition hover:bg-[#d85f13] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ea721f] focus-visible:ring-offset-2 active:scale-95"
+            >
+              ลองปลุกเซิร์ฟเวอร์อีกที
+            </button>
+          </div>
+        ) : (
+          <p role="status" className="text-sm font-semibold text-[#71675f]">
+            {problemsLoading ? "กำลังโหลดโจทย์..." : "ยังไม่มีโจทย์ในระบบ"}
+          </p>
+        )}
       </div>
     );
   }
