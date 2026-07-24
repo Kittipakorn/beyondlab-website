@@ -18,7 +18,7 @@ const contentSecurityPolicy = `
   connect-src 'self' ${backendOrigin};
   object-src 'none';
   base-uri 'self';
-  form-action 'self';
+  form-action 'self' ${backendOrigin};
   frame-ancestors 'none';
   upgrade-insecure-requests;
 `

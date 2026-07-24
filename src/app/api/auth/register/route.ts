@@ -8,11 +8,19 @@ const BACKEND_URL =
 export async function POST(request: Request) {
   const body = await request.json();
 
-  const backendRes = await fetch(`${BACKEND_URL}/auth/register`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-  });
+  let backendRes: Response;
+  try {
+    backendRes = await fetch(`${BACKEND_URL}/auth/register`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+  } catch {
+    return NextResponse.json(
+      { error: "สัญญาณขาดหาย สงสัยพี่มิคค์เดินเตะปลั๊กไฟ\nพักหน้าจอสักครู่ แล้วค่อยมาลองใหม่อีกครั้งนะ" },
+      { status: 503 },
+    );
+  }
 
   const result = await backendRes.json();
 
