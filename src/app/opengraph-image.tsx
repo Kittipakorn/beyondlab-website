@@ -1,5 +1,6 @@
 import { ImageResponse } from "next/og";
 
+export const dynamic = "force-dynamic";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -8,16 +9,24 @@ const TAGLINE = "ห้องทดลองของคนที่อยาก
 const CREDIT = "ติวโดยพี่โม & พี่มิคค์ · วิศวะคอม (CEDT) จุฬาฯ";
 
 async function loadIbmPlexSansThaiSemiBold() {
-  const cssRes = await fetch(
-    `https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@700&text=${encodeURIComponent(
-      TITLE + TAGLINE + CREDIT
-    )}`
-  );
-  const css = await cssRes.text();
-  const fontUrl = css.match(/src: url\(([^)]+)\)/)?.[1];
-  if (!fontUrl) return null;
-  const fontRes = await fetch(fontUrl);
-  return fontRes.arrayBuffer();
+  try {
+    const cssRes = await fetch(
+      `https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@700&text=${encodeURIComponent(
+        TITLE + TAGLINE + CREDIT
+      )}`,
+      { next: { revalidate: 86400 } }
+    );
+    if (!cssRes.ok) return null;
+    const css = await cssRes.text();
+    const fontUrl = css.match(/src: url\(([^)]+)\)/)?.[1];
+    if (!fontUrl) return null;
+    const fontRes = await fetch(fontUrl, { next: { revalidate: 86400 } });
+    if (!fontRes.ok) return null;
+    return await fontRes.arrayBuffer();
+  } catch (err) {
+    console.warn("Failed to load custom font for OG image, falling back to system font:", err);
+    return null;
+  }
 }
 
 export default async function OpengraphImage() {
@@ -33,7 +42,7 @@ export default async function OpengraphImage() {
           flexDirection: "column",
           justifyContent: "center",
           padding: "80px",
-          fontFamily: "IBM Plex Sans Thai",
+          fontFamily: fontData ? "IBM Plex Sans Thai" : "sans-serif",
           background: "#303030",
           backgroundImage:
             "radial-gradient(circle at 15% 20%, rgba(234,114,31,0.32), transparent 55%)",
