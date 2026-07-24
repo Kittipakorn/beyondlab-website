@@ -4,8 +4,12 @@
   "private": true,
   "scripts": {
     "dev": "node dev-server.js",
+    "dev:backend": "node --env-file=../backend/.env.local ../backend/server.mjs",
+    "dev:compiler": "node ../project-compiler/server.js",
     "build": "next build",
     "start": "next start",
+    "start:backend": "node --env-file=../backend/.env.local ../backend/server.mjs",
+    "start:compiler": "node ../project-compiler/server.js",
     "lint": "next lint"
   },
   "dependencies": {

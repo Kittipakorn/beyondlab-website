@@ -55,6 +55,7 @@ export const navItems = [
   { label: "คอร์สเรียน", href: "/#courses" },
   { label: "ผลงาน", href: "/#projects" },
   { label: "ติดต่อเรา", href: "/#contact" },
+  { label: "Grader", href: "/grader" },
 ];
 
 export const aboutStats = [
