@@ -7,7 +7,9 @@ const BACKEND_URL =
 
 async function proxy(request: NextRequest, { params }: { params: Promise<{ path: string[] }> }) {
   const { path } = await params;
-  const backendPath = `/api/${path.join("/")}`;
+  const backendPath = path.length === 1 && path[0] === "health"
+    ? "/health"
+    : `/api/${path.join("/")}`;
   const url = new URL(backendPath, BACKEND_URL);
   url.search = request.nextUrl.search;
 
