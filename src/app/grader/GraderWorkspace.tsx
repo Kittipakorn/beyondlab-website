@@ -11,8 +11,9 @@ const starterCode = `#include <bits/stdc++.h>
 using namespace std;
 
 int main() {
-
+    cout << "Hello, BeyondLab!";
 }`;
+const pythonStarterCode = `print("Hello, BeyondLab!")`;
 
 const cppCompletionWords = [
   "cout", "cin", "endl", "return", "int", "string", "vector", "for", "while",
@@ -46,6 +47,24 @@ type Problem = {
   solved: boolean;
   passedCount: number;
   locked: boolean;
+};
+
+const placeholderProblem: Problem = {
+  id: 1,
+  title: "กำลังโหลดโจทย์...",
+  topic: "BeyondLab Grader",
+  difficulty: "ง่าย",
+  accessTier: "free",
+  points: 0,
+  description: "",
+  inputDescription: "",
+  outputDescription: "",
+  sampleInput: "",
+  sampleOutput: "",
+  testCaseCount: 0,
+  solved: false,
+  passedCount: 0,
+  locked: true,
 };
 
 const cppKeywords = new Set([
@@ -168,6 +187,7 @@ export function GraderWorkspace({
   backendUrl,
 }: GraderWorkspaceProps) {
   const [code, setCode] = useState(starterCode);
+  const [language, setLanguage] = useState<"cpp" | "python">("cpp");
   const [activeTab, setActiveTab] = useState<"problem" | "submissions">("problem");
   const [consoleTab, setConsoleTab] = useState<"result" | "custom">("custom");
   const [runState, setRunState] = useState<RunState>("idle");
@@ -364,7 +384,7 @@ export function GraderWorkspace({
     () => problems.filter((problem) => problem.title.includes(query) || problem.topic.includes(query)),
     [problems, query],
   );
-  const activeProblem = problems.find((problem) => problem.id === selectedProblem) ?? problems[0];
+  const activeProblem = problems.find((problem) => problem.id === selectedProblem) ?? problems[0] ?? placeholderProblem;
   const solvedProblemCount = problems.filter((problem) => problem.solved).length;
 
   function reconcilePassedSubmission(problemId: number, history: Submission[]) {
@@ -379,7 +399,12 @@ export function GraderWorkspace({
   useEffect(() => {
     setProblemsLoading(true);
     setProblemsError("");
-    fetch(`/api/proxy/problems`)
+    fetch(`/api/proxy/health`)
+      .then(async (response) => {
+        if (!response.ok) throw new Error("เซิร์ฟเวอร์ยังไม่พร้อมใช้งาน");
+        return response;
+      })
+      .then(() => fetch(`/api/proxy/problems`))
       .then(async (response) => {
         const result = await response.json().catch(() => null);
         if (!response.ok) {
@@ -408,6 +433,7 @@ export function GraderWorkspace({
   }, []);
 
   useEffect(() => {
+    if (problemsLoading || problemsError) return;
     fetch(`/api/proxy/submissions?problemId=${selectedProblem}`)
       .then((response) => response.ok ? response.json() : null)
       .then((result) => {
@@ -416,7 +442,7 @@ export function GraderWorkspace({
         reconcilePassedSubmission(selectedProblem, history);
       })
       .catch(() => {});
-  }, [backendUrl, selectedProblem]);
+  }, [backendUrl, selectedProblem, problemsLoading, problemsError]);
 
   useEffect(() => {
     document.body.classList.add("grader-page-active");
@@ -436,7 +462,7 @@ export function GraderWorkspace({
     const url = URL.createObjectURL(blob);
     const anchor = document.createElement("a");
     anchor.href = url;
-    anchor.download = "main.cpp";
+    anchor.download = language === "python" ? "main.py" : "main.cpp";
     anchor.click();
     URL.revokeObjectURL(url);
   }
@@ -458,7 +484,7 @@ export function GraderWorkspace({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          language: "cpp",
+          language,
           code,
           input: customInput,
           submit,
@@ -522,7 +548,7 @@ export function GraderWorkspace({
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            language: "cpp",
+            language,
             code,
             input: customInput,
             submit: false,
@@ -628,36 +654,6 @@ export function GraderWorkspace({
 
     document.addEventListener("pointermove", onMove);
     document.addEventListener("pointerup", stop, { once: true });
-  }
-
-  if (!activeProblem) {
-    return (
-      <div className="fixed inset-0 grid place-items-center bg-[#f7f3ed] p-5">
-        {problemsError ? (
-          <div
-            role="alert"
-            className="w-full max-w-md rounded-3xl border border-[#eadfce] bg-white p-8 text-center shadow-[0_18px_50px_rgba(62,46,30,.10)]"
-          >
-            <span className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-[#fff0df] text-[#d85f13]">
-              <Icon name="terminal" className="h-7 w-7" />
-            </span>
-            <h1 className="mt-5 text-xl font-bold text-[#292725]">เซิร์ฟเวอร์มีปัญหา</h1>
-            <p className="mt-2 whitespace-pre-line text-sm leading-6 text-[#71675f]">{problemsError}</p>
-            <button
-              type="button"
-              onClick={() => setProblemsReloadKey((current) => current + 1)}
-              className="mt-6 inline-flex min-h-11 cursor-pointer items-center justify-center rounded-xl bg-[#ea721f] px-5 text-sm font-bold text-white shadow-[0_8px_20px_rgba(234,114,31,.25)] transition hover:bg-[#d85f13] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ea721f] focus-visible:ring-offset-2 active:scale-95"
-            >
-              ลองปลุกเซิร์ฟเวอร์อีกที
-            </button>
-          </div>
-        ) : (
-          <p role="status" className="text-sm font-semibold text-[#71675f]">
-            {problemsLoading ? "กำลังโหลดโจทย์..." : "ยังไม่มีโจทย์ในระบบ"}
-          </p>
-        )}
-      </div>
-    );
   }
 
   return (
@@ -921,7 +917,22 @@ export function GraderWorkspace({
 
           {activeTab === "problem" ? (
             <article className="space-y-7 p-5 text-[15px] leading-7 text-[#544d47] sm:p-7">
-              {activeProblem.locked ? (
+              {problemsError ? (
+                <div role="alert" className="flex min-h-[360px] flex-col items-center justify-center text-center">
+                  <span className="grid h-14 w-14 place-items-center rounded-2xl bg-[#fff0df] text-[#d85f13]" aria-hidden="true">
+                    <Icon name="terminal" className="h-7 w-7" />
+                  </span>
+                  <h2 className="mt-5 text-xl font-bold text-[#292725]">เซิร์ฟเวอร์มีปัญหา</h2>
+                  <p className="mt-2 max-w-sm whitespace-pre-line text-sm leading-6 text-[#81766c]">{problemsError}</p>
+                  <button type="button" onClick={() => setProblemsReloadKey((current) => current + 1)} className="mt-6 flex min-h-11 cursor-pointer items-center justify-center rounded-xl bg-[#ea721f] px-6 text-sm font-bold text-white shadow-[0_8px_20px_rgba(234,114,31,.25)] transition hover:bg-[#d85f13] active:scale-95">
+                    ลองใหม่อีกครั้ง
+                  </button>
+                </div>
+              ) : problemsLoading ? (
+                <div role="status" className="flex min-h-[360px] items-center justify-center text-sm font-semibold text-[#81766c]">
+                  กำลังเตรียมโจทย์...
+                </div>
+              ) : activeProblem.locked ? (
                 <div className="flex min-h-[360px] flex-col items-center justify-center text-center">
                   <span className="grid h-14 w-14 place-items-center rounded-2xl bg-[#fff0df] text-[#d85f13]" aria-hidden="true">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-7 w-7">
@@ -1027,7 +1038,7 @@ export function GraderWorkspace({
           <div className="grader-code-toolbar flex min-h-14 flex-wrap items-center justify-between gap-3 border-b px-4">
             <div className="grader-code-title flex items-center gap-2 text-sm font-bold">
               <Icon name="terminal" className="h-4 w-4 text-[#f28a42]" />
-              main.cpp
+              {language === "python" ? "main.py" : "main.cpp"}
               <span className="h-2 w-2 rounded-full bg-[#f28a42]" title="มีการแก้ไข" />
             </div>
             <div className="flex items-center gap-2">
@@ -1047,7 +1058,7 @@ export function GraderWorkspace({
               <button
                 type="button"
                 aria-label="ดาวน์โหลดไฟล์โค้ด"
-                title="ดาวน์โหลด main.cpp"
+                title={`ดาวน์โหลด ${language === "python" ? "main.py" : "main.cpp"}`}
                 onClick={downloadCode}
                 className="grader-code-control grid h-11 w-11 cursor-pointer place-items-center rounded-lg transition"
               >
@@ -1056,11 +1067,17 @@ export function GraderWorkspace({
               <select
                 aria-label="เลือกภาษาโปรแกรม"
                 className="grader-code-select h-10 cursor-pointer rounded-lg border px-3 text-sm font-semibold outline-none focus:border-[#f28a42]"
-                defaultValue="cpp"
+                value={language}
+                onChange={(event) => {
+                  const nextLanguage = event.target.value as "cpp" | "python";
+                  setLanguage(nextLanguage);
+                  setCode(nextLanguage === "python" ? pythonStarterCode : starterCode);
+                  setCompileError(null);
+                  setRunState("idle");
+                }}
               >
                 <option value="cpp">C++ 17</option>
                 <option value="python">Python 3</option>
-                <option value="java">Java 17</option>
               </select>
             </div>
           </div>

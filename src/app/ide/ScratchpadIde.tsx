@@ -8,23 +8,19 @@ import { UserMenu } from "../components/beyondlab/ProtectedToolBar";
 import { getTextareaCaretPosition } from "../components/beyondlab/editorCaret";
 
 const templates = {
-  cpp: `#include <iostream>
+  cpp: `#include <bits/stdc++.h>
 using namespace std;
 
 int main() {
-    // วางหรือเขียนโค้ดของคุณที่นี่
-    
-    return 0;
+    cout << "Hello, BeyondLab!";
 }`,
-  python: `# วางหรือเขียนโค้ดของคุณที่นี่\n\nprint("Hello, BeyondLab!")`,
-  javascript: `// วางหรือเขียนโค้ดของคุณที่นี่\n\nconsole.log("Hello, BeyondLab!");`,
+  python: `print("Hello, BeyondLab!")`,
 };
 
 type Language = keyof typeof templates;
 const completionWords: Record<Language, string[]> = {
   cpp: ["cout", "cin", "endl", "return", "int", "string", "vector", "for", "while", "if", "else", "include", "using", "namespace"],
   python: ["print", "input", "return", "def", "for", "while", "if", "elif", "else", "import", "range", "len", "int", "str"],
-  javascript: ["console.log", "const", "let", "function", "return", "for", "while", "if", "else", "async", "await", "JSON.stringify", "Array"],
 };
 function Glyph({ name }: { name: "back" | "play" | "reset" | "moon" | "sun" | "terminal" | "download" }) {
   const paths = {
@@ -165,7 +161,15 @@ export function ScratchpadIde({ username, email, backendUrl }: ScratchpadIdeProp
       const response = await fetch("/api/proxy/compile", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ language, code, input }),
+        body: JSON.stringify({
+          language,
+          code,
+          input,
+          // IDE is a standalone playground: return stdout/stderr without grader tests.
+          isCustom: true,
+          submit: false,
+          problemId: 1,
+        }),
       });
       const result = (await response.json()) as {
         status?: string;
@@ -257,7 +261,6 @@ export function ScratchpadIde({ username, email, backendUrl }: ScratchpadIdeProp
           <select value={language} onChange={(event) => changeLanguage(event.target.value as Language)} aria-label="เลือกภาษาโปรแกรม" className={`h-11 rounded-xl border px-3 text-sm font-bold outline-none focus:border-[#ea721f] ${darkMode ? "border-[#364152] bg-[#202936]" : "border-[#ded5ca] bg-white"}`}>
             <option value="cpp">C++ 17</option>
             <option value="python">Python 3</option>
-            <option value="javascript">JavaScript</option>
           </select>
           <button type="button" onClick={() => { if (window.confirm("ต้องการคืนค่าโค้ดเริ่มต้นหรือไม่? โค้ดที่เขียนอยู่จะถูกแทนที่")) setCode(templates[language]); }} aria-label="คืนค่าโค้ดเริ่มต้น" className={`grid h-11 w-11 place-items-center rounded-xl border ${darkMode ? "border-[#364152] hover:bg-[#222b38]" : "border-[#ded5ca] bg-white hover:border-[#ea721f]"}`}>
             <Glyph name="reset" />
