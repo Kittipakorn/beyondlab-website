@@ -7,13 +7,15 @@ import type { NextConfig } from "next";
 // https://nextjs.org/docs/app/guides/content-security-policy#without-nonces
 const isDev = process.env.NODE_ENV === "development";
 
+const backendOrigin = process.env.NEXT_PUBLIC_BACKEND_URL ?? "http://localhost:4000";
+
 const contentSecurityPolicy = `
   default-src 'self';
   script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""};
   style-src 'self' 'unsafe-inline';
-  img-src 'self' blob: data:;
+  img-src 'self' blob: data: https://api.qrserver.com;
   font-src 'self';
-  connect-src 'self';
+  connect-src 'self' ${backendOrigin};
   object-src 'none';
   base-uri 'self';
   form-action 'self';
