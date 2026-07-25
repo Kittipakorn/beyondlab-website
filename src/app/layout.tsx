@@ -1,8 +1,6 @@
 import "./globals.css";
 import { IBM_Plex_Sans_Thai } from "next/font/google";
-import { FloatingContact } from "./components/beyondlab/FloatingContact";
-import { Footer } from "./components/beyondlab/Footer";
-import { Navbar } from "./components/beyondlab/Navbar";
+import { SiteHeaderFooter } from "./components/beyondlab/SiteHeaderFooter";
 
 const title = "BeyondLab | ห้องทดลองของคนที่อยากก้าวข้ามขีดจำกัด";
 const description =
@@ -47,10 +45,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           ข้ามไปยังเนื้อหา
         </a>
         <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.95),rgba(243,244,246,0.92)_56%,rgba(226,229,233,0.95))]" />
-        <Navbar />
-        <main id="main-content" className="min-h-screen">{children}</main>
-        <Footer />
-        <FloatingContact />
+        <SiteHeaderFooter>{children}</SiteHeaderFooter>
       </body>
     </html>
   );
