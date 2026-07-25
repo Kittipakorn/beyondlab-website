@@ -251,7 +251,7 @@ export function GraderWorkspace({
       const src = e.target?.result as string;
       if (!src) return;
 
-      const img = new Image();
+      const img = new window.Image();
       img.onload = () => {
         const canvas = document.createElement("canvas");
         const MAX_DIM = 1200;
