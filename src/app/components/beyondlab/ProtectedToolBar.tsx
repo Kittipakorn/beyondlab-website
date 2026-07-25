@@ -22,7 +22,7 @@ export function UserMenu({
     <details className="group relative">
       <summary
         aria-label={`เมนูผู้ใช้ ${username}`}
-        className={`flex h-11 cursor-pointer list-none items-center gap-2 rounded-xl border py-1.5 pl-1.5 pr-3 text-sm font-semibold shadow-sm transition [&::-webkit-details-marker]:hidden ${
+        className={`flex h-8 sm:h-11 cursor-pointer list-none items-center gap-1 sm:gap-2 rounded-lg sm:rounded-xl border p-1 sm:py-1.5 sm:pl-1.5 sm:pr-3 text-xs sm:text-sm font-semibold shadow-sm transition [&::-webkit-details-marker]:hidden ${
           dark
             ? "border-[#364152] bg-[#202936] text-white hover:border-[#ea721f]"
             : "border-[#dfd2c1] bg-white text-[#303030] hover:border-[#ea721f]"
@@ -30,7 +30,7 @@ export function UserMenu({
       >
         <span
           aria-hidden="true"
-          className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-[#fff1e6] font-bold text-[#d55d11]"
+          className="flex h-6 w-6 sm:h-8 sm:w-8 shrink-0 items-center justify-center rounded-md sm:rounded-lg bg-[#fff1e6] text-xs sm:text-sm font-bold text-[#d55d11]"
         >
           {userInitial}
         </span>
@@ -41,7 +41,7 @@ export function UserMenu({
           aria-hidden="true"
           viewBox="0 0 20 20"
           fill="none"
-          className="size-4 text-[#857a71] transition group-open:rotate-180"
+          className="hidden sm:block size-4 text-[#857a71] transition group-open:rotate-180"
         >
           <path
             d="m6 8 4 4 4-4"

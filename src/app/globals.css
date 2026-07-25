@@ -20,22 +20,18 @@ body {
 }
 
 body.grader-page-active,
-body.scratch-page-active,
-html:has(.scratch-workspace),
-body:has(.scratch-workspace),
-html:has(.grader-workspace),
-body:has(.grader-workspace) {
+body.scratch-page-active {
   overflow: hidden !important;
   height: 100vh !important;
   max-height: 100vh !important;
 }
 
 .my-speech {
-  @apply text-right ml-16
+  @apply text-right ml-16;
 }
 
 .short-description {
-  @apply italic text-gray-700 text-lg text-center my-3
+  @apply italic text-gray-700 text-lg text-center my-3;
 }
 
 .body-bg-dark {

@@ -526,7 +526,7 @@ export function AdminDashboard({ backendUrl }: { backendUrl: string }) {
 
       {/* Header Bar */}
       <header className="sticky top-0 z-40 border-b border-[#eadfce] bg-white/90 backdrop-blur-xl">
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
+        <div className="mx-auto flex h-14 sm:h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
           <div className="flex items-center gap-3">
             <Link href="/" className="flex items-center gap-2.5">
               <div className="relative h-8 w-8 flex-none overflow-hidden">
@@ -538,7 +538,7 @@ export function AdminDashboard({ backendUrl }: { backendUrl: string }) {
                   className="object-contain"
                 />
               </div>
-              <span className="text-lg font-extrabold tracking-tight text-[#292725]">
+              <span className="text-base sm:text-lg font-extrabold tracking-tight text-[#292725]">
                 BeyondLab <span className="text-[#ea721f]">Admin</span>
               </span>
             </Link>
@@ -557,7 +557,7 @@ export function AdminDashboard({ backendUrl }: { backendUrl: string }) {
             </div>
             <Link
               href="/grader"
-              className="rounded-xl border border-[#eadfce] bg-white px-3.5 py-2 text-xs font-bold text-[#5c5148] transition hover:bg-[#f7f3ed]"
+              className="hidden sm:inline-flex rounded-xl border border-[#eadfce] bg-white px-3.5 py-2 text-xs font-bold text-[#5c5148] transition hover:bg-[#f7f3ed]"
             >
               หน้า Grader
             </Link>
@@ -576,7 +576,7 @@ export function AdminDashboard({ backendUrl }: { backendUrl: string }) {
         {/* Navigation Tabs (Only visible when not in problem form mode) */}
         {problemViewMode === "list" && (
           <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-[#eadfce] pb-4">
-            <div className="flex gap-2 rounded-2xl border border-[#eadfce] bg-white p-1.5 shadow-sm">
+            <div className="flex flex-col sm:flex-row gap-2 rounded-2xl border border-[#eadfce] bg-white p-1.5 shadow-sm w-full sm:w-auto">
               <button
                 onClick={() => {
                   setActiveTab("problems");
@@ -591,7 +591,7 @@ export function AdminDashboard({ backendUrl }: { backendUrl: string }) {
                 <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
-                จัดการโจทย์ (Problem CRUD)
+                <span className="sm:hidden">โจทย์</span><span className="hidden sm:inline">จัดการโจทย์ (Problem CRUD)</span>
                 <span className={`rounded-full px-2 py-0.5 text-xs ${activeTab === "problems" ? "bg-white/20 text-white" : "bg-[#f0dfc8] text-[#5c5148]"}`}>
                   {problems.length}
                 </span>
@@ -611,7 +611,7 @@ export function AdminDashboard({ backendUrl }: { backendUrl: string }) {
                 <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                 </svg>
-                จัดการผู้ใช้ & สิทธิ์ (Users & Roles)
+                <span className="sm:hidden">ผู้ใช้</span><span className="hidden sm:inline">จัดการผู้ใช้ & สิทธิ์ (Users & Roles)</span>
                 <span className={`rounded-full px-2 py-0.5 text-xs ${activeTab === "users" ? "bg-white/20 text-white" : "bg-[#f0dfc8] text-[#5c5148]"}`}>
                   {users.length}
                 </span>
@@ -693,7 +693,9 @@ export function AdminDashboard({ backendUrl }: { backendUrl: string }) {
                       ไม่พบข้อมูลโจทย์ตรงตามเงื่อนไข
                     </div>
                   ) : (
-                    <div className="overflow-x-auto">
+                    <>
+                    {/* Desktop Table */}
+                    <div className="hidden md:block overflow-x-auto">
                       <table className="w-full text-left text-sm text-[#303030]">
                         <thead className="border-b border-[#eadfce] bg-[#faf6f0] text-xs uppercase font-bold text-[#5c5148]">
                           <tr>
@@ -810,6 +812,31 @@ export function AdminDashboard({ backendUrl }: { backendUrl: string }) {
                         </tbody>
                       </table>
                     </div>
+
+                    {/* Mobile Card View */}
+                    <div className="block md:hidden divide-y divide-[#f0dfc8]">
+                      {filteredProblems.map((prob) => (
+                        <div key={prob.id} className="p-4 space-y-2">
+                          <div className="flex items-center justify-between">
+                            <span className="font-mono font-bold text-[#ea721f]">#{prob.id}</span>
+                            <div className="flex items-center gap-1.5">
+                              <span className={`inline-block rounded-full px-2 py-0.5 text-[10px] font-bold ${prob.difficulty === "ง่าย" ? "bg-emerald-50 text-emerald-700 border border-emerald-200" : prob.difficulty === "ปานกลาง" ? "bg-amber-50 text-amber-700 border border-amber-200" : "bg-rose-50 text-rose-700 border border-rose-200"}`}>{prob.difficulty}</span>
+                              <span className={`inline-block rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${prob.accessTier === "pro" ? "bg-purple-50 text-purple-700 border border-purple-200" : "bg-blue-50 text-blue-700 border border-blue-200"}`}>{prob.accessTier}</span>
+                            </div>
+                          </div>
+                          <div className="font-bold text-sm text-[#292725]">{prob.title}</div>
+                          <div className="flex items-center justify-between text-xs text-[#71675f]">
+                            <span>{prob.topic}</span>
+                            <span className="font-mono">{Array.isArray(prob.tests) ? prob.tests.length : 0} ชุด · {prob.points} pt</span>
+                          </div>
+                          <div className="flex items-center gap-2 pt-1">
+                            <button onClick={() => openEditModal(prob)} className="flex-1 rounded-lg border border-[#eadfce] bg-white px-3 py-1.5 text-xs font-bold text-[#5c5148] transition hover:bg-[#f7f3ed]">แก้ไข</button>
+                            <button onClick={() => { setProblemToDelete(prob); setIsDeleteModalOpen(true); }} className="rounded-lg border border-rose-200 bg-rose-50 px-3 py-1.5 text-xs font-bold text-rose-600 transition hover:bg-rose-100">ลบ</button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    </>
                   )}
                 </div>
               </div>
@@ -1178,7 +1205,9 @@ export function AdminDashboard({ backendUrl }: { backendUrl: string }) {
                   ไม่พบรายชื่อผู้ใช้ที่ค้นหา
                 </div>
               ) : (
-                <div className="overflow-x-auto">
+                <>
+                {/* Desktop Table */}
+                <div className="hidden md:block overflow-x-auto">
                   <table className="w-full text-left text-sm text-[#303030]">
                     <thead className="border-b border-[#eadfce] bg-[#faf6f0] text-xs uppercase font-bold text-[#5c5148]">
                       <tr>
@@ -1282,6 +1311,35 @@ export function AdminDashboard({ backendUrl }: { backendUrl: string }) {
                     </tbody>
                   </table>
                 </div>
+
+                {/* Mobile Card View */}
+                <div className="block md:hidden divide-y divide-[#f0dfc8]">
+                  {filteredUsers.map((usr) => (
+                    <div key={usr.username} className="p-4 space-y-2">
+                      <div className="flex items-center justify-between">
+                        <span className="font-bold text-[#292725]">{usr.username}</span>
+                        <span className={`inline-block rounded-full px-2.5 py-0.5 text-[10px] font-extrabold uppercase ${usr.role === "admin" ? "bg-purple-100 text-purple-800 border border-purple-300" : "bg-zinc-100 text-zinc-700 border border-zinc-300"}`}>{usr.role}</span>
+                      </div>
+                      <div className="text-xs text-[#71675f]">{usr.email}</div>
+                      <div className="flex items-center gap-2">
+                        <span className={`inline-block rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${usr.plan === "pro" ? "bg-amber-100 text-amber-800 border border-amber-300" : "bg-zinc-100 text-zinc-700 border border-zinc-300"}`}>{usr.plan}</span>
+                        {usr.plan === "pro" && usr.planExpiresAt && <span className="text-[10px] text-amber-700">หมดอายุ: {new Date(usr.planExpiresAt).toLocaleDateString("th-TH")}</span>}
+                        {usr.createdAt && <span className="text-[10px] text-[#71675f]">สมัคร: {new Date(usr.createdAt).toLocaleDateString("th-TH")}</span>}
+                      </div>
+                      <div className="flex items-center gap-2 pt-1">
+                        <button onClick={() => openPlanModal(usr)} className="flex-1 rounded-lg border border-amber-300 bg-amber-50 px-3 py-1.5 text-xs font-bold text-amber-800 transition hover:bg-amber-100">ปรับวัน PRO</button>
+                        {session.user?.username?.toLowerCase() === usr.username.toLowerCase() ? (
+                          <span className="rounded-lg border border-purple-200 bg-purple-50 px-3 py-1.5 text-xs font-bold text-purple-700">คุณ</span>
+                        ) : usr.role === "user" ? (
+                          <button disabled={roleUpdatingUser === usr.username} onClick={() => handleRoleChange(usr.username, "admin")} className="rounded-lg border border-purple-300 bg-purple-50 px-3 py-1.5 text-xs font-bold text-purple-700 transition hover:bg-purple-100 disabled:opacity-50">{roleUpdatingUser === usr.username ? "..." : "ADMIN"}</button>
+                        ) : (
+                          <button disabled={roleUpdatingUser === usr.username} onClick={() => handleRoleChange(usr.username, "user")} className="rounded-lg border border-[#eadfce] bg-white px-3 py-1.5 text-xs font-bold text-[#5c5148] transition hover:bg-[#f7f3ed] disabled:opacity-50">{roleUpdatingUser === usr.username ? "..." : "USER"}</button>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                </>
               )}
             </div>
           </div>

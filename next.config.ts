@@ -12,15 +12,15 @@ const backendOrigin = process.env.NEXT_PUBLIC_BACKEND_URL ?? "http://localhost:4
 const contentSecurityPolicy = `
   default-src 'self';
   script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""};
-  style-src 'self' 'unsafe-inline';
+  style-src 'self' 'unsafe-inline' https:;
   img-src 'self' blob: data: https://api.qrserver.com;
-  font-src 'self';
+  font-src 'self' data: https:;
   connect-src 'self' ${backendOrigin};
   object-src 'none';
   base-uri 'self';
   form-action 'self' ${backendOrigin};
   frame-ancestors 'none';
-  upgrade-insecure-requests;
+  ${!isDev && process.env.NEXT_PUBLIC_SITE_URL?.startsWith("https") ? "upgrade-insecure-requests;" : ""}
 `
   .replace(/\s{2,}/g, " ")
   .trim();

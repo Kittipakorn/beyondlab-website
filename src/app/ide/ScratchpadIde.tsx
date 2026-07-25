@@ -50,6 +50,7 @@ export function ScratchpadIde({ username, email, backendUrl }: ScratchpadIdeProp
   const [darkMode, setDarkMode] = useState(true);
   const [editorWidth, setEditorWidth] = useState(70);
   const [inputHeight, setInputHeight] = useState(50);
+  const [mobileTab, setMobileTab] = useState<"code" | "io">("code");
   const [fontSize, setFontSize] = useState(14);
   const [cursorPosition, setCursorPosition] = useState(0);
   const [selectedSuggestion, setSelectedSuggestion] = useState(0);
@@ -168,6 +169,7 @@ export function ScratchpadIde({ username, email, backendUrl }: ScratchpadIdeProp
   async function runCode() {
     setRunning(true);
     setOutput("กำลังรัน...");
+    setMobileTab("io");
     try {
       const response = await fetch("/api/proxy/compile", {
         method: "POST",
@@ -247,21 +249,23 @@ export function ScratchpadIde({ username, email, backendUrl }: ScratchpadIdeProp
         "--scratch-font-size": `${fontSize}px`,
       } as React.CSSProperties}
     >
-      <header className={`flex min-h-16 flex-none flex-wrap items-center justify-between gap-3 border-b px-3 py-2 sm:px-5 ${darkMode ? "border-[#2b3442] bg-[#151b25]" : "border-[#e2d8cc] bg-white"}`}>
-        <div className="flex min-w-0 items-center gap-3">
-          <Link href="/grader" aria-label="กลับไปหน้า Grader" className={`grid h-11 w-11 place-items-center rounded-xl border transition ${darkMode ? "border-[#364152] hover:bg-[#222b38]" : "border-[#ded5ca] hover:bg-[#f7f2ec]"}`}>
+      <header className={`flex flex-none items-center justify-between gap-1.5 px-2 py-1.5 sm:px-5 sm:py-2 border-b ${darkMode ? "border-[#2b3442] bg-[#151b25]" : "border-[#e2d8cc] bg-white"}`}>
+        <div className="flex min-w-0 items-center gap-1.5 sm:gap-3">
+          <Link href="/grader" aria-label="กลับไปหน้า Grader" className={`grid h-8 w-8 sm:h-11 sm:w-11 place-items-center rounded-lg sm:rounded-xl border transition ${darkMode ? "border-[#364152] hover:bg-[#222b38]" : "border-[#ded5ca] hover:bg-[#f7f2ec]"}`}>
             <Glyph name="back" />
           </Link>
           <div className="min-w-0">
-            <div className="flex items-center gap-2 text-xs font-semibold text-[#ea721f]"><Glyph name="terminal" /> PLAYGROUND</div>
-            <h1 className="truncate text-base font-bold sm:text-lg">Code Playground</h1>
+            <div className="hidden sm:flex items-center gap-2 text-xs font-semibold text-[#ea721f]"><Glyph name="terminal" /> PLAYGROUND</div>
+            <h1 className="max-w-[120px] xs:max-w-[160px] truncate text-xs font-bold sm:max-w-none sm:text-lg">Code Playground</h1>
           </div>
         </div>
-        <div className="flex items-center gap-2">
-          <button type="button" onClick={toggleTheme} aria-label={darkMode ? "เปลี่ยนเป็นโหมดสว่าง" : "เปลี่ยนเป็นโหมดมืด"} className={`grid h-11 w-11 place-items-center rounded-xl border ${darkMode ? "border-[#364152] hover:bg-[#222b38]" : "border-[#ded5ca] bg-white hover:border-[#ea721f]"}`}>
+        <div className="flex flex-none items-center gap-1 sm:gap-2">
+          <button type="button" onClick={toggleTheme} aria-label={darkMode ? "เปลี่ยนเป็นโหมดสว่าง" : "เปลี่ยนเป็นโหมดมืด"} className={`grid h-8 w-8 sm:h-11 sm:w-11 place-items-center rounded-lg sm:rounded-xl border ${darkMode ? "border-[#364152] hover:bg-[#222b38]" : "border-[#ded5ca] bg-white hover:border-[#ea721f]"}`}>
             <Glyph name={darkMode ? "sun" : "moon"} />
           </button>
-          <FontSizeControl value={fontSize} dark={darkMode} onChange={setFontSize} />
+          <div className="hidden sm:block">
+            <FontSizeControl value={fontSize} dark={darkMode} onChange={setFontSize} />
+          </div>
           <UserMenu
             username={username}
             email={email}
@@ -269,31 +273,65 @@ export function ScratchpadIde({ username, email, backendUrl }: ScratchpadIdeProp
             backendUrl={backendUrl}
             dark={darkMode}
           />
-          <select value={language} onChange={(event) => changeLanguage(event.target.value as Language)} aria-label="เลือกภาษาโปรแกรม" className={`h-11 rounded-xl border px-3 text-sm font-bold outline-none focus:border-[#ea721f] ${darkMode ? "border-[#364152] bg-[#202936]" : "border-[#ded5ca] bg-white"}`}>
+          <select value={language} onChange={(event) => changeLanguage(event.target.value as Language)} aria-label="เลือกภาษาโปรแกรม" className={`h-8 sm:h-11 rounded-lg sm:rounded-xl border px-2 sm:px-3 text-xs sm:text-sm font-bold outline-none focus:border-[#ea721f] ${darkMode ? "border-[#364152] bg-[#202936]" : "border-[#ded5ca] bg-white"}`}>
             <option value="cpp">C++ 17</option>
             <option value="python">Python 3</option>
           </select>
-          <button type="button" onClick={() => { if (window.confirm("ต้องการคืนค่าโค้ดเริ่มต้นหรือไม่? โค้ดที่เขียนอยู่จะถูกแทนที่")) setCode(templates[language]); }} aria-label="คืนค่าโค้ดเริ่มต้น" className={`grid h-11 w-11 place-items-center rounded-xl border ${darkMode ? "border-[#364152] hover:bg-[#222b38]" : "border-[#ded5ca] bg-white hover:border-[#ea721f]"}`}>
+          <button type="button" onClick={() => { if (window.confirm("ต้องการคืนค่าโค้ดเริ่มต้นหรือไม่? โค้ดที่เขียนอยู่จะถูกแทนที่")) setCode(templates[language]); }} aria-label="คืนค่าโค้ดเริ่มต้น" className={`grid h-8 w-8 sm:h-11 sm:w-11 place-items-center rounded-lg sm:rounded-xl border ${darkMode ? "border-[#364152] hover:bg-[#222b38]" : "border-[#ded5ca] bg-white hover:border-[#ea721f]"}`}>
             <Glyph name="reset" />
           </button>
-          <button type="button" onClick={downloadCode} aria-label="ดาวน์โหลดไฟล์โค้ด" title="ดาวน์โหลดไฟล์โค้ด" className={`grid h-11 w-11 place-items-center rounded-xl border ${darkMode ? "border-[#364152] hover:bg-[#222b38]" : "border-[#ded5ca] bg-white hover:border-[#ea721f]"}`}>
+          <button type="button" onClick={downloadCode} aria-label="ดาวน์โหลดไฟล์โค้ด" title="ดาวน์โหลดไฟล์โค้ด" className={`grid h-8 w-8 sm:h-11 sm:w-11 place-items-center rounded-lg sm:rounded-xl border ${darkMode ? "border-[#364152] hover:bg-[#222b38]" : "border-[#ded5ca] bg-white hover:border-[#ea721f]"}`}>
             <Glyph name="download" />
           </button>
-          <button type="button" onClick={runCode} disabled={running} className="inline-flex h-11 items-center gap-2 rounded-xl bg-[#ea721f] px-4 text-sm font-bold text-white transition hover:bg-[#d85f13] disabled:cursor-wait disabled:opacity-60">
-            <Glyph name="play" /> <span className="hidden sm:inline">รันโค้ด</span>
+          <button type="button" onClick={runCode} disabled={running} className="inline-flex h-8 sm:h-11 items-center gap-1 sm:gap-2 rounded-lg sm:rounded-xl bg-[#ea721f] px-2.5 sm:px-4 text-xs sm:text-sm font-bold text-white transition hover:bg-[#d85f13] disabled:cursor-wait disabled:opacity-60">
+            <Glyph name="play" /> <span>รันโค้ด</span>
           </button>
         </div>
       </header>
+
+      {/* Mobile Tab Switcher Bar */}
+      <div className={`flex flex-none items-center justify-around border-b px-2 py-1.5 lg:hidden ${darkMode ? "border-[#2b3442] bg-[#151b25] text-[#dbe2eb]" : "border-[#e2d8cc] bg-white text-[#39332e]"}`}>
+        <button
+          type="button"
+          onClick={() => setMobileTab("code")}
+          className={`flex flex-1 items-center justify-center gap-1.5 rounded-lg py-2 text-xs font-bold transition ${
+            mobileTab === "code"
+              ? "bg-[#ea721f] text-white shadow-sm"
+              : darkMode
+              ? "text-[#aeb7c4] hover:bg-[#1f2735]"
+              : "text-[#655c53] hover:bg-[#f5efea]"
+          }`}
+        >
+          <Glyph name="terminal" />
+          <span>พื้นที่เขียนโค้ด</span>
+        </button>
+        <button
+          type="button"
+          onClick={() => setMobileTab("io")}
+          className={`flex flex-1 items-center justify-center gap-1.5 rounded-lg py-2 text-xs font-bold transition ${
+            mobileTab === "io"
+              ? "bg-[#ea721f] text-white shadow-sm"
+              : darkMode
+              ? "text-[#aeb7c4] hover:bg-[#1f2735]"
+              : "text-[#655c53] hover:bg-[#f5efea]"
+          }`}
+        >
+          <Glyph name="play" />
+          <span>Input & Output</span>
+        </button>
+      </div>
 
       <main
         className="scratch-main-split grid min-h-0 flex-1 gap-0 p-2"
         style={{ "--scratch-editor-width": `${editorWidth}%` } as React.CSSProperties}
       >
-        <section className={`scratch-editor relative min-h-[420px] overflow-hidden rounded-xl border ${darkMode ? "border-[#2d3442] bg-[#111722]" : "border-[#ded5ca] bg-[#fffdf9]"}`} aria-label="Code editor">
-          <div ref={lineNumbersRef} aria-hidden="true" className={`scratch-code-font absolute inset-y-0 left-0 w-12 select-none overflow-hidden border-r px-3 py-5 text-right leading-6 ${darkMode ? "border-[#242c38] bg-[#111722] text-[#627084]" : "border-[#e2d9cf] bg-[#f6f2ed] text-[#9b9086]"}`}>
+        <section className={`scratch-editor relative overflow-hidden rounded-xl border ${darkMode ? "border-[#2d3442] bg-[#111722]" : "border-[#ded5ca] bg-[#fffdf9]"} ${
+          mobileTab === "code" ? "flex flex-col h-full min-h-[calc(100vh-170px)]" : "hidden lg:block"
+        }`} aria-label="Code editor">
+          <div ref={lineNumbersRef} aria-hidden="true" className={`scratch-code-font absolute inset-y-0 left-0 w-12 select-none overflow-hidden border-r px-3 pt-5 pb-12 text-right leading-6 ${darkMode ? "border-[#242c38] bg-[#111722] text-[#627084]" : "border-[#e2d9cf] bg-[#f6f2ed] text-[#9b9086]"}`}>
             {Array.from({ length: lines }, (_, index) => <div key={index}>{index + 1}</div>)}
           </div>
-          <pre ref={highlightedCodeRef} aria-hidden="true" className="scratch-code-font pointer-events-none absolute inset-0 overflow-hidden whitespace-pre py-5 pl-16 pr-5 leading-6">{highlightCode(code, language)}</pre>
+          <pre ref={highlightedCodeRef} aria-hidden="true" className="scratch-code-font pointer-events-none absolute inset-0 overflow-hidden whitespace-pre pt-5 pb-12 pl-16 pr-5 leading-6">{highlightCode(code, language)}</pre>
           <textarea
             value={code}
             onChange={(event) => {
@@ -310,16 +348,19 @@ export function ScratchpadIde({ username, email, backendUrl }: ScratchpadIdeProp
               if (lineNumbersRef.current) lineNumbersRef.current.scrollTop = event.currentTarget.scrollTop;
             }}
             aria-label="พื้นที่เขียนโค้ด"
+            autoCapitalize="none"
+            autoCorrect="off"
+            autoComplete="off"
             spellCheck={false}
-            className="scratch-code-font absolute inset-0 h-full w-full resize-none overflow-auto whitespace-pre bg-transparent py-5 pl-16 pr-5 leading-6 text-transparent caret-[#f28a42] outline-none selection:bg-[#f28a42]/30"
+            className="scratch-code-font absolute inset-0 h-full w-full resize-none overflow-auto whitespace-pre bg-transparent pt-5 pb-12 pl-16 pr-5 leading-6 text-transparent caret-[#f28a42] outline-none selection:bg-[#f28a42]/30"
             style={{ WebkitTextFillColor: "transparent" }}
           />
           {suggestions.length > 0 ? (
             <div
               role="listbox"
               aria-label="คำแนะนำโค้ด"
-              className={`absolute z-30 w-72 overflow-hidden rounded-lg border py-1 text-sm shadow-2xl ${darkMode ? "border-[#3a4558] bg-[#171d29] text-[#dbe2eb]" : "border-[#d7cec3] bg-white text-[#39332e]"}`}
-              style={{ left: suggestionPosition.left, top: suggestionPosition.top }}
+              className={`absolute z-30 max-w-[85vw] w-72 overflow-hidden rounded-lg border py-1 text-sm shadow-2xl ${darkMode ? "border-[#3a4558] bg-[#171d29] text-[#dbe2eb]" : "border-[#d7cec3] bg-white text-[#39332e]"}`}
+              style={{ left: Math.min(suggestionPosition.left, typeof window !== "undefined" ? window.innerWidth - 300 : 50), top: suggestionPosition.top }}
             >
               {suggestions.map((suggestion, index) => (
                 <button
@@ -361,7 +402,9 @@ export function ScratchpadIde({ username, email, backendUrl }: ScratchpadIdeProp
         />
 
         <aside
-          className={`scratch-io-split grid min-h-0 gap-0 ${darkMode ? "text-[#dbe2eb]" : "text-[#39332e]"}`}
+          className={`scratch-io-split grid min-h-0 gap-0 ${darkMode ? "text-[#dbe2eb]" : "text-[#39332e]"} ${
+            mobileTab === "io" ? "flex flex-col h-full min-h-[calc(100vh-170px)]" : "hidden lg:grid"
+          }`}
           style={{ "--scratch-input-height": `${inputHeight}%` } as React.CSSProperties}
         >
           <section className={`flex min-h-[180px] flex-col overflow-hidden rounded-xl border ${darkMode ? "border-[#2d3442] bg-[#151b25]" : "border-[#e2d8cc] bg-white"}`}>

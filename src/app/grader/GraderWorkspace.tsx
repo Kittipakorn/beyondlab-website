@@ -204,6 +204,7 @@ export function GraderWorkspace({
   const [sidebarWidth, setSidebarWidth] = useState(290);
   const [problemWidth, setProblemWidth] = useState(40);
   const [consoleHeight, setConsoleHeight] = useState(240);
+  const [mobileTab, setMobileTab] = useState<"problem" | "code" | "console">("code");
   const [fontSize, setFontSize] = useState(14);
   const [cursorPosition, setCursorPosition] = useState(0);
   const [selectedSuggestion, setSelectedSuggestion] = useState(0);
@@ -523,6 +524,7 @@ export function GraderWorkspace({
     setRunState("running");
     setCompileError(null);
     setConsoleTab("result");
+    setMobileTab("console");
     setSelectedTestCase(null);
     try {
       const response = await fetch(`/api/proxy/compile`, {
@@ -586,6 +588,7 @@ export function GraderWorkspace({
     if (activeProblem?.locked) return;
     setRunState("running");
     setCompileError(null);
+    setMobileTab("console");
     try {
       const response = await fetch(
         `/api/proxy/compile`,
@@ -825,11 +828,12 @@ export function GraderWorkspace({
                       </span>
                     )}
                   </span>
-                  <span className="grader-problem-meta mt-1 flex items-center gap-2 text-xs text-[#887d73]">
-                    {problem.topic}
-                    <span aria-hidden="true">·</span>
-                    <span className={problem.difficulty === "ยาก" ? "text-[#b83a2f]" : problem.difficulty === "ปานกลาง" ? "text-[#9a6815]" : "text-[#287548]"}>{problem.difficulty}</span>
-                    <span className="text-[#607089]">ผ่านแล้ว {problem.passedCount} คน</span>
+                  <span className="grader-problem-meta mt-1 flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-xs text-[#887d73]">
+                    <span className="whitespace-nowrap">{problem.topic}</span>
+                    <span aria-hidden="true" className="opacity-50">·</span>
+                    <span className={`whitespace-nowrap ${problem.difficulty === "ยาก" ? "text-[#b83a2f]" : problem.difficulty === "ปานกลาง" ? "text-[#9a6815]" : "text-[#287548]"}`}>{problem.difficulty}</span>
+                    <span aria-hidden="true" className="opacity-50">·</span>
+                    <span className="whitespace-nowrap text-[#607089]">ผ่านแล้ว {problem.passedCount} คน</span>
                   </span>
                 </span>
               </button>
@@ -863,54 +867,54 @@ export function GraderWorkspace({
       />
 
       <div className="flex min-w-0 flex-1 flex-col">
-      <header className="grader-header flex-none border-b border-[#eadfce] bg-white px-3 py-2 sm:px-4">
-        <div className="flex min-h-12 flex-wrap items-center justify-between gap-2">
-          <div className="flex min-w-0 items-center gap-3">
+      <header className="grader-header flex-none border-b border-[#eadfce] bg-white px-2 py-1.5 sm:px-4 sm:py-2">
+        <div className="flex h-9 sm:h-12 items-center justify-between gap-1.5 sm:gap-2">
+          <div className="flex min-w-0 items-center gap-1.5 sm:gap-3">
             <button
               type="button"
               aria-label="เปิดรายการโจทย์"
               aria-expanded={sidebarOpen}
               onClick={() => setSidebarOpen(true)}
-              className="grid h-11 w-11 flex-none place-items-center rounded-xl border border-[#e5dbce] text-[#514a44] hover:border-[#ea721f] lg:hidden"
+              className="grid h-8 w-8 flex-none place-items-center rounded-lg border border-[#e5dbce] text-[#514a44] hover:border-[#ea721f] sm:h-11 sm:w-11 sm:rounded-xl lg:hidden"
             >
-              <Icon name="menu" />
+              <Icon name="menu" className="h-4 w-4 sm:h-5 sm:w-5" />
             </button>
-            <span className="grid h-10 w-10 flex-none place-items-center rounded-xl bg-[#fff0df] text-sm font-bold text-[#d85f13]">
+            <span className="grid h-8 w-8 flex-none place-items-center rounded-lg bg-[#fff0df] text-xs font-bold text-[#d85f13] sm:h-10 sm:w-10 sm:rounded-xl sm:text-sm">
               {String(activeProblem.id).padStart(2, "0")}
             </span>
             <div className="min-w-0">
-              <div className="flex items-center gap-2 text-xs font-medium text-[#766b61]">
-                <span className="hidden sm:inline">แบบฝึกหัดพื้นฐาน</span>
+              <div className="hidden sm:flex items-center gap-2 text-xs font-medium text-[#766b61]">
+                <span>แบบฝึกหัดพื้นฐาน</span>
                 <Icon name="chevron" className="h-3.5 w-3.5" />
                 <span className="truncate">{activeProblem.topic}</span>
               </div>
-              <h1 className="max-w-[180px] truncate text-base font-bold text-[#292725] sm:max-w-none sm:text-lg">{activeProblem.title}</h1>
+              <h1 className="max-w-[110px] xs:max-w-[160px] truncate text-xs font-bold text-[#292725] sm:max-w-none sm:text-lg">{activeProblem.title}</h1>
             </div>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-none items-center gap-1 sm:gap-2">
             {userPlan === "free" ? (
               <button
                 type="button"
                 onClick={() => setUpgradeModalOpen(true)}
-                className={`grader-theme-toggle flex h-11 cursor-pointer items-center justify-center rounded-xl border px-3.5 text-xs font-bold transition ${
+                className={`grader-theme-toggle flex h-8 sm:h-11 cursor-pointer items-center justify-center rounded-lg sm:rounded-xl border px-2 sm:px-3.5 text-[11px] sm:text-xs font-bold transition ${
                   darkMode
                     ? "border-[#364152] bg-[#1c2430] text-[#e6ebf2] hover:border-[#ea721f] hover:text-[#f4a46d]"
                     : "border-[#ded6cc] bg-white text-[#514a44] hover:border-[#ea721f] hover:text-[#d85f13]"
                 }`}
               >
-                <span>อัปเกรดเป็น PRO</span>
+                <span>PRO</span>
               </button>
             ) : (
               <div
-                className={`flex h-11 items-center gap-1.5 rounded-xl border px-3 text-xs font-bold ${
+                className={`flex h-8 sm:h-11 items-center gap-1 rounded-lg sm:rounded-xl border px-2 sm:px-3 text-xs font-bold ${
                   darkMode
                     ? "border-[#eab308]/30 bg-[#eab308]/10 text-[#facc15]"
                     : "border-[#fde68a] bg-[#fffbeb] text-[#b45309]"
                 }`}
                 title={planExpiresAt ? `วันหมดอายุสิทธิ์ PRO: ${new Date(planExpiresAt).toLocaleString("th-TH")}` : undefined}
               >
-                <span className="font-extrabold text-[#eab308]">PRO</span>
-                <span className="text-[11px] font-semibold opacity-90">
+                <span className="font-extrabold text-[#eab308] text-[11px] sm:text-xs">PRO</span>
+                <span className="hidden md:inline text-[11px] font-semibold opacity-90">
                   exp: {formatExpireDate(planExpiresAt)}
                 </span>
               </div>
@@ -920,11 +924,13 @@ export function GraderWorkspace({
               onClick={toggleTheme}
               aria-label={darkMode ? "เปลี่ยนเป็นโหมดสว่าง" : "เปลี่ยนเป็นโหมดมืด"}
               title={darkMode ? "โหมดสว่าง" : "โหมดมืด"}
-              className="grader-theme-toggle grid h-11 w-11 flex-none cursor-pointer place-items-center rounded-xl border border-[#ded6cc] bg-white text-[#514a44] transition hover:border-[#ea721f] hover:text-[#d85f13]"
+              className="grader-theme-toggle grid h-8 w-8 sm:h-11 sm:w-11 flex-none cursor-pointer place-items-center rounded-lg sm:rounded-xl border border-[#ded6cc] bg-white text-[#514a44] transition hover:border-[#ea721f] hover:text-[#d85f13]"
             >
-              <Icon name={darkMode ? "sun" : "moon"} className="h-5 w-5" />
+              <Icon name={darkMode ? "sun" : "moon"} className="h-4 w-4 sm:h-5 sm:w-5" />
             </button>
-            <FontSizeControl value={fontSize} dark={darkMode} onChange={setFontSize} />
+            <div className="hidden sm:block">
+              <FontSizeControl value={fontSize} dark={darkMode} onChange={setFontSize} />
+            </div>
             <UserMenu
               username={username}
               email={email}
@@ -936,21 +942,71 @@ export function GraderWorkspace({
               type="button"
               onClick={() => evaluate(true)}
               disabled={runState === "running" || activeProblem.locked}
-              className="inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-xl bg-[#ea721f] px-4 text-sm font-bold text-white shadow-[0_8px_20px_rgba(234,114,31,.25)] transition hover:bg-[#d85f13] disabled:cursor-wait disabled:opacity-60"
+              className="inline-flex h-8 sm:min-h-11 cursor-pointer items-center gap-1 sm:gap-2 rounded-lg sm:rounded-xl bg-[#ea721f] px-2.5 sm:px-4 text-xs sm:text-sm font-bold text-white shadow-[0_8px_20px_rgba(234,114,31,.25)] transition hover:bg-[#d85f13] disabled:cursor-wait disabled:opacity-60"
             >
-              <Icon name="send" className="h-4 w-4" />
-              {activeProblem.locked ? "สำหรับ Pro" : "ส่งคำตอบ"}
+              <Icon name="send" className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+              <span>{activeProblem.locked ? "Pro" : "ส่งคำตอบ"}</span>
             </button>
           </div>
         </div>
       </header>
 
+      {/* Mobile Tab Switcher Bar (Visible on mobile screens < 1024px) */}
+      <div className={`flex flex-none items-center justify-around border-b px-2 py-1.5 lg:hidden ${darkMode ? "border-[#29303c] bg-[#151b25] text-[#dbe2eb]" : "border-[#eadfce] bg-white text-[#514a44]"}`}>
+        <button
+          type="button"
+          onClick={() => setMobileTab("problem")}
+          className={`flex flex-1 items-center justify-center gap-1.5 rounded-lg py-2 text-xs font-bold transition ${
+            mobileTab === "problem"
+              ? "bg-[#ea721f] text-white shadow-sm"
+              : darkMode
+              ? "text-[#aeb7c4] hover:bg-[#1f2735]"
+              : "text-[#655c53] hover:bg-[#f5efea]"
+          }`}
+        >
+          <Icon name="book" className="h-4 w-4" />
+          <span>โจทย์</span>
+        </button>
+        <button
+          type="button"
+          onClick={() => setMobileTab("code")}
+          className={`flex flex-1 items-center justify-center gap-1.5 rounded-lg py-2 text-xs font-bold transition ${
+            mobileTab === "code"
+              ? "bg-[#ea721f] text-white shadow-sm"
+              : darkMode
+              ? "text-[#aeb7c4] hover:bg-[#1f2735]"
+              : "text-[#655c53] hover:bg-[#f5efea]"
+          }`}
+        >
+          <Icon name="terminal" className="h-4 w-4" />
+          <span>เขียนโค้ด</span>
+        </button>
+        <button
+          type="button"
+          onClick={() => setMobileTab("console")}
+          className={`flex flex-1 items-center justify-center gap-1.5 rounded-lg py-2 text-xs font-bold transition ${
+            mobileTab === "console"
+              ? "bg-[#ea721f] text-white shadow-sm"
+              : darkMode
+              ? "text-[#aeb7c4] hover:bg-[#1f2735]"
+              : "text-[#655c53] hover:bg-[#f5efea]"
+          }`}
+        >
+          <Icon name="play" className="h-4 w-4" />
+          <span>ผลการตรวจ</span>
+          {runState === "passed" && <span className="h-2 w-2 rounded-full bg-emerald-500" />}
+          {runState === "failed" && <span className="h-2 w-2 rounded-full bg-red-500" />}
+        </button>
+      </div>
+
       <div
         className="grader-main-split grid min-h-0 min-w-0 flex-1 gap-0 overflow-x-hidden overflow-y-auto p-2 lg:overflow-hidden"
         style={{ "--grader-problem-width": `${problemWidth}%` } as React.CSSProperties}
       >
-        <section className="grader-problem overflow-hidden rounded-xl border border-[#e5dbce] bg-white shadow-[0_12px_36px_rgba(62,46,30,.06)] lg:min-h-0 lg:overflow-y-auto">
-          <div className="flex h-14 items-end border-b border-[#eee6dc] px-5" role="tablist" aria-label="รายละเอียดโจทย์">
+        <section className={`grader-problem flex flex-col overflow-hidden rounded-xl border border-[#e5dbce] bg-white shadow-[0_12px_36px_rgba(62,46,30,.06)] lg:min-h-0 ${
+          mobileTab === "problem" ? "h-full min-h-[calc(100vh-170px)]" : "hidden lg:flex"
+        }`}>
+          <div className="flex h-14 flex-none items-end border-b border-[#eee6dc] px-5" role="tablist" aria-label="รายละเอียดโจทย์">
             <button
               type="button"
               role="tab"
@@ -971,107 +1027,109 @@ export function GraderWorkspace({
             </button>
           </div>
 
-          {activeTab === "problem" ? (
-            <article className="space-y-7 p-5 text-[15px] leading-7 text-[#544d47] sm:p-7">
-              {problemsError ? (
-                <div role="alert" className="flex min-h-[360px] flex-col items-center justify-center text-center">
-                  <span className="grid h-14 w-14 place-items-center rounded-2xl bg-[#fff0df] text-[#d85f13]" aria-hidden="true">
-                    <Icon name="terminal" className="h-7 w-7" />
-                  </span>
-                  <h2 className="mt-5 text-xl font-bold text-[#292725]">เซิร์ฟเวอร์มีปัญหา</h2>
-                  <p className="mt-2 max-w-sm whitespace-pre-line text-sm leading-6 text-[#81766c]">{problemsError}</p>
-                  <button type="button" onClick={() => setProblemsReloadKey((current) => current + 1)} className="mt-6 flex min-h-11 cursor-pointer items-center justify-center rounded-xl bg-[#ea721f] px-6 text-sm font-bold text-white shadow-[0_8px_20px_rgba(234,114,31,.25)] transition hover:bg-[#d85f13] active:scale-95">
-                    ลองใหม่อีกครั้ง
-                  </button>
-                </div>
-              ) : problemsLoading ? (
-                <div role="status" className="flex min-h-[360px] items-center justify-center text-sm font-semibold text-[#81766c]">
-                  กำลังเตรียมโจทย์...
-                </div>
-              ) : activeProblem.locked ? (
-                <div className="flex min-h-[360px] flex-col items-center justify-center text-center">
-                  <span className="grid h-14 w-14 place-items-center rounded-2xl bg-[#fff0df] text-[#d85f13]" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-7 w-7">
-                      <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
-                      <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                    </svg>
-                  </span>
-                  <h2 className="mt-5 text-xl font-bold text-[#292725]">โจทย์สำหรับสมาชิก Pro</h2>
-                  <p className="mt-2 max-w-sm text-sm text-[#81766c]">
-                    อัปเกรดเป็น Pro เพื่ออ่านรายละเอียด รันโค้ด และส่งคำตอบ
-                  </p>
-                  <button
-                    type="button"
-                    onClick={() => setUpgradeModalOpen(true)}
-                    className="mt-6 flex h-11 cursor-pointer items-center justify-center rounded-xl bg-[#ea721f] px-6 text-sm font-bold text-white shadow-[0_8px_20px_rgba(234,114,31,.25)] transition hover:bg-[#d85f13] active:scale-95"
-                  >
-                    อัปเกรดเป็น PRO
-                  </button>
-                </div>
-              ) : (
-                <>
-              <div>
-                <div className="mb-4 flex flex-wrap gap-2">
-                  <span className="rounded-full bg-[#e9f8ef] px-3 py-1 text-xs font-bold text-[#227a45]">{activeProblem.difficulty}</span>
-                  <span className="rounded-full bg-[#f4f1ed] px-3 py-1 text-xs font-semibold text-[#71675f]">{activeProblem.points} คะแนน</span>
-                  <span className="rounded-full bg-[#eef2f8] px-3 py-1 text-xs font-semibold text-[#607089]">
-                    ผ่านแล้ว {activeProblem.passedCount} คน
-                  </span>
-                </div>
-                <h2 className="text-xl font-bold text-[#292725]">โจทย์</h2>
-                <p className="mt-2">{activeProblem.description}</p>
-              </div>
-              <div>
-                <h2 className="font-bold text-[#292725]">ข้อมูลนำเข้า</h2>
-                <p className="mt-1">{activeProblem.inputDescription}</p>
-              </div>
-              <div>
-                <h2 className="font-bold text-[#292725]">ข้อมูลส่งออก</h2>
-                <p className="mt-1">{activeProblem.outputDescription}</p>
-              </div>
-              <div className="grid gap-3 sm:grid-cols-2">
-                <div className="overflow-hidden rounded-xl border border-[#e7ded4]">
-                  <div className="flex items-center justify-between bg-[#f8f5f1] px-4 py-2 text-xs font-bold text-[#71675f]">
-                    ตัวอย่างข้อมูลนำเข้า
-                    <span className="font-mono font-normal">stdin</span>
-                  </div>
-                    <pre className="whitespace-pre-wrap px-4 py-3 font-mono text-sm text-[#292725]">{activeProblem.sampleInput}</pre>
-                </div>
-                <div className="overflow-hidden rounded-xl border border-[#e7ded4]">
-                  <div className="flex items-center justify-between bg-[#f8f5f1] px-4 py-2 text-xs font-bold text-[#71675f]">
-                    ตัวอย่างผลลัพธ์
-                    <span className="font-mono font-normal">stdout</span>
-                  </div>
-                  <pre className="whitespace-pre-wrap px-4 py-3 font-mono text-sm text-[#292725]">{activeProblem.sampleOutput}</pre>
-                </div>
-              </div>
-                </>
-              )}
-            </article>
-          ) : (
-            <div className="p-7">
-              {submissions.length > 0 ? (
-                <div className="space-y-3">
-                  {submissions.map((submission) => (
-                    <button key={submission.id} type="button" onClick={() => setSelectedSubmission(submission)}
-                      className="w-full rounded-xl border border-[#e8dfd5] p-5 text-left transition hover:border-[#ea721f]">
-                      <p className="text-xs font-semibold text-[#81766c]">{new Date(submission.createdAt).toLocaleString("th-TH")}</p>
-                      <p className={`mt-2 font-bold ${submission.status === "passed" ? "text-[#18753c]" : "text-[#b83a2f]"}`}>
-                        {submission.status === "passed" ? `ผ่านทุก test case · ${submission.score}/100` : "คำตอบยังไม่ถูกต้อง · 0/100"}
-                      </p>
-                      <p className="mt-1 text-xs font-semibold text-[#c45211]">กดเพื่อดูโค้ด</p>
+          <div className="min-h-0 flex-1 overflow-y-auto">
+            {activeTab === "problem" ? (
+              <article className="space-y-7 p-5 text-[15px] leading-7 text-[#544d47] sm:p-7">
+                {problemsError ? (
+                  <div role="alert" className="flex min-h-[360px] flex-col items-center justify-center text-center">
+                    <span className="grid h-14 w-14 place-items-center rounded-2xl bg-[#fff0df] text-[#d85f13]" aria-hidden="true">
+                      <Icon name="terminal" className="h-7 w-7" />
+                    </span>
+                    <h2 className="mt-5 text-xl font-bold text-[#292725]">เซิร์ฟเวอร์มีปัญหา</h2>
+                    <p className="mt-2 max-w-sm whitespace-pre-line text-sm leading-6 text-[#81766c]">{problemsError}</p>
+                    <button type="button" onClick={() => setProblemsReloadKey((current) => current + 1)} className="mt-6 flex min-h-11 cursor-pointer items-center justify-center rounded-xl bg-[#ea721f] px-6 text-sm font-bold text-white shadow-[0_8px_20px_rgba(234,114,31,.25)] transition hover:bg-[#d85f13] active:scale-95">
+                      ลองใหม่อีกครั้ง
                     </button>
-                  ))}
+                  </div>
+                ) : problemsLoading ? (
+                  <div role="status" className="flex min-h-[360px] items-center justify-center text-sm font-semibold text-[#81766c]">
+                    กำลังเตรียมโจทย์...
+                  </div>
+                ) : activeProblem.locked ? (
+                  <div className="flex min-h-[360px] flex-col items-center justify-center text-center">
+                    <span className="grid h-14 w-14 place-items-center rounded-2xl bg-[#fff0df] text-[#d85f13]" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-7 w-7">
+                        <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                      </svg>
+                    </span>
+                    <h2 className="mt-5 text-xl font-bold text-[#292725]">โจทย์สำหรับสมาชิก Pro</h2>
+                    <p className="mt-2 max-w-sm text-sm text-[#81766c]">
+                      อัปเกรดเป็น Pro เพื่ออ่านรายละเอียด รันโค้ด และส่งคำตอบ
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => setUpgradeModalOpen(true)}
+                      className="mt-6 flex h-11 cursor-pointer items-center justify-center rounded-xl bg-[#ea721f] px-6 text-sm font-bold text-white shadow-[0_8px_20px_rgba(234,114,31,.25)] transition hover:bg-[#d85f13] active:scale-95"
+                    >
+                      อัปเกรดเป็น PRO
+                    </button>
+                  </div>
+                ) : (
+                  <>
+                <div>
+                  <div className="mb-4 flex flex-wrap gap-2">
+                    <span className="rounded-full bg-[#e9f8ef] px-3 py-1 text-xs font-bold text-[#227a45]">{activeProblem.difficulty}</span>
+                    <span className="rounded-full bg-[#f4f1ed] px-3 py-1 text-xs font-semibold text-[#71675f]">{activeProblem.points} คะแนน</span>
+                    <span className="rounded-full bg-[#eef2f8] px-3 py-1 text-xs font-semibold text-[#607089]">
+                      ผ่านแล้ว {activeProblem.passedCount} คน
+                    </span>
+                  </div>
+                  <h2 className="text-xl font-bold text-[#292725]">โจทย์</h2>
+                  <p className="mt-2">{activeProblem.description}</p>
                 </div>
-              ) : (
-                <div className="py-16 text-center">
-                  <Icon name="terminal" className="mx-auto h-8 w-8 text-[#b8ada3]" />
-                  <p className="mt-3 font-semibold text-[#5e554e]">ยังไม่มีประวัติการส่ง</p>
-                  <p className="mt-1 text-sm text-[#8a8077]">กด “ส่งคำตอบ” เมื่อต้องการให้ระบบตรวจ</p>
+                <div>
+                  <h2 className="font-bold text-[#292725]">ข้อมูลนำเข้า</h2>
+                  <p className="mt-1">{activeProblem.inputDescription}</p>
                 </div>
-              )}
-            </div>
-          )}
+                <div>
+                  <h2 className="font-bold text-[#292725]">ข้อมูลส่งออก</h2>
+                  <p className="mt-1">{activeProblem.outputDescription}</p>
+                </div>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <div className="overflow-hidden rounded-xl border border-[#e7ded4]">
+                    <div className="flex items-center justify-between bg-[#f8f5f1] px-4 py-2 text-xs font-bold text-[#71675f]">
+                      ตัวอย่างข้อมูลนำเข้า
+                      <span className="font-mono font-normal">stdin</span>
+                    </div>
+                      <pre className="whitespace-pre-wrap px-4 py-3 font-mono text-sm text-[#292725]">{activeProblem.sampleInput}</pre>
+                  </div>
+                  <div className="overflow-hidden rounded-xl border border-[#e7ded4]">
+                    <div className="flex items-center justify-between bg-[#f8f5f1] px-4 py-2 text-xs font-bold text-[#71675f]">
+                      ตัวอย่างผลลัพธ์
+                      <span className="font-mono font-normal">stdout</span>
+                    </div>
+                    <pre className="whitespace-pre-wrap px-4 py-3 font-mono text-sm text-[#292725]">{activeProblem.sampleOutput}</pre>
+                  </div>
+                </div>
+                  </>
+                )}
+              </article>
+            ) : (
+              <div className="p-5 sm:p-7">
+                {submissions.length > 0 ? (
+                  <div className="space-y-3">
+                    {submissions.map((submission) => (
+                      <button key={submission.id} type="button" onClick={() => setSelectedSubmission(submission)}
+                        className="w-full rounded-xl border border-[#e8dfd5] p-5 text-left transition hover:border-[#ea721f]">
+                        <p className="text-xs font-semibold text-[#81766c]">{new Date(submission.createdAt).toLocaleString("th-TH")}</p>
+                        <p className={`mt-2 font-bold ${submission.status === "passed" ? "text-[#18753c]" : "text-[#b83a2f]"}`}>
+                          {submission.status === "passed" ? `ผ่านทุก test case · ${submission.score}/100` : "คำตอบยังไม่ถูกต้อง · 0/100"}
+                        </p>
+                        <p className="mt-1 text-xs font-semibold text-[#c45211]">กดเพื่อดูโค้ด</p>
+                      </button>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="py-16 text-center">
+                    <Icon name="terminal" className="mx-auto h-8 w-8 text-[#b8ada3]" />
+                    <p className="mt-3 font-semibold text-[#5e554e]">ยังไม่มีประวัติการส่ง</p>
+                    <p className="mt-1 text-sm text-[#8a8077]">กด “ส่งคำตอบ” เมื่อต้องการให้ระบบตรวจ</p>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
         </section>
 
         <div
@@ -1090,7 +1148,9 @@ export function GraderWorkspace({
           }}
         />
 
-        <section className="grader-code-panel overflow-hidden rounded-xl border shadow-[0_18px_44px_rgba(18,24,34,.12)] lg:min-h-0">
+        <section className={`grader-code-panel overflow-hidden rounded-xl border shadow-[0_18px_44px_rgba(18,24,34,.12)] lg:min-h-0 ${
+          mobileTab !== "problem" ? "flex flex-col h-full min-h-[calc(100vh-170px)]" : "hidden lg:flex"
+        }`}>
           <div className="grader-code-toolbar flex min-h-14 flex-wrap items-center justify-between gap-3 border-b px-4">
             <div className="grader-code-title flex items-center gap-2 text-sm font-bold">
               <Icon name="terminal" className="h-4 w-4 text-[#f28a42]" />
@@ -1138,20 +1198,22 @@ export function GraderWorkspace({
             </div>
           </div>
 
-          <div className="grader-code-surface relative min-h-[430px]">
+          <div className={`grader-code-surface relative min-h-[160px] flex-1 overflow-hidden ${
+            mobileTab === "code" ? "flex flex-col h-full min-h-[250px]" : "hidden lg:block"
+          }`}>
             <div
               ref={lineNumbersRef}
               aria-hidden="true"
-              className="grader-code-font grader-line-numbers pointer-events-none absolute bottom-0 left-0 top-0 z-10 w-12 select-none overflow-hidden border-r px-3 py-5 text-right font-mono leading-6"
+              className="grader-code-font grader-line-numbers pointer-events-none absolute bottom-0 left-0 top-0 z-10 w-12 select-none overflow-hidden border-r px-3 pt-5 pb-12 text-right font-mono leading-6"
             >
               {Array.from({ length: lineCount }, (_, index) => <div key={index}>{index + 1}</div>)}
             </div>
             <pre
               ref={highlightedCodeRef}
               aria-hidden="true"
-              className="grader-code-font pointer-events-none absolute inset-0 overflow-hidden whitespace-pre py-5 pl-16 pr-5 font-mono leading-6"
+              className="grader-code-font pointer-events-none absolute inset-0 overflow-hidden whitespace-pre pt-5 pb-12 pl-16 pr-5 font-mono leading-6"
             >
-              {highlightCpp(code)}
+              {highlightCode(code, language)}
             </pre>
             <textarea
               value={code}
@@ -1172,16 +1234,19 @@ export function GraderWorkspace({
                 }
               }}
               aria-label="พื้นที่เขียนโค้ด"
+              autoCapitalize="none"
+              autoCorrect="off"
+              autoComplete="off"
               spellCheck={false}
-              className="grader-code-font absolute inset-0 min-h-[430px] w-full resize-none overflow-auto whitespace-pre bg-transparent py-5 pl-16 pr-5 font-mono leading-6 text-transparent caret-[#f28a42] outline-none selection:bg-[#f28a42]/30"
+              className="grader-code-font absolute inset-0 h-full w-full resize-none overflow-auto whitespace-pre bg-transparent pt-5 pb-12 pl-16 pr-5 font-mono leading-6 text-transparent caret-[#f28a42] outline-none selection:bg-[#f28a42]/30"
               style={{ WebkitTextFillColor: "transparent" }}
             />
             {suggestions.length > 0 ? (
               <div
                 role="listbox"
                 aria-label="คำแนะนำโค้ด"
-                className="absolute z-30 w-72 overflow-hidden rounded-lg border border-[#3a4558] bg-[#171d29] py-1 text-sm text-[#dbe2eb] shadow-2xl"
-                style={{ left: suggestionPosition.left, top: suggestionPosition.top }}
+                className="absolute z-30 max-w-[85vw] w-72 overflow-hidden rounded-lg border border-[#3a4558] bg-[#171d29] py-1 text-sm text-[#dbe2eb] shadow-2xl"
+                style={{ left: Math.min(suggestionPosition.left, typeof window !== "undefined" ? window.innerWidth - 300 : 50), top: suggestionPosition.top }}
               >
                 {suggestions.map((suggestion, index) => (
                   <button
@@ -1207,7 +1272,9 @@ export function GraderWorkspace({
           </div>
 
           <div
-            className="grader-console relative border-t"
+            className={`grader-console relative border-t ${
+              mobileTab === "console" ? "flex-1 flex flex-col h-full min-h-[250px]" : "hidden lg:flex"
+            }`}
             style={{ "--grader-console-height": `${consoleHeight}px` } as React.CSSProperties}
           >
             <div
