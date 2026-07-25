@@ -69,14 +69,26 @@ export function UserMenu({
             {email}
           </p>
         </div>
+        <div className="pt-2">
+          <a
+            href="/admin"
+            className={`flex w-full items-center justify-center rounded-xl border px-4 py-2 text-xs font-bold transition ${
+              dark
+                ? "border-purple-500/40 bg-purple-950/40 text-purple-200 hover:bg-purple-900/60"
+                : "border-purple-300 bg-purple-50 text-purple-700 hover:bg-purple-100"
+            }`}
+          >
+            Admin Portal (แอดมิน)
+          </a>
+        </div>
         <form
           action={`/api/auth/logout?returnTo=${encodeURIComponent(returnTo)}`}
           method="post"
-          className="pt-3"
+          className="pt-2"
         >
           <button
             type="submit"
-            className="flex w-full items-center justify-center rounded-xl bg-[#ea721f] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#d85f13]"
+            className="flex w-full items-center justify-center rounded-xl bg-[#ea721f] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#d85f13]"
           >
             ออกจากระบบ
           </button>
