@@ -1,6 +1,7 @@
 type ProtectedToolBarProps = {
   username: string;
   email: string;
+  role: string;
   returnTo: "/grader" | "/ide";
   backendUrl: string;
 };
@@ -12,6 +13,7 @@ type UserMenuProps = ProtectedToolBarProps & {
 export function UserMenu({
   username,
   email,
+  role,
   returnTo,
   backendUrl,
   dark = false,
@@ -69,17 +71,29 @@ export function UserMenu({
             {email}
           </p>
         </div>
-        <div className="pt-2">
+        <div className="pt-2 space-y-2">
           <a
-            href="/admin"
+            href="/account"
             className={`flex w-full items-center justify-center rounded-xl border px-4 py-2 text-xs font-bold transition ${
               dark
-                ? "border-purple-500/40 bg-purple-950/40 text-purple-200 hover:bg-purple-900/60"
-                : "border-purple-300 bg-purple-50 text-purple-700 hover:bg-purple-100"
+                ? "border-blue-500/40 bg-blue-950/40 text-blue-200 hover:bg-blue-900/60"
+                : "border-blue-300 bg-blue-50 text-blue-700 hover:bg-blue-100"
             }`}
           >
-            Admin Portal (แอดมิน)
+            บัญชีของฉัน
           </a>
+          {role === "admin" && (
+            <a
+              href="/admin"
+              className={`flex w-full items-center justify-center rounded-xl border px-4 py-2 text-xs font-bold transition ${
+                dark
+                  ? "border-purple-500/40 bg-purple-950/40 text-purple-200 hover:bg-purple-900/60"
+                  : "border-purple-300 bg-purple-50 text-purple-700 hover:bg-purple-100"
+              }`}
+            >
+              Admin Portal (แอดมิน)
+            </a>
+          )}
         </div>
         <form
           action={`/api/auth/logout?returnTo=${encodeURIComponent(returnTo)}`}

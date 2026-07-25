@@ -774,7 +774,7 @@ export function AdminDashboard({ backendUrl }: { backendUrl: string }) {
                                 <span
                                   className={`inline-block rounded-full px-2.5 py-0.5 text-xs font-bold uppercase ${
                                     prob.accessTier === "pro"
-                                      ? "bg-purple-50 text-purple-700 border border-purple-200"
+                                      ? "bg-amber-50 text-amber-700 border border-amber-200"
                                       : "bg-blue-50 text-blue-700 border border-blue-200"
                                   }`}
                                 >
@@ -821,7 +821,7 @@ export function AdminDashboard({ backendUrl }: { backendUrl: string }) {
                             <span className="font-mono font-bold text-[#ea721f]">#{prob.id}</span>
                             <div className="flex items-center gap-1.5">
                               <span className={`inline-block rounded-full px-2 py-0.5 text-[10px] font-bold ${prob.difficulty === "ง่าย" ? "bg-emerald-50 text-emerald-700 border border-emerald-200" : prob.difficulty === "ปานกลาง" ? "bg-amber-50 text-amber-700 border border-amber-200" : "bg-rose-50 text-rose-700 border border-rose-200"}`}>{prob.difficulty}</span>
-                              <span className={`inline-block rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${prob.accessTier === "pro" ? "bg-purple-50 text-purple-700 border border-purple-200" : "bg-blue-50 text-blue-700 border border-blue-200"}`}>{prob.accessTier}</span>
+                              <span className={`inline-block rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${prob.accessTier === "pro" ? "bg-amber-50 text-amber-700 border border-amber-200" : "bg-blue-50 text-blue-700 border border-blue-200"}`}>{prob.accessTier}</span>
                             </div>
                           </div>
                           <div className="font-bold text-sm text-[#292725]">{prob.title}</div>

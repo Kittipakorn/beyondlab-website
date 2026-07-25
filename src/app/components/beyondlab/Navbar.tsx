@@ -1,13 +1,28 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowIcon, CloseIcon, MenuIcon } from "./icons";
+import { CloseIcon, MenuIcon } from "./icons";
 import { Logo } from "./Logo";
 import { navItems } from "./data";
 
 export function Navbar() {
   const [open, setOpen] = useState(false);
+  const [session, setSession] = useState<{
+    authenticated: boolean;
+    user?: { username: string; email: string; plan: string; role: string };
+  } | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const backendUrl =
+      process.env.NEXT_PUBLIC_BACKEND_URL ?? "http://localhost:4000";
+    fetch(`${backendUrl}/auth/session`, { credentials: "include" })
+      .then((res) => (res.ok ? res.json() : { authenticated: false }))
+      .then((data) => setSession(data))
+      .catch(() => setSession({ authenticated: false }))
+      .finally(() => setLoading(false));
+  }, []);
 
   return (
     <nav className="sticky top-0 z-50 border-b border-[#f0dfc8]/90 bg-white/88 backdrop-blur-xl">
@@ -27,13 +42,26 @@ export function Navbar() {
           ))}
         </div>
         <div className="flex items-center gap-2">
-          <Link
-            href="/#contact"
-            className="hidden h-11 items-center gap-2 rounded-2xl bg-[#303030] px-4 text-sm font-semibold text-white shadow-[0_12px_28px_rgba(48,48,48,0.18)] transition hover:-translate-y-0.5 hover:bg-[#1f1f1f] sm:inline-flex"
-          >
-            ติดต่อเรา
-            <ArrowIcon />
-          </Link>
+          {loading ? (
+            <div className="h-8 w-20 animate-pulse rounded-2xl bg-[#f0dfc8]" />
+          ) : session?.authenticated && session.user ? (
+            <Link
+              href="/account"
+              className="flex h-11 items-center gap-2 rounded-2xl border border-[#ea721f]/30 bg-[#fff1e6] px-4 text-sm font-semibold text-[#d55d11] transition hover:bg-[#ffe4d0] shadow-sm"
+            >
+              <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-[#ea721f] text-xs font-bold text-white">
+                {session.user.username.charAt(0).toUpperCase()}
+              </span>
+              <span className="hidden sm:inline">{session.user.username}</span>
+            </Link>
+          ) : (
+            <Link
+              href="/login"
+              className="flex h-11 items-center gap-2 rounded-2xl bg-[#303030] px-4 text-sm font-semibold text-white shadow-[0_12px_28px_rgba(48,48,48,0.18)] transition hover:-translate-y-0.5 hover:bg-[#1f1f1f]"
+            >
+              เข้าสู่ระบบ
+            </Link>
+          )}
           <button
             type="button"
             aria-label={open ? "ปิดเมนู" : "เปิดเมนู"}
@@ -58,14 +86,23 @@ export function Navbar() {
                 {item.label}
               </Link>
             ))}
-            <Link
-              href="/#contact"
-              onClick={() => setOpen(false)}
-              className="mt-2 inline-flex h-11 items-center justify-center gap-2 rounded-2xl bg-[#303030] px-4 text-sm font-semibold text-white sm:hidden"
-            >
-              ติดต่อเรา
-              <ArrowIcon />
-            </Link>
+            {session?.authenticated && session.user ? (
+              <Link
+                href="/account"
+                onClick={() => setOpen(false)}
+                className="mt-2 inline-flex h-11 items-center justify-center gap-2 rounded-2xl bg-[#fff1e6] px-4 text-sm font-semibold text-[#d55d11] border border-[#ea721f]/30"
+              >
+                {session.user.username} — บัญชีของฉัน
+              </Link>
+            ) : (
+              <Link
+                href="/login"
+                onClick={() => setOpen(false)}
+                className="mt-2 inline-flex h-11 items-center justify-center gap-2 rounded-2xl bg-[#303030] px-4 text-sm font-semibold text-white"
+              >
+                เข้าสู่ระบบ
+              </Link>
+            )}
           </div>
         </div>
       )}
