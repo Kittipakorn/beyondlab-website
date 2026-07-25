@@ -251,43 +251,46 @@ export function GraderWorkspace({
       const src = e.target?.result as string;
       if (!src) return;
 
-      // Set preview immediately so it's ready right away
+      // Always set original preview first
       setSlipPreview(src);
 
-      try {
-        const img = new window.Image();
-        img.onload = () => {
-          try {
-            const canvas = document.createElement("canvas");
-            const MAX_DIM = 1200;
-            let width = img.width;
-            let height = img.height;
+      // Only attempt compression if file size is > 2MB
+      if (file.size > 2 * 1024 * 1024) {
+        try {
+          const img = new window.Image();
+          img.onload = () => {
+            try {
+              const canvas = document.createElement("canvas");
+              const MAX_DIM = 1600;
+              let width = img.width;
+              let height = img.height;
 
-            if (width > MAX_DIM || height > MAX_DIM) {
-              if (width > height) {
-                height = Math.round((height * MAX_DIM) / width);
-                width = MAX_DIM;
-              } else {
-                width = Math.round((width * MAX_DIM) / height);
-                height = MAX_DIM;
-              }
+              if (width > MAX_DIM || height > MAX_DIM) {
+                if (width > height) {
+                  height = Math.round((height * MAX_DIM) / width);
+                  width = MAX_DIM;
+                } else {
+                  width = Math.round((width * MAX_DIM) / height);
+                  height = MAX_DIM;
+                }
 
-              canvas.width = width;
-              canvas.height = height;
-              const ctx = canvas.getContext("2d");
-              if (ctx) {
-                ctx.drawImage(img, 0, 0, width, height);
-                const compressedBase64 = canvas.toDataURL("image/jpeg", 0.85);
-                setSlipPreview(compressedBase64);
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext("2d");
+                if (ctx) {
+                  ctx.drawImage(img, 0, 0, width, height);
+                  const compressedBase64 = canvas.toDataURL("image/png");
+                  setSlipPreview(compressedBase64);
+                }
               }
+            } catch {
+              // keep original
             }
-          } catch {
-            // keep src if canvas fails
-          }
-        };
-        img.src = src;
-      } catch {
-        // keep src if image loading fails
+          };
+          img.src = src;
+        } catch {
+          // keep original
+        }
       }
     };
     reader.readAsDataURL(file);
@@ -317,6 +320,7 @@ export function GraderWorkspace({
           setUpgradeModalOpen(false);
         }, 1800);
       } else {
+        console.error("[SLIP UPLOAD ERROR]:", data?.error || data);
         setSlipError(data?.error || "ไม่สามารถอัปโหลดสลิปได้");
       }
     } catch {
@@ -1469,9 +1473,9 @@ export function GraderWorkspace({
                     <p className="text-xs font-extrabold text-[#ea721f]">สแกน QR Code ชำระเงิน 99.- บาท</p>
                     <div className="my-2.5 flex justify-center">
                       <img
-                        src="https://promptpay.io/0987824363/99.png"
+                        src="/promptpay-qr.png"
                         onError={(e) => {
-                          (e.target as HTMLImageElement).src = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=00020101021129370016A000000677010111011300669878243635802TH53037645402995408TH";
+                          (e.target as HTMLImageElement).src = "https://promptpay.io/0987824363/99.png";
                         }}
                         alt="PromptPay QR Code 99 THB"
                         className="h-36 w-36 rounded-xl border border-current/10 bg-white p-1.5 shadow-sm"
