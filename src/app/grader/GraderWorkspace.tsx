@@ -251,38 +251,44 @@ export function GraderWorkspace({
       const src = e.target?.result as string;
       if (!src) return;
 
-      const img = new window.Image();
-      img.onload = () => {
-        const canvas = document.createElement("canvas");
-        const MAX_DIM = 1200;
-        let width = img.width;
-        let height = img.height;
+      // Set preview immediately so it's ready right away
+      setSlipPreview(src);
 
-        if (width > MAX_DIM || height > MAX_DIM) {
-          if (width > height) {
-            height = Math.round((height * MAX_DIM) / width);
-            width = MAX_DIM;
-          } else {
-            width = Math.round((width * MAX_DIM) / height);
-            height = MAX_DIM;
+      try {
+        const img = new window.Image();
+        img.onload = () => {
+          try {
+            const canvas = document.createElement("canvas");
+            const MAX_DIM = 1200;
+            let width = img.width;
+            let height = img.height;
+
+            if (width > MAX_DIM || height > MAX_DIM) {
+              if (width > height) {
+                height = Math.round((height * MAX_DIM) / width);
+                width = MAX_DIM;
+              } else {
+                width = Math.round((width * MAX_DIM) / height);
+                height = MAX_DIM;
+              }
+
+              canvas.width = width;
+              canvas.height = height;
+              const ctx = canvas.getContext("2d");
+              if (ctx) {
+                ctx.drawImage(img, 0, 0, width, height);
+                const compressedBase64 = canvas.toDataURL("image/jpeg", 0.85);
+                setSlipPreview(compressedBase64);
+              }
+            }
+          } catch {
+            // keep src if canvas fails
           }
-        }
-
-        canvas.width = width;
-        canvas.height = height;
-        const ctx = canvas.getContext("2d");
-        if (ctx) {
-          ctx.drawImage(img, 0, 0, width, height);
-          const compressedBase64 = canvas.toDataURL("image/jpeg", 0.85);
-          setSlipPreview(compressedBase64);
-        } else {
-          setSlipPreview(src);
-        }
-      };
-      img.onerror = () => {
-        setSlipPreview(src);
-      };
-      img.src = src;
+        };
+        img.src = src;
+      } catch {
+        // keep src if image loading fails
+      }
     };
     reader.readAsDataURL(file);
   }
