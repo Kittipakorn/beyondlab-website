@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { CourseLesson, R2Course } from "@/lib/r2Course";
 
@@ -45,6 +46,7 @@ export function LearningWorkspace({ course, studentName, studentEmail }: Learnin
   const [videoLoading, setVideoLoading] = useState(true);
   const [videoError, setVideoError] = useState("");
   const [videoRequestVersion, setVideoRequestVersion] = useState(0);
+  const [playbackRate, setPlaybackRate] = useState(1);
   const videoRef = useRef<HTMLVideoElement>(null);
   const videoShellRef = useRef<HTMLDivElement>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -151,7 +153,10 @@ export function LearningWorkspace({ course, studentName, studentEmail }: Learnin
 
   function handleVideoReady() {
     const video = videoRef.current;
-    if (!video || resumeTimeRef.current <= 0) return;
+    if (!video) return;
+
+    video.playbackRate = playbackRate;
+    if (resumeTimeRef.current <= 0) return;
 
     video.currentTime = resumeTimeRef.current;
     resumeTimeRef.current = 0;
@@ -209,6 +214,10 @@ export function LearningWorkspace({ course, studentName, studentEmail }: Learnin
   return (
     <section className="bg-[#f7f3ed] px-5 py-8 sm:px-8 sm:py-10">
       <div className="mx-auto max-w-7xl">
+        <Link href="/learn" className="mb-5 inline-flex min-h-11 items-center gap-2 rounded-xl px-1 text-sm font-bold text-[#655d56] transition hover:text-[#c65018] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ea721f] focus-visible:ring-offset-2">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-4 w-4" aria-hidden="true"><path d="M19 12H5m5 5-5-5 5-5" /></svg>
+          คอร์สของฉัน
+        </Link>
         <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#c65018]">BeyondLab Classroom</p>
@@ -237,13 +246,16 @@ export function LearningWorkspace({ course, studentName, studentEmail }: Learnin
                   src={videoUrl}
                   crossOrigin="anonymous"
                   controls
-                  controlsList="nodownload noplaybackrate nofullscreen"
+                  controlsList="nodownload nofullscreen"
                   disablePictureInPicture
                   playsInline
                   preload="metadata"
                   onContextMenu={(event) => event.preventDefault()}
                   onError={handleVideoError}
                   onLoadedMetadata={handleVideoReady}
+                  onRateChange={(event) => {
+                    setPlaybackRate(event.currentTarget.playbackRate);
+                  }}
                   onPlaying={() => {
                     consecutivePlaybackErrorsRef.current = 0;
                   }}

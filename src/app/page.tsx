@@ -14,8 +14,8 @@ export default function Home() {
       <Hero />
       <AboutTutors />
       {/* <ReviewsMarquee /> */}
+            <BuildGrid />
       <ServicesSection />
-      <BuildGrid />
       <ProjectShowcase />
       <InteractiveTerminal />
       <Community />

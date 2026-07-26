@@ -489,11 +489,11 @@ export function AccountPageClient({ username, email, backendUrl, courses = [], o
                   <div className="grid gap-5 sm:grid-cols-2">
                     <label className="block text-sm font-bold text-[#514840]">
                       ชื่อ
-                      <input type="text" autoComplete="given-name" maxLength={80} value={firstName} onChange={(event) => setFirstName(event.target.value)} className="mt-2 min-h-12 w-full rounded-xl border border-[#ddcfc2] bg-white px-4 font-normal outline-none transition focus:border-[#ea721f] focus:ring-2 focus:ring-[#ea721f]/15" placeholder="เช่น กิตติภกร" />
+                      <input type="text" autoComplete="given-name" maxLength={80} value={firstName} onChange={(event) => setFirstName(event.target.value)} className="mt-2 min-h-12 w-full rounded-xl border border-[#ddcfc2] bg-white px-4 font-normal outline-none transition focus:border-[#ea721f] focus:ring-2 focus:ring-[#ea721f]/15" />
                     </label>
                     <label className="block text-sm font-bold text-[#514840]">
                       นามสกุล
-                      <input type="text" autoComplete="family-name" maxLength={80} value={lastName} onChange={(event) => setLastName(event.target.value)} className="mt-2 min-h-12 w-full rounded-xl border border-[#ddcfc2] bg-white px-4 font-normal outline-none transition focus:border-[#ea721f] focus:ring-2 focus:ring-[#ea721f]/15" placeholder="เช่น สีนาค" />
+                      <input type="text" autoComplete="family-name" maxLength={80} value={lastName} onChange={(event) => setLastName(event.target.value)} className="mt-2 min-h-12 w-full rounded-xl border border-[#ddcfc2] bg-white px-4 font-normal outline-none transition focus:border-[#ea721f] focus:ring-2 focus:ring-[#ea721f]/15" />
                     </label>
                   </div>
                 </div>
