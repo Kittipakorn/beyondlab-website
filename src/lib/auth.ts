@@ -1,6 +1,7 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import type { SafeReturnTo } from "./safeReturnTo";
 
 export const SESSION_COOKIE_NAME = "beyondlab_session";
 
@@ -68,7 +69,7 @@ export async function getSession() {
   return verifySessionToken(cookieStore.get(SESSION_COOKIE_NAME)?.value);
 }
 
-export async function requireSession(returnTo: "/grader" | "/ide") {
+export async function requireSession(returnTo: SafeReturnTo) {
   const session = await getSession();
 
   if (!session) {

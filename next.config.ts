@@ -9,11 +9,23 @@ const isDev = process.env.NODE_ENV === "development";
 
 const backendOrigin = process.env.NEXT_PUBLIC_BACKEND_URL ?? "http://localhost:4000";
 
+function getOrigin(value: string | undefined) {
+  if (!value) return "";
+  try {
+    return new URL(value).origin;
+  } catch {
+    return "";
+  }
+}
+
+const r2Origin = getOrigin(process.env.R2_PUBLIC_URL);
+
 const contentSecurityPolicy = `
   default-src 'self';
   script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""};
   style-src 'self' 'unsafe-inline' https:;
   img-src 'self' blob: data: https://api.qrserver.com;
+  media-src 'self' blob: https://*.r2.cloudflarestorage.com${r2Origin ? ` ${r2Origin}` : ""};
   font-src 'self' data: https:;
   connect-src 'self' ${backendOrigin};
   object-src 'none';

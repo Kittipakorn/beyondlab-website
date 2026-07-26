@@ -53,6 +53,7 @@ export type PortfolioCategory = {
 export const navItems = [
   { label: "บริการ", href: "/#services" },
   { label: "คอร์สเรียน", href: "/#courses" },
+  { label: "เข้าเรียน", href: "/learn" },
   { label: "ผลงาน", href: "/#projects" },
   { label: "ติดต่อเรา", href: "/#contact" },
   { label: "Grader", href: "/grader" },

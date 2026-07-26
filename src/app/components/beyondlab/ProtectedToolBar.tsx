@@ -1,7 +1,7 @@
 type ProtectedToolBarProps = {
   username: string;
   email: string;
-  role: string;
+  role?: string;
   returnTo: "/grader" | "/ide";
   backendUrl: string;
 };
@@ -13,7 +13,7 @@ type UserMenuProps = ProtectedToolBarProps & {
 export function UserMenu({
   username,
   email,
-  role,
+  role = "user",
   returnTo,
   backendUrl,
   dark = false,

@@ -1,4 +1,4 @@
-export const SAFE_RETURN_TO_PATHS = ["/", "/account", "/grader", "/ide"] as const;
+export const SAFE_RETURN_TO_PATHS = ["/", "/account", "/grader", "/ide", "/learn"] as const;
 
 export type SafeReturnTo = (typeof SAFE_RETURN_TO_PATHS)[number];
 
@@ -14,5 +14,6 @@ export function getReturnToLabel(returnTo: SafeReturnTo) {
   if (returnTo === "/account") return "บัญชีของคุณ";
   if (returnTo === "/grader") return "BeyondLab Grader";
   if (returnTo === "/ide") return "IDE Playground";
+  if (returnTo === "/learn") return "ห้องเรียน BeyondLab";
   return "BeyondLab";
 }

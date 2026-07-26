@@ -60,6 +60,8 @@ async function proxy(request: NextRequest, { params }: { params: Promise<{ path:
   const responseHeaders = new Headers();
   const contentType = backendRes.headers.get("Content-Type");
   if (contentType) responseHeaders.set("Content-Type", contentType);
+  const cacheControl = backendRes.headers.get("Cache-Control");
+  if (cacheControl) responseHeaders.set("Cache-Control", cacheControl);
 
   return new NextResponse(backendRes.body, {
     status: backendRes.status,

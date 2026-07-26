@@ -19,6 +19,12 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
+/* The learning player uses its own fullscreen button. */
+.learn-video::-webkit-media-controls-fullscreen-button,
+.learn-video::-webkit-media-controls-download-button {
+  display: none !important;
+}
+
 body.grader-page-active,
 body.scratch-page-active {
   overflow: hidden !important;
