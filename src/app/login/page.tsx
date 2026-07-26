@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/auth";
+import { getReturnToLabel, getSafeReturnTo } from "@/lib/safeReturnTo";
 import { LoginForm } from "./LoginForm";
 
 export const metadata: Metadata = {
@@ -14,7 +15,7 @@ type LoginPageProps = {
 
 export default async function LoginPage({ searchParams }: LoginPageProps) {
   const { returnTo: requestedReturnTo } = await searchParams;
-  const returnTo = requestedReturnTo === "/ide" ? "/ide" : "/grader";
+  const returnTo = getSafeReturnTo(requestedReturnTo);
   const session = await getSession();
   const backendUrl =
     process.env.NEXT_PUBLIC_BACKEND_URL ?? "http://localhost:4000";
@@ -33,8 +34,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
           เข้าสู่ระบบ
         </h1>
         <p className="mt-3 leading-7 text-[#6f655d]">
-          กรุณาเข้าสู่ระบบก่อนใช้งาน{" "}
-          {returnTo === "/ide" ? "IDE Playground" : "BeyondLab Grader"}
+          กรุณาเข้าสู่ระบบเพื่อไปยัง {getReturnToLabel(returnTo)}
         </p>
         <LoginForm returnTo={returnTo} backendUrl={backendUrl} />
       </div>

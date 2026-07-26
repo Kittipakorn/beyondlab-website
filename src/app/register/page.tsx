@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/auth";
+import { getReturnToLabel, getSafeReturnTo } from "@/lib/safeReturnTo";
 import { RegisterForm } from "./RegisterForm";
 
 export const metadata: Metadata = {
@@ -16,7 +17,7 @@ export default async function RegisterPage({
   searchParams,
 }: RegisterPageProps) {
   const { returnTo: requestedReturnTo } = await searchParams;
-  const returnTo = requestedReturnTo === "/ide" ? "/ide" : "/grader";
+  const returnTo = getSafeReturnTo(requestedReturnTo);
   const session = await getSession();
   const backendUrl =
     process.env.NEXT_PUBLIC_BACKEND_URL ?? "http://localhost:4000";
@@ -35,8 +36,7 @@ export default async function RegisterPage({
           สมัครสมาชิก
         </h1>
         <p className="mt-3 leading-7 text-[#6f655d]">
-          สร้างบัญชีเพื่อใช้งาน{" "}
-          {returnTo === "/ide" ? "IDE Playground" : "BeyondLab Grader"}
+          สร้างบัญชีเพื่อไปยัง {getReturnToLabel(returnTo)}
         </p>
         <RegisterForm returnTo={returnTo} backendUrl={backendUrl} />
       </div>

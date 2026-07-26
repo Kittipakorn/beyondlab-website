@@ -1,19 +1,21 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { SESSION_COOKIE_NAME } from "@/lib/auth";
+import { getSafeReturnTo } from "@/lib/safeReturnTo";
 
 const BACKEND_URL =
   process.env.NEXT_PUBLIC_BACKEND_URL ?? "http://localhost:4000";
 
 export async function POST(request: Request) {
   const body = await request.json();
+  const returnTo = getSafeReturnTo(body.returnTo);
 
   let backendRes: Response;
   try {
     backendRes = await fetch(`${BACKEND_URL}/auth/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
+      body: JSON.stringify({ ...body, returnTo }),
     });
   } catch {
     return NextResponse.json(
@@ -40,5 +42,5 @@ export async function POST(request: Request) {
   }
 
   const { token: _, ...safeResult } = result;
-  return NextResponse.json(safeResult);
+  return NextResponse.json({ ...safeResult, redirectTo: returnTo });
 }

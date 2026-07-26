@@ -5,7 +5,7 @@ import { AccountPageClient } from "./AccountPageClient";
 
 export const metadata: Metadata = {
   title: "บัญชีของฉัน | BeyondLab",
-  description: "จัดการบัญชีผู้ใช้ BeyondLab - ดูข้อมูลสมาชิก แผนการใช้งาน และอัปเกรดเป็น Pro",
+  description: "พื้นที่ส่วนตัวสำหรับจัดการบัญชี คอร์ส ประวัติการซื้อ และสิทธิ์สมาชิก BeyondLab",
 };
 
 export default async function AccountPage() {

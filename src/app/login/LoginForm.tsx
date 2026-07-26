@@ -2,15 +2,14 @@
 
 import { FormEvent, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import type { SafeReturnTo } from "@/lib/safeReturnTo";
 
 type LoginFormProps = {
-  returnTo: "/grader" | "/ide";
+  returnTo: SafeReturnTo;
   backendUrl: string;
 };
 
 export function LoginForm({ returnTo, backendUrl }: LoginFormProps) {
-  const router = useRouter();
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -41,8 +40,9 @@ export function LoginForm({ returnTo, backendUrl }: LoginFormProps) {
         return;
       }
 
-      router.replace(result.redirectTo ?? returnTo);
-      router.refresh();
+      // A full navigation remounts the persistent layout so Navbar and every
+      // session-dependent client component read the newly issued cookie.
+      window.location.replace(returnTo);
     } catch {
       setError("เชื่อมต่อเซิร์ฟเวอร์ไม่ได้ กรุณาลองอีกครั้ง");
     } finally {

@@ -2,15 +2,14 @@
 
 import { FormEvent, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import type { SafeReturnTo } from "@/lib/safeReturnTo";
 
 type RegisterFormProps = {
-  returnTo: "/grader" | "/ide";
+  returnTo: SafeReturnTo;
   backendUrl: string;
 };
 
 export function RegisterForm({ returnTo, backendUrl }: RegisterFormProps) {
-  const router = useRouter();
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -19,8 +18,15 @@ export function RegisterForm({ returnTo, backendUrl }: RegisterFormProps) {
     setError("");
 
     const formData = new FormData(event.currentTarget);
+    const firstName = String(formData.get("firstName") ?? "").trim();
+    const lastName = String(formData.get("lastName") ?? "").trim();
     const password = String(formData.get("password") ?? "");
     const confirmPassword = String(formData.get("confirmPassword") ?? "");
+
+    if (!firstName || !lastName) {
+      setError("กรุณากรอกชื่อและนามสกุล");
+      return;
+    }
 
     if (password.length < 8 || password.length > 12 ||
         !/[a-z]/.test(password) || !/[A-Z]/.test(password) || !/[0-9]/.test(password)) {
@@ -39,6 +45,8 @@ export function RegisterForm({ returnTo, backendUrl }: RegisterFormProps) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          firstName,
+          lastName,
           username: formData.get("username"),
           email: formData.get("email"),
           password,
@@ -55,8 +63,7 @@ export function RegisterForm({ returnTo, backendUrl }: RegisterFormProps) {
         return;
       }
 
-      router.replace(result.redirectTo ?? returnTo);
-      router.refresh();
+      window.location.replace(returnTo);
     } catch {
       setError("เชื่อมต่อเซิร์ฟเวอร์ไม่ได้ กรุณาลองอีกครั้ง");
     } finally {
@@ -68,7 +75,7 @@ export function RegisterForm({ returnTo, backendUrl }: RegisterFormProps) {
     <form onSubmit={handleSubmit} className="mt-8 space-y-5">
       <div>
         <label htmlFor="username" className="mb-2 block text-sm font-semibold text-[#5c5148]">
-          Username
+          Username <span className="font-normal text-[#766b61]">(ชื่อที่แสดง)</span>
         </label>
         <input
           id="username"
@@ -82,7 +89,43 @@ export function RegisterForm({ returnTo, backendUrl }: RegisterFormProps) {
           autoFocus
           className="h-12 w-full rounded-2xl border border-[#e4d7c6] bg-white px-4 text-[#303030] outline-none transition placeholder:text-[#a49a91] focus:border-[#ea721f] focus:ring-4 focus:ring-[#ea721f]/10"
           placeholder="your-username"
+          aria-describedby="username-help"
         />
+        <p id="username-help" className="mt-2 text-xs leading-5 text-[#766b61]">
+          ชื่อนี้จะแสดงบนโปรไฟล์และในพื้นที่การใช้งานของคุณ
+        </p>
+      </div>
+      <div className="grid gap-5 sm:grid-cols-2">
+        <div>
+          <label htmlFor="firstName" className="mb-2 block text-sm font-semibold text-[#5c5148]">
+            ชื่อ
+          </label>
+          <input
+            id="firstName"
+            name="firstName"
+            type="text"
+            autoComplete="given-name"
+            maxLength={80}
+            required
+            className="h-12 w-full rounded-2xl border border-[#e4d7c6] bg-white px-4 text-[#303030] outline-none transition placeholder:text-[#a49a91] focus:border-[#ea721f] focus:ring-4 focus:ring-[#ea721f]/10"
+            placeholder="ชื่อของคุณ"
+          />
+        </div>
+        <div>
+          <label htmlFor="lastName" className="mb-2 block text-sm font-semibold text-[#5c5148]">
+            นามสกุล
+          </label>
+          <input
+            id="lastName"
+            name="lastName"
+            type="text"
+            autoComplete="family-name"
+            maxLength={80}
+            required
+            className="h-12 w-full rounded-2xl border border-[#e4d7c6] bg-white px-4 text-[#303030] outline-none transition placeholder:text-[#a49a91] focus:border-[#ea721f] focus:ring-4 focus:ring-[#ea721f]/10"
+            placeholder="นามสกุลของคุณ"
+          />
+        </div>
       </div>
       <div>
         <label

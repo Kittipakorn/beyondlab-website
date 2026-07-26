@@ -1,13 +1,12 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { SESSION_COOKIE_NAME } from "@/lib/auth";
-
-const allowedReturnTo = new Set(["/grader", "/ide"]);
+import { getSafeReturnTo } from "@/lib/safeReturnTo";
 
 export async function POST(request: Request) {
   const url = new URL(request.url);
-  const requestedReturnTo = url.searchParams.get("returnTo") ?? "/grader";
-  const returnTo = allowedReturnTo.has(requestedReturnTo) ? requestedReturnTo : "/grader";
+  const returnTo = getSafeReturnTo(url.searchParams.get("returnTo"));
+  const redirectTo = `/login?returnTo=${encodeURIComponent(returnTo)}`;
 
   const cookieStore = await cookies();
   cookieStore.set(SESSION_COOKIE_NAME, "", {
@@ -19,10 +18,9 @@ export async function POST(request: Request) {
     maxAge: 0,
   });
 
-  const response = NextResponse.redirect(
-    new URL(`/login?returnTo=${encodeURIComponent(returnTo)}`, request.url),
-    303,
-  );
+  const response = request.headers.get("accept")?.includes("application/json")
+    ? NextResponse.json({ success: true, redirectTo })
+    : NextResponse.redirect(new URL(redirectTo, request.url), 303);
   response.headers.set("Cache-Control", "no-store");
   return response;
 }
