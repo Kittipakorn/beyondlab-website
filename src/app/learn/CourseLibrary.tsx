@@ -7,23 +7,24 @@ import { CourseCountBadge } from "@/app/components/courses/CourseCountBadge";
 import { CoursePageHeader } from "@/app/components/courses/CoursePageHeader";
 import { CoursePageShell } from "@/app/components/courses/CoursePageShell";
 
-export function CourseLibrary({ course, studentName }: { course: R2Course; studentName: string }) {
-  const totalLessons = course.modules.reduce((total, module) => total + module.lessons.length, 0);
-  const [completedLessons, setCompletedLessons] = useState(0);
+export function CourseLibrary({ courses, studentName }: { courses: R2Course[]; studentName: string }) {
+  const [completedLessonsByCourse, setCompletedLessonsByCourse] = useState<Record<string, number>>({});
 
   useEffect(() => {
-    try {
-      const saved = window.localStorage.getItem(`beyondlab-course-progress:${course.id}`);
-      const completedIds: unknown = saved ? JSON.parse(saved) : [];
-      if (!Array.isArray(completedIds)) return;
-      const validLessonIds = new Set(course.modules.flatMap((module) => module.lessons.map((lesson) => lesson.id)));
-      setCompletedLessons(new Set(completedIds.filter((id): id is string => typeof id === "string" && validLessonIds.has(id))).size);
-    } catch {
-      // The course remains accessible when local storage is unavailable.
+    const next: Record<string, number> = {};
+    for (const course of courses) {
+      try {
+        const saved = window.localStorage.getItem(`beyondlab-course-progress:${course.id}`);
+        const completedIds: unknown = saved ? JSON.parse(saved) : [];
+        if (!Array.isArray(completedIds)) continue;
+        const validLessonIds = new Set(course.modules.flatMap((module) => module.lessons.map((lesson) => lesson.id)));
+        next[course.id] = new Set(completedIds.filter((id): id is string => typeof id === "string" && validLessonIds.has(id))).size;
+      } catch {
+        next[course.id] = 0;
+      }
     }
-  }, [course.id, course.modules]);
-
-  const progress = totalLessons ? Math.round((completedLessons / totalLessons) * 100) : 0;
+    setCompletedLessonsByCourse(next);
+  }, [courses]);
 
   return (
     <CoursePageShell>
@@ -31,7 +32,7 @@ export function CourseLibrary({ course, studentName }: { course: R2Course; stude
           eyebrow="BeyondLab Classroom"
           title="คอร์สของฉัน"
           description={`สวัสดี ${studentName} เลือกคอร์สที่ต้องการ แล้วกลับมาเรียนต่อจากจุดเดิมได้เลย`}
-          rightSlot={<CourseCountBadge count={1} />}
+          rightSlot={<CourseCountBadge count={courses.length} />}
         />
 
         <section className="mt-6" aria-labelledby="available-courses-title">
@@ -44,18 +45,27 @@ export function CourseLibrary({ course, studentName }: { course: R2Course; stude
           </div>
 
           <div className="mt-4 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            <CourseCard
-              title={course.title}
-              image="/courses/zero-to-code.png"
-              description={course.description}
-              meta={[`${course.modules.length} โมดูล`, `${totalLessons} บทเรียน`, ...(course.instructor ? [`ผู้สอน ${course.instructor}`] : [])]}
-              statusLabel="พร้อมเรียน"
-              statusTone="light"
-              actionHref={`/learn/${encodeURIComponent(course.id)}`}
-              actionLabel={progress > 0 ? "เรียนต่อ" : "เข้าเรียน"}
-              progress={{ completed: completedLessons, total: totalLessons }}
-              priority
-            />
+            {courses.map((course, index) => {
+              const totalLessons = course.modules.reduce((total, module) => total + module.lessons.length, 0);
+              const completedLessons = completedLessonsByCourse[course.id] ?? 0;
+              const progress = totalLessons ? Math.round((completedLessons / totalLessons) * 100) : 0;
+
+              return (
+                <CourseCard
+                  key={course.id}
+                  title={course.title}
+                  image={course.image}
+                  description={course.description}
+                  meta={[`${course.modules.length} โมดูล`, `${totalLessons} บทเรียน`, ...(course.instructor ? [`ผู้สอน ${course.instructor}`] : [])]}
+                  statusLabel={course.status === "open" ? "พร้อมเรียน" : "เร็วๆนี้"}
+                  statusTone="light"
+                  actionHref={`/learn/${encodeURIComponent(course.id)}`}
+                  actionLabel={progress > 0 ? "เรียนต่อ" : "เข้าเรียน"}
+                  progress={{ completed: completedLessons, total: totalLessons }}
+                  priority={index === 0}
+                />
+              );
+            })}
           </div>
         </section>
     </CoursePageShell>

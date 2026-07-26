@@ -90,11 +90,10 @@ export function CourseCatalog({ courses }: { courses: CourseItem[] }) {
                   features={course.points}
                   audience={course.audience}
                   price={course.price}
-                  statusLabel={course.status === "open" ? "เปิดรับสมัคร" : "เร็วๆ นี้"}
+                  statusLabel={course.status === "open" ? "เปิดรับสมัคร" : "เร็วๆนี้"}
                   statusTone={course.status === "open" ? "dark" : "light"}
                   actionHref={course.href}
-                  actionLabel={course.status === "open" ? "สมัครเรียน" : "เร็วๆ นี้"}
-                  actionExternal={course.status === "open"}
+                  actionLabel={course.status === "open" ? "สมัครเรียน" : "เร็วๆนี้"}
                 />
               ))}
             </div>

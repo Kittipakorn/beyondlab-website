@@ -24,12 +24,12 @@ export function CourseUnavailable({
           </svg>
         </span>
         <h1 className="mt-5 text-2xl font-bold text-[#292725]">
-          {title ?? (notConfigured ? "ยังไม่ได้เชื่อม Cloudflare R2" : "โหลดข้อมูลคอร์สไม่สำเร็จ")}
+          {title ?? (notConfigured ? "ยังไม่ได้เชื่อมฐานข้อมูลคอร์ส" : "โหลดข้อมูลคอร์สไม่สำเร็จ")}
         </h1>
         <p className="mt-3 text-base leading-7 text-[#71675f]">
           {description ?? (notConfigured
-            ? "เพิ่ม R2_PUBLIC_URL และอัปโหลด course manifest ตามตัวอย่างในไฟล์ environment แล้วเปิดหน้านี้อีกครั้ง"
-            : "กรุณาตรวจสอบว่า metadata manifest เปิดอ่านได้ และ backend เชื่อม private R2 video bucket สำเร็จ แล้วลองใหม่อีกครั้ง")}
+            ? "ตรวจสอบว่า MongoDB มีข้อมูลคอร์สแล้ว แล้วลองเปิดหน้านี้อีกครั้ง"
+            : "ระบบยังดึงข้อมูลคอร์สมาแสดงไม่ได้ กรุณาลองใหม่อีกครั้ง")}
         </p>
         <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
           <Link href="/account" className="inline-flex min-h-11 items-center justify-center rounded-xl border border-[#ded2c6] px-5 text-sm font-bold text-[#504841] transition hover:border-[#c65018] hover:text-[#c65018] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ea721f] focus-visible:ring-offset-2">

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { courses } from "@/app/components/beyondlab/data";
+import { getCourseCatalog } from "@/lib/courseDb";
 import { CourseCatalog } from "./CourseCatalog";
 
 export const metadata: Metadata = {
@@ -7,6 +7,12 @@ export const metadata: Metadata = {
   description: "ค้นหาและเลือกคอร์สเรียนเขียนโปรแกรมและเทคโนโลยีจาก BeyondLab",
 };
 
-export default function CoursesPage() {
-  return <CourseCatalog courses={courses} />;
+export const dynamic = "force-dynamic";
+
+export default async function CoursesPage() {
+  const courses = await getCourseCatalog().catch((error) => {
+    console.error("Unable to load course catalog", error);
+    return [];
+  });
+  return <CourseCatalog courses={courses.filter((course) => !course.hidden)} />;
 }

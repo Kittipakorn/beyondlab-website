@@ -50,8 +50,8 @@ async function proxy(request: NextRequest, { params }: { params: Promise<{ path:
     console.error(`Backend unavailable: ${url.origin}`, error);
     return NextResponse.json(
       {
-        error: "SERVER_UNAVAILABLE",
-        message: "สัญญาณขาดหาย สงสัยพี่มิคค์เดินเตะปลั๊กไฟ\nพักหน้าจอสักครู่ แล้วค่อยมาลองใหม่อีกครั้งนะ",
+        error: "ระบบชั่วคราวไม่พร้อมใช้งาน",
+        message: "ระบบกำลังมีปัญหาเล็กน้อย กรุณาลองใหม่อีกครั้งในสักครู่",
       },
       { status: 503 },
     );

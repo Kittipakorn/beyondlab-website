@@ -203,7 +203,7 @@ export function LearningWorkspace({ course, studentName, studentEmail }: Learnin
       <section className="mx-auto grid min-h-[65dvh] max-w-7xl place-items-center px-5 py-16 sm:px-8">
         <div className="rounded-[28px] border border-[#eadfce] bg-white p-8 text-center shadow-[0_18px_50px_rgba(62,46,30,.08)]">
           <h1 className="text-2xl font-bold text-[#292725]">ยังไม่มีบทเรียนในคอร์สนี้</h1>
-          <p className="mt-2 text-base leading-7 text-[#71675f]">เพิ่ม lesson ใน manifest บน Cloudflare R2 แล้วรีเฟรชหน้านี้</p>
+          <p className="mt-2 text-base leading-7 text-[#71675f]">คอร์สนี้ยังไม่มีบทเรียน กรุณากลับมาใหม่อีกครั้งในภายหลัง</p>
         </div>
       </section>
     );

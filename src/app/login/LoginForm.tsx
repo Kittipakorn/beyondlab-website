@@ -44,7 +44,7 @@ export function LoginForm({ returnTo, backendUrl }: LoginFormProps) {
       // session-dependent client component read the newly issued cookie.
       window.location.replace(result.redirectTo ?? returnTo);
     } catch {
-      setError("เชื่อมต่อเซิร์ฟเวอร์ไม่ได้ กรุณาลองอีกครั้ง");
+      setError("ระบบกำลังมีปัญหา กรุณาลองใหม่อีกครั้ง");
     } finally {
       setIsSubmitting(false);
     }

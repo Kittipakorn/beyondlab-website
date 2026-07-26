@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { FontSizeControl } from "../components/beyondlab/EditorControls";
+import { PromptPayQr } from "../components/beyondlab/PromptPayQr";
 import { UserMenu } from "../components/beyondlab/ProtectedToolBar";
 import { getTextareaCaretPosition } from "../components/beyondlab/editorCaret";
 
@@ -232,7 +233,7 @@ export function GraderWorkspace({
   const [copiedPromptPay, setCopiedPromptPay] = useState(false);
 
   function handleCopyPromptPay() {
-    navigator.clipboard.writeText("0987824363");
+    navigator.clipboard.writeText("2111550924");
     setCopiedPromptPay(true);
     setTimeout(() => setCopiedPromptPay(false), 2000);
   }
@@ -549,13 +550,13 @@ export function GraderWorkspace({
 
       if (!response.ok || result.error) {
         setRunState("failed");
-        setCompileError(result.error || result.stderr || "เกิดข้อผิดพลาดในการประมวลผล");
+        setCompileError(result.error || result.stderr || "เกิดข้อผิดพลาดในการตรวจคำตอบ");
         return;
       }
 
       if (result.status === "Compile Error") {
         setRunState("failed");
-        setCompileError(result.stderr || "Compile Error");
+        setCompileError(result.stderr || "โค้ดรันไม่สำเร็จ");
         setTestResults([]);
         return;
       }
@@ -580,7 +581,7 @@ export function GraderWorkspace({
       }
     } catch {
       setRunState("failed");
-      setCompileError("ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้");
+      setCompileError("ไม่สามารถเชื่อมต่อกับระบบตรวจคำตอบได้");
     }
   }
 
@@ -607,7 +608,7 @@ export function GraderWorkspace({
       );
       const result = await response.json();
       if (result.status === "Compile Error") {
-        setCompileError(result.stderr || "Compile Error");
+        setCompileError(result.stderr || "โค้ดรันไม่สำเร็จ");
         setCustomOutput({ stdout: "", stderr: result.stderr || "", status: "Compile Error" });
       } else {
         setCustomOutput({
@@ -618,7 +619,7 @@ export function GraderWorkspace({
       }
       setRunState("idle");
     } catch {
-      setCompileError("เชื่อมต่อระบบคอมไพเลอร์ไม่ได้");
+      setCompileError("ไม่สามารถเชื่อมต่อกับระบบตรวจคำตอบได้");
       setRunState("idle");
     }
   }
@@ -1347,7 +1348,7 @@ export function GraderWorkspace({
                   <div className={`rounded-xl border p-3 text-xs ${
                     darkMode ? "border-[#303947] bg-[#111722]" : "border-[#ded6cc] bg-white"
                   }`}>
-                    <p className={`font-bold ${darkMode ? "text-[#aeb7c4]" : "text-[#4a423a]"}`}>ผลลัพธ์ (Stdout):</p>
+                    <p className={`font-bold ${darkMode ? "text-[#aeb7c4]" : "text-[#4a423a]"}`}>ผลลัพธ์จากโปรแกรม</p>
                     <pre className={`mt-1 font-mono whitespace-pre-wrap ${
                       customOutput?.stdout
                         ? (darkMode ? "text-[#76d69a]" : "text-[#15803d]")
@@ -1357,7 +1358,7 @@ export function GraderWorkspace({
                     </pre>
                     {customOutput?.stderr ? (
                       <>
-                        <p className={`mt-2 font-bold ${darkMode ? "text-[#f19a91]" : "text-[#b91c1c]"}`}>ข้อผิดพลาด (Stderr):</p>
+                        <p className={`mt-2 font-bold ${darkMode ? "text-[#f19a91]" : "text-[#b91c1c]"}`}>ข้อความแสดงปัญหา</p>
                         <pre className={`mt-1 font-mono whitespace-pre-wrap ${darkMode ? "text-[#f19a91]" : "text-[#b91c1c]"}`}>{customOutput.stderr}</pre>
                       </>
                     ) : null}
@@ -1380,7 +1381,7 @@ export function GraderWorkspace({
                 }`}>
                   <div className="flex items-center gap-2 font-bold">
                     <Icon name="close" className="h-5 w-5" />
-                    <span>เกิดข้อผิดพลาดในการรันโค้ด (Compile / Runtime Error)</span>
+                    <span>โค้ดรันไม่สำเร็จ</span>
                   </div>
                   <pre className={`mt-3 max-h-48 overflow-auto rounded-lg p-3 font-mono text-xs whitespace-pre-wrap ${
                     darkMode ? "bg-[#1a1315] text-[#f8b4ab]" : "bg-white border border-[#fca5a5] text-[#991b1b]"
@@ -1399,7 +1400,7 @@ export function GraderWorkspace({
                     <div>
                       <p className="text-sm font-bold">
                         {runState === "passed"
-                          ? "ผ่านทุก test case"
+                          ? "ผ่านทุกข้อทดสอบ"
                           : `คำตอบยังไม่ถูกต้อง (${testResults.filter((t) => t.status === "passed").length} / ${testResults.length || activeProblem?.testCaseCount || 0} ผ่าน)`}
                       </p>
                       <p className="text-xs opacity-80">
@@ -1515,7 +1516,7 @@ export function GraderWorkspace({
                 <span className={`text-xs font-semibold ${darkMode ? "text-[#9aa8bb]" : "text-[#71675f]"}`}>/ 30 วัน</span>
               </div>
               <p className={`mt-1 text-[11px] font-medium ${darkMode ? "text-[#7c8b9e]" : "text-[#8a7e74]"}`}>
-                ชำระเงินผ่าน QR Code / PromptPay
+                ชำระเงินผ่าน QR Code
               </p>
 
               <button
@@ -1539,25 +1540,18 @@ export function GraderWorkspace({
                   }`}>
                     <p className="text-xs font-extrabold text-[#ea721f]">สแกน QR Code ชำระเงิน 99.- บาท</p>
                     <div className="my-2.5 flex justify-center">
-                      <img
-                        src="/promptpay-qr.png"
-                        onError={(e) => {
-                          (e.target as HTMLImageElement).src = "https://promptpay.io/0987824363/99.png";
-                        }}
-                        alt="PromptPay QR Code 99 THB"
-                        className="h-36 w-36 rounded-xl border border-current/10 bg-white p-1.5 shadow-sm"
-                      />
+                      <PromptPayQr amount={99} />
                     </div>
                     <div className="flex items-center justify-center gap-2">
                       <p className={`text-[11px] font-bold ${darkMode ? "text-white" : "text-[#292725]"}`}>
-                        พร้อมเพย์: <span className="font-mono text-[#ea721f]">098-782-4363</span>
+                        บัญชีกสิกร: <span className="font-mono text-[#ea721f]">2111550924</span>
                       </p>
                       <button
                         type="button"
                         onClick={handleCopyPromptPay}
                         className="rounded-md bg-[#ea721f]/15 px-2 py-0.5 text-[10px] font-extrabold text-[#ea721f] hover:bg-[#ea721f]/25 cursor-pointer"
                       >
-                        {copiedPromptPay ? "คัดลอกแล้ว! ✓" : "คัดลอกเบอร์"}
+                        {copiedPromptPay ? "คัดลอกแล้ว! ✓" : "คัดลอกเลขบัญชี"}
                       </button>
                     </div>
                     <p className={`mt-1 text-[10px] ${darkMode ? "text-[#7c8b9e]" : "text-[#8a7e74]"}`}>

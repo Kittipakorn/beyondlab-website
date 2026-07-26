@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { ArrowIcon } from "./icons";
 import { courses } from "./data";
 
@@ -74,15 +75,13 @@ export function BuildGrid() {
                   </p>
                 </div>
                 <div className="mt-4 flex flex-wrap items-center gap-3">
-                  <a
+                  <Link
                     href={course.href}
-                    target="_blank"
-                    rel="noreferrer"
                     className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-2xl bg-[#ff681f] px-5 text-sm font-semibold text-white shadow-[0_14px_30px_rgba(255,104,31,0.24)] transition hover:-translate-y-0.5 hover:bg-[#ea5b16] sm:w-auto"
                   >
                     {course.cta}
                     <ArrowIcon />
-                  </a>
+                  </Link>
                   <span className="text-xs text-neutral-500">
                     ลงทะเบียนแล้ว {course.students}
                   </span>

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { requireCompleteProfile } from "@/lib/auth";
 import { getEnrolledCourseIds } from "@/lib/courseAccess";
-import { getR2Course } from "@/lib/r2Course";
+import { getCourseCatalog } from "@/lib/courseDb";
 import { CourseLibrary } from "./CourseLibrary";
 import { CourseUnavailable } from "./CourseUnavailable";
 import { EmptyCourseLibrary } from "./EmptyCourseLibrary";
@@ -10,6 +10,8 @@ export const metadata: Metadata = {
   title: "คอร์สของฉัน | BeyondLab",
   description: "เลือกคอร์สและกลับมาเรียนต่อในห้องเรียน BeyondLab",
 };
+
+export const dynamic = "force-dynamic";
 
 export default async function LearnPage() {
   const session = await requireCompleteProfile("/learn");
@@ -27,13 +29,14 @@ export default async function LearnPage() {
   }
 
   try {
-    const course = await getR2Course();
-    if (!enrolledCourseIds.includes(course.id)) {
+    const courseCatalog = await getCourseCatalog(true);
+    const enrolledCourses = courseCatalog.filter((course) => enrolledCourseIds.includes(course.id));
+    if (enrolledCourses.length === 0) {
       return <EmptyCourseLibrary studentName={session.username} />;
     }
-    return <CourseLibrary course={course} studentName={session.username} />;
+    return <CourseLibrary courses={enrolledCourses} studentName={session.username} />;
   } catch (error) {
-    console.error("Unable to load course library from R2", error);
-    return <CourseUnavailable notConfigured={error instanceof Error && error.message === "R2_NOT_CONFIGURED"} />;
+    console.error("Unable to load course library from database", error);
+    return <CourseUnavailable notConfigured={false} />;
   }
 }

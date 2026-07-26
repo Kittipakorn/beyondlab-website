@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { requireCompleteProfile } from "@/lib/auth";
 import { getEnrolledCourseIds } from "@/lib/courseAccess";
-import { getR2Course } from "@/lib/r2Course";
+import { getCourseById } from "@/lib/courseDb";
 import { CourseUnavailable } from "../CourseUnavailable";
 import { LearningWorkspace } from "../LearningWorkspace";
 
@@ -10,6 +10,8 @@ export const metadata: Metadata = {
   title: "ห้องเรียน | BeyondLab",
   description: "ดูวิดีโอบทเรียนและเอกสารประกอบคอร์ส BeyondLab",
 };
+
+export const dynamic = "force-dynamic";
 
 export default async function CoursePage({ params }: { params: Promise<{ courseId: string }> }) {
   const [{ courseId }, session] = await Promise.all([params, requireCompleteProfile("/learn")]);
@@ -25,12 +27,12 @@ export default async function CoursePage({ params }: { params: Promise<{ courseI
   }
 
   try {
-    const course = await getR2Course();
+    const course = await getCourseById(courseId, true);
     if (course.id !== courseId) notFound();
     return <LearningWorkspace course={course} studentName={studentName} studentEmail={session.email} />;
   } catch (error) {
     if (error && typeof error === "object" && "digest" in error) throw error;
-    console.error("Unable to load course from R2", error);
-    return <CourseUnavailable notConfigured={error instanceof Error && error.message === "R2_NOT_CONFIGURED"} retryHref={`/learn/${encodeURIComponent(courseId)}`} />;
+    console.error("Unable to load course from database", error);
+    return <CourseUnavailable notConfigured={false} retryHref={`/learn/${encodeURIComponent(courseId)}`} />;
   }
 }

@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { CourseManager } from "./CourseManager";
 
 type TestCase = {
   input: string;
@@ -27,6 +28,9 @@ type Problem = {
 type UserItem = {
   username: string;
   email: string;
+  firstName: string;
+  lastName: string;
+  fullName: string;
   role: "admin" | "user";
   plan: "free" | "pro";
   planExpiresAt: string | null;
@@ -36,6 +40,9 @@ type UserItem = {
 type SessionUser = {
   username: string;
   email: string;
+  firstName: string;
+  lastName: string;
+  fullName?: string;
   plan: string;
   role: string;
 };
@@ -47,7 +54,7 @@ export function AdminDashboard({ backendUrl }: { backendUrl: string }) {
   } | null>(null);
   const [loadingSession, setLoadingSession] = useState(true);
 
-  const [activeTab, setActiveTab] = useState<"problems" | "users">("problems");
+  const [activeTab, setActiveTab] = useState<"problems" | "users" | "courses">("problems");
 
   // Problem State
   const [problems, setProblems] = useState<Problem[]>([]);
@@ -110,6 +117,12 @@ export function AdminDashboard({ backendUrl }: { backendUrl: string }) {
       setToast((prev) => (prev?.message === message ? null : prev));
     }, 4000);
   };
+
+  const getDisplayName = (user?: { firstName?: string; lastName?: string; fullName?: string; username?: string }) =>
+    user?.fullName?.trim() ||
+    [user?.firstName, user?.lastName].filter(Boolean).join(" ").trim() ||
+    user?.username ||
+    "";
 
   // Fetch Session
   useEffect(() => {
@@ -454,7 +467,8 @@ export function AdminDashboard({ backendUrl }: { backendUrl: string }) {
     return users.filter(
       (u) =>
         u.username.toLowerCase().includes(searchUserQuery.toLowerCase()) ||
-        u.email.toLowerCase().includes(searchUserQuery.toLowerCase())
+        u.email.toLowerCase().includes(searchUserQuery.toLowerCase()) ||
+        u.fullName.toLowerCase().includes(searchUserQuery.toLowerCase())
     );
   }, [users, searchUserQuery]);
 
@@ -487,7 +501,7 @@ export function AdminDashboard({ backendUrl }: { backendUrl: string }) {
           <h1 className="mt-5 text-2xl font-bold text-[#292725]">Access Denied</h1>
           <p className="mt-2 text-sm leading-relaxed text-[#71675f]">
             {session?.authenticated
-              ? `บัญชี "${session.user?.username}" ของคุณยังไม่มีสิทธิ์เป็น Admin ในระบบ`
+              ? `บัญชี "${getDisplayName(session.user)}" ของคุณยังไม่มีสิทธิ์เป็น Admin ในระบบ`
               : "กรุณาเข้าสู่ระบบด้วยบัญชีแอดมินเพื่อเข้าใช้งานส่วนนี้"}
           </p>
           <div className="mt-6 flex flex-col gap-3">
@@ -550,7 +564,7 @@ export function AdminDashboard({ backendUrl }: { backendUrl: string }) {
           <div className="flex items-center gap-3">
             <div className="hidden items-center gap-2 rounded-xl border border-[#eadfce] bg-[#faf6f0] px-3 py-1.5 text-xs font-semibold sm:flex">
               <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="text-[#303030]">{session.user?.username}</span>
+              <span className="text-[#303030]">{getDisplayName(session.user)}</span>
               <span className="rounded bg-purple-100 px-1.5 py-0.5 text-[10px] uppercase font-bold text-purple-800 border border-purple-200">
                 {session.user?.role}
               </span>
@@ -615,6 +629,23 @@ export function AdminDashboard({ backendUrl }: { backendUrl: string }) {
                 <span className={`rounded-full px-2 py-0.5 text-xs ${activeTab === "users" ? "bg-white/20 text-white" : "bg-[#f0dfc8] text-[#5c5148]"}`}>
                   {users.length}
                 </span>
+              </button>
+
+              <button
+                onClick={() => {
+                  setActiveTab("courses");
+                  setProblemViewMode("list");
+                }}
+                className={`flex items-center gap-2.5 rounded-xl px-5 py-2.5 text-sm font-bold transition-all ${
+                  activeTab === "courses"
+                    ? "bg-[#ea721f] text-white shadow-md shadow-[#ea721f]/20"
+                    : "text-[#71675f] hover:text-[#292725] hover:bg-[#f7f3ed]"
+                }`}
+              >
+                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h10M4 18h16" />
+                </svg>
+                <span className="sm:hidden">คอร์ส</span><span className="hidden sm:inline">จัดการคอร์ส (Course CRUD)</span>
               </button>
             </div>
 
@@ -1187,7 +1218,7 @@ export function AdminDashboard({ backendUrl }: { backendUrl: string }) {
             <div>
               <input
                 type="text"
-                placeholder="ค้นหาผู้ใช้ตามชื่อผู้ใช้หรืออีเมล..."
+                placeholder="ค้นหาผู้ใช้ตามชื่อบัญชี ชื่อจริง หรืออีเมล..."
                 value={searchUserQuery}
                 onChange={(e) => setSearchUserQuery(e.target.value)}
                 className="w-full rounded-xl border border-[#eadfce] bg-white px-4 py-2.5 text-sm text-[#292725] placeholder-[#a3978c] focus:border-[#ea721f] focus:outline-none shadow-sm"
@@ -1212,6 +1243,7 @@ export function AdminDashboard({ backendUrl }: { backendUrl: string }) {
                     <thead className="border-b border-[#eadfce] bg-[#faf6f0] text-xs uppercase font-bold text-[#5c5148]">
                       <tr>
                         <th className="px-5 py-3.5">ชื่อผู้ใช้</th>
+                        <th className="px-5 py-3.5">ชื่อจริง</th>
                         <th className="px-5 py-3.5">Email</th>
                         <th className="px-5 py-3.5">สถานะ Plan</th>
                         <th className="px-5 py-3.5">สิทธิ์การใช้งาน (Role)</th>
@@ -1227,6 +1259,9 @@ export function AdminDashboard({ backendUrl }: { backendUrl: string }) {
                         >
                           <td className="px-5 py-4 font-bold text-[#292725]">
                             {usr.username}
+                          </td>
+                          <td className="px-5 py-4 text-[#71675f]">
+                            {getDisplayName(usr) || "-"}
                           </td>
                           <td className="px-5 py-4 text-[#71675f]">
                             {usr.email}
@@ -1317,7 +1352,10 @@ export function AdminDashboard({ backendUrl }: { backendUrl: string }) {
                   {filteredUsers.map((usr) => (
                     <div key={usr.username} className="p-4 space-y-2">
                       <div className="flex items-center justify-between">
-                        <span className="font-bold text-[#292725]">{usr.username}</span>
+                        <div>
+                          <span className="block font-bold text-[#292725]">{usr.username}</span>
+                          <span className="block text-xs text-[#71675f]">{getDisplayName(usr) || "-"}</span>
+                        </div>
                         <span className={`inline-block rounded-full px-2.5 py-0.5 text-[10px] font-extrabold uppercase ${usr.role === "admin" ? "bg-purple-100 text-purple-800 border border-purple-300" : "bg-zinc-100 text-zinc-700 border border-zinc-300"}`}>{usr.role}</span>
                       </div>
                       <div className="text-xs text-[#71675f]">{usr.email}</div>
@@ -1344,6 +1382,9 @@ export function AdminDashboard({ backendUrl }: { backendUrl: string }) {
             </div>
           </div>
         )}
+
+        {/* TAB 3: COURSES CRUD */}
+        {activeTab === "courses" && <CourseManager backendUrl={backendUrl} onToast={showToast} />}
       </main>
 
       {/* PLAN ADJUSTMENT MODAL */}
@@ -1356,7 +1397,7 @@ export function AdminDashboard({ backendUrl }: { backendUrl: string }) {
                   ตั้งค่า Plan & จำนวนวัน PRO
                 </h3>
                 <p className="text-xs text-[#71675f] mt-0.5">
-                  สำหรับผู้ใช้: <strong className="text-[#ea721f]">{targetUserForPlan.username}</strong> ({targetUserForPlan.email})
+                  สำหรับผู้ใช้: <strong className="text-[#ea721f]">{getDisplayName(targetUserForPlan)}</strong> ({targetUserForPlan.username} · {targetUserForPlan.email})
                 </p>
               </div>
               <button

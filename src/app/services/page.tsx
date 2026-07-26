@@ -10,7 +10,7 @@ export const metadata = {
 
 export default function ServicesPage() {
   return (
-    <section className="px-5 py-16 sm:px-8">
+    <section className="min-h-[calc(100dvh-4rem)] bg-[#f7f3ed] px-5 py-16 sm:px-8">
       <div className="mx-auto max-w-7xl">
         <div className="mb-8 text-center">
           <p className="text-sm font-semibold text-[#ea721f]">Services</p>

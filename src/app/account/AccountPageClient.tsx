@@ -11,6 +11,7 @@ import {
   type FormEvent,
   type ReactNode,
 } from "react";
+import { PromptPayQr } from "../components/beyondlab/PromptPayQr";
 
 type SessionData = {
   authenticated: boolean;
@@ -543,12 +544,108 @@ export function AccountPageClient({ username, email, backendUrl, courses = [], o
               <div className="p-5 sm:p-8"><div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center"><div><p className="text-xs font-bold uppercase tracking-[0.16em] text-[#c65018]">BeyondLab Pro</p><h2 className="mt-2 text-2xl font-bold">{isPro ? "จัดการสิทธิ์ PRO" : "ปลดล็อกโจทย์ทั้งหมด"}</h2><p className="mt-1 text-sm leading-6 text-[#6e645d]">PRO ราคา 99 บาท / 30 วัน หรือรับสิทธิ์ 6 เดือนสำหรับนักเรียน ZERO TO CODE</p></div><span className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-[#ea721f] text-white shadow-[0_10px_24px_rgba(234,114,31,.25)]"><Icon name="spark" className="h-6 w-6" /></span></div>
                 <div className="mt-6 grid gap-3">
                   <div className="overflow-hidden rounded-2xl border border-[#ebd3bf] bg-white">
-                    <button type="button" aria-expanded={expandedSection === "payment"} onClick={() => setExpandedSection((value) => value === "payment" ? null : "payment")} className="flex min-h-16 w-full items-center justify-between gap-4 px-4 text-left transition hover:bg-[#fffbf8]"><span className="flex items-center gap-3"><span className="grid h-10 w-10 place-items-center rounded-xl bg-[#fff0e5] text-[#c65018]"><Icon name="upload" /></span><span><span className="block text-sm font-bold">อัปโหลดสลิปชำระเงิน</span><span className="block text-xs text-[#766c64]">ต่ออายุ PRO เพิ่ม 30 วัน</span></span></span><Icon name="chevron" className={`h-5 w-5 transition-transform ${expandedSection === "payment" ? "rotate-180" : ""}`} /></button>
-                    {expandedSection === "payment" ? <div className="border-t border-[#eee2d7] p-4 sm:p-5"><div className="flex flex-col gap-4 sm:flex-row sm:items-start"><div className="flex-1"><p className="text-sm leading-6 text-[#6e645d]">ชำระ 99 บาทด้วย QR PromptPay จากนั้นแนบสลิปเพื่อให้ระบบตรวจสอบอัตโนมัติ</p><div className="mt-4 flex flex-wrap gap-3"><label className="inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-xl border border-[#ddcfc2] bg-white px-4 py-2.5 text-sm font-bold transition hover:border-[#c65018]"><Icon name="upload" className="h-4 w-4" />เลือกรูปสลิป<input type="file" accept="image/png,image/jpeg,image/webp" onChange={handleSlipFileChange} className="sr-only" /></label>{slipImage ? <button type="button" onClick={handleUploadSlip} disabled={uploading} className="inline-flex min-h-11 items-center gap-2 rounded-xl bg-[#ea721f] px-5 py-2.5 text-sm font-bold text-white transition hover:bg-[#d96217] disabled:cursor-not-allowed disabled:opacity-50">{uploading ? <><span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />กำลังตรวจสอบ</> : "ยืนยันการชำระเงิน"}</button> : null}</div></div>{slipImage ? <div className="relative h-32 w-32 shrink-0 overflow-hidden rounded-xl border border-[#e4d8cc] bg-[#f7f2ed]"><Image src={slipImage} alt="ตัวอย่างสลิปที่เลือก" fill sizes="128px" className="object-contain" /></div> : null}</div></div> : null}
+                    <button
+                      type="button"
+                      aria-expanded={expandedSection === "payment"}
+                      onClick={() => setExpandedSection((value) => value === "payment" ? null : "payment")}
+                      className="flex min-h-16 w-full items-center justify-between gap-4 px-4 text-left transition hover:bg-[#fffbf8]"
+                    >
+                      <span className="flex items-center gap-3">
+                        <span className="grid h-10 w-10 place-items-center rounded-xl bg-[#fff0e5] text-[#c65018]">
+                          <Icon name="upload" />
+                        </span>
+                        <span>
+                          <span className="block text-sm font-bold">อัปโหลดสลิปชำระเงิน</span>
+                          <span className="block text-xs text-[#766c64]">ต่ออายุ PRO เพิ่ม 30 วัน</span>
+                        </span>
+                      </span>
+                      <Icon name="chevron" className={`h-5 w-5 transition-transform ${expandedSection === "payment" ? "rotate-180" : ""}`} />
+                    </button>
+                    {expandedSection === "payment" ? (
+                      <div className="border-t border-[#eee2d7] p-4 sm:p-5">
+                        <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
+                          <div className="flex-1">
+                            <p className="text-sm leading-6 text-[#6e645d]">ชำระ 99 บาทด้วย QR จากนั้นแนบสลิปเพื่อให้ระบบตรวจสอบอัตโนมัติ</p>
+                            <div className="mt-4 flex flex-wrap gap-3">
+                              <label className="inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-xl border border-[#ddcfc2] bg-white px-4 py-2.5 text-sm font-bold transition hover:border-[#c65018]">
+                                <Icon name="upload" className="h-4 w-4" />
+                                เลือกรูปสลิป
+                                <input type="file" accept="image/png,image/jpeg,image/webp" onChange={handleSlipFileChange} className="sr-only" />
+                              </label>
+                              {slipImage ? (
+                                <button
+                                  type="button"
+                                  onClick={handleUploadSlip}
+                                  disabled={uploading}
+                                  className="inline-flex min-h-11 items-center gap-2 rounded-xl bg-[#ea721f] px-5 py-2.5 text-sm font-bold text-white transition hover:bg-[#d96217] disabled:cursor-not-allowed disabled:opacity-50"
+                                >
+                                  {uploading ? (
+                                    <>
+                                      <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />
+                                      กำลังตรวจสอบ
+                                    </>
+                                  ) : "ยืนยันการชำระเงิน"}
+                                </button>
+                              ) : null}
+                            </div>
+                            {slipImage ? (
+                              <div className="relative mt-4 h-32 w-32 overflow-hidden rounded-xl border border-[#e4d8cc] bg-[#f7f2ed]">
+                                <Image src={slipImage} alt="ตัวอย่างสลิปที่เลือก" fill sizes="128px" className="object-contain" />
+                              </div>
+                            ) : null}
+                          </div>
+                          <div className="w-full max-w-[240px] rounded-2xl border border-[#eadfce] bg-[#fffaf5] p-4">
+                            <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#c65018]">QR ชำระเงิน</p>
+                            <div className="mt-3 flex justify-center">
+                              <PromptPayQr amount={99} className="h-40 w-40 rounded-xl border border-[#eadfce] bg-white p-1.5 shadow-none" />
+                            </div>
+                            <p className="mt-3 text-center text-sm font-bold text-[#292725]">กสิกร 2111550924</p>
+                          </div>
+                        </div>
+                      </div>
+                    ) : null}
                   </div>
                   <div className="overflow-hidden rounded-2xl border border-[#ebd3bf] bg-white">
-                    <button type="button" aria-expanded={expandedSection === "student"} onClick={() => setExpandedSection((value) => value === "student" ? null : "student")} className="flex min-h-16 w-full items-center justify-between gap-4 px-4 text-left transition hover:bg-[#fffbf8]"><span className="flex items-center gap-3"><span className="grid h-10 w-10 place-items-center rounded-xl bg-emerald-50 text-emerald-700"><Icon name="student" /></span><span><span className="block text-sm font-bold">สิทธิ์นักเรียน ZERO TO CODE</span><span className="block text-xs text-[#766c64]">รับ PRO ฟรี 6 เดือน</span></span></span><Icon name="chevron" className={`h-5 w-5 transition-transform ${expandedSection === "student" ? "rotate-180" : ""}`} /></button>
-                    {expandedSection === "student" ? <form onSubmit={handleRequestStudentCode} className="border-t border-[#eee2d7] p-4 sm:p-5"><p className="mb-4 text-sm leading-6 text-[#6e645d]">กรอกข้อมูลเดียวกับที่ใช้ลงทะเบียนคอร์ส ระบบจะตรวจสอบสิทธิ์ให้อัตโนมัติ</p><div className="grid gap-4 sm:grid-cols-2"><label className="text-sm font-bold">อีเมลที่ลงทะเบียน<input type="email" autoComplete="email" required value={studentEmail} onChange={(event) => setStudentEmail(event.target.value)} className="mt-2 min-h-12 w-full rounded-xl border border-[#ddcfc2] bg-white px-4 font-normal outline-none transition focus:border-[#ea721f] focus:ring-2 focus:ring-[#ea721f]/15" placeholder="name@example.com" /></label><label className="text-sm font-bold">ชื่อ–นามสกุลจริง<input type="text" autoComplete="name" required value={studentName} onChange={(event) => setStudentName(event.target.value)} className="mt-2 min-h-12 w-full rounded-xl border border-[#ddcfc2] bg-white px-4 font-normal outline-none transition focus:border-[#ea721f] focus:ring-2 focus:ring-[#ea721f]/15" placeholder="ไม่ต้องใส่คำนำหน้า" /></label></div><button type="submit" disabled={requestingCode} className="mt-4 inline-flex min-h-11 items-center gap-2 rounded-xl bg-emerald-700 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-emerald-800 disabled:cursor-not-allowed disabled:opacity-50">{requestingCode ? <><span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />กำลังตรวจสอบ</> : "ยืนยันสิทธิ์นักเรียน"}</button></form> : null}
+                    <button
+                      type="button"
+                      aria-expanded={expandedSection === "student"}
+                      onClick={() => setExpandedSection((value) => value === "student" ? null : "student")}
+                      className="flex min-h-16 w-full items-center justify-between gap-4 px-4 text-left transition hover:bg-[#fffbf8]"
+                    >
+                      <span className="flex items-center gap-3">
+                        <span className="grid h-10 w-10 place-items-center rounded-xl bg-emerald-50 text-emerald-700">
+                          <Icon name="student" />
+                        </span>
+                        <span>
+                          <span className="block text-sm font-bold">สิทธิ์นักเรียน ZERO TO CODE</span>
+                          <span className="block text-xs text-[#766c64]">รับ PRO ฟรี 6 เดือน</span>
+                        </span>
+                      </span>
+                      <Icon name="chevron" className={`h-5 w-5 transition-transform ${expandedSection === "student" ? "rotate-180" : ""}`} />
+                    </button>
+                    {expandedSection === "student" ? (
+                      <form onSubmit={handleRequestStudentCode} className="border-t border-[#eee2d7] p-4 sm:p-5">
+                        <p className="mb-4 text-sm leading-6 text-[#6e645d]">กรอกข้อมูลเดียวกับที่ใช้ลงทะเบียนคอร์ส ระบบจะตรวจสอบสิทธิ์ให้อัตโนมัติ</p>
+                        <div className="grid gap-4 sm:grid-cols-2">
+                          <label className="text-sm font-bold">
+                            อีเมลที่ลงทะเบียน
+                            <input type="email" autoComplete="email" required value={studentEmail} onChange={(event) => setStudentEmail(event.target.value)} className="mt-2 min-h-12 w-full rounded-xl border border-[#ddcfc2] bg-white px-4 font-normal outline-none transition focus:border-[#ea721f] focus:ring-2 focus:ring-[#ea721f]/15" placeholder="name@example.com" />
+                          </label>
+                          <label className="text-sm font-bold">
+                            ชื่อ–นามสกุลจริง
+                            <input type="text" autoComplete="name" required value={studentName} onChange={(event) => setStudentName(event.target.value)} className="mt-2 min-h-12 w-full rounded-xl border border-[#ddcfc2] bg-white px-4 font-normal outline-none transition focus:border-[#ea721f] focus:ring-2 focus:ring-[#ea721f]/15" placeholder="ไม่ต้องใส่คำนำหน้า" />
+                          </label>
+                        </div>
+                        <button type="submit" disabled={requestingCode} className="mt-4 inline-flex min-h-11 items-center gap-2 rounded-xl bg-emerald-700 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-emerald-800 disabled:cursor-not-allowed disabled:opacity-50">
+                          {requestingCode ? (
+                            <>
+                              <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />
+                              กำลังตรวจสอบ
+                            </>
+                          ) : "ยืนยันสิทธิ์นักเรียน"}
+                        </button>
+                      </form>
+                    ) : null}
                   </div>
                 </div>
               </div>

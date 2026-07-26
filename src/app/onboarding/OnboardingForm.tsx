@@ -45,7 +45,7 @@ export function OnboardingForm({
 
       window.location.replace(returnTo);
     } catch {
-      setError("เชื่อมต่อเซิร์ฟเวอร์ไม่ได้ กรุณาลองอีกครั้ง");
+      setError("ระบบกำลังมีปัญหา กรุณาลองใหม่อีกครั้ง");
     } finally {
       setIsSubmitting(false);
     }

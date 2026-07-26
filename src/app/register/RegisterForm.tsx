@@ -54,7 +54,7 @@ export function RegisterForm({ returnTo }: RegisterFormProps) {
 
       window.location.replace(result.redirectTo ?? `/onboarding?returnTo=${encodeURIComponent(returnTo)}`);
     } catch {
-      setError("เชื่อมต่อเซิร์ฟเวอร์ไม่ได้ กรุณาลองอีกครั้ง");
+      setError("ระบบกำลังมีปัญหา กรุณาลองใหม่อีกครั้ง");
     } finally {
       setIsSubmitting(false);
     }

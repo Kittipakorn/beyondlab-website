@@ -20,6 +20,7 @@ type ContactChannel = {
 };
 
 export type CourseItem = {
+  id: string;
   title: string;
   label: string;
   subtitle: string;
@@ -27,12 +28,14 @@ export type CourseItem = {
   audience: string;
   format: string;
   price: string;
+  priceAmount: number;
   originalPrice: string;
   duration: string;
   students: string;
   image: string;
   cta: string;
   href: string;
+  paymentHref: string;
   status: "open" | "soon";
   points: string[];
 };
@@ -54,9 +57,9 @@ export type PortfolioCategory = {
 export const navItems = [
    { label: "หน้าแรก", href: "/" },
   { label: "คอร์สเรียน", href: "/courses" },
-  { label: "เข้าเรียน", href: "/learn" },
+  { label: "บริการ", href: "/services" },
   { label: "ผลงาน", href: "/portfolio" },
-  { label: "Grader", href: "/grader" },
+  { label: "ฝึกเขียนโค้ด", href: "/grader" },
 ];
 
 export const aboutStats = [
@@ -153,21 +156,28 @@ export const tutors = [
 
 export const courses: CourseItem[] = [
   {
+    id: "zero-to-code",
     title: "ZERO TO CODE",
     label: "คอร์สออนไลน์",
-    subtitle: "เขียนโปรแกรม C++ พื้นฐาน จาก 0",
-    description: "",
-    audience: "มือใหม่ / ไม่มีพื้นฐาน / เตรียมสอบ",
-    format: "ออนไลน์ 8 ชั่วโมง + กลุ่มถามตอบ",
+    subtitle: "เขียนโปรแกรม C++ สำหรับผู้เริ่มต้น และเตรียมสอบ TOI-Zero",
+    description:
+      "C++ พื้นฐาน / ตัวแปร / if-else / loop / array / ตะลุยโจทย์.\n\nช่วงสอนสมัคร TOI Zero ในคลิปข้ามได้เลยครับ (ปัจจุบันระบบปิดแล้ว) ไม่ต้องสมัครหรือส่งโจทย์ในเว็บตาม เรียนแค่เนื้อหาหลักอย่างเดียวได้เลยครับ\n\nสิทธิ์คอร์สใช้งานได้ 6 เดือนนับจากวันสมัคร",
+    audience: "ผู้เริ่มต้น / เตรียมสอบ TOI-Zero",
+    format: "วิดีโอ ~ 8 ชั่วโมง + Discord",
     price: "688.-",
+    priceAmount: 688,
     originalPrice: "990.-",
     duration: "8 hr.",
     students: "80+",
     image: "/courses/zero-to-code.png",
-    cta: "สมัครเรียน 688.-",
-    href: "http://lin.ee/VbDTcyo",
+    cta: "ดูรายละเอียดคอร์ส",
+    href: "/courses/zero-to-code",
+    paymentHref: "http://lin.ee/VbDTcyo",
     status: "open",
-    points: ["เรียนซ้ำได้ในกลุ่ม Facebook", "ใช้แท็บเล็ตหรือ iPad เรียนได้"],
+    points: [
+      "เรียนวิดีโอทั้งหมดผ่านระบบนี้ (ดูซ้ำได้ไม่จำกัด)",
+      "สิทธิ์เข้ากลุ่ม Discord สำหรับถาม-ตอบ + ติดตามข่าวสาร + พูดคุยกับเพื่อนในคอร์ส",
+    ],
   },
 ];
 

@@ -24,7 +24,7 @@ const contentSecurityPolicy = `
   default-src 'self';
   script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""};
   style-src 'self' 'unsafe-inline' https:;
-  img-src 'self' blob: data: https://api.qrserver.com;
+  img-src 'self' blob: data: https://api.qrserver.com https://promptpay.io;
   media-src 'self' blob: https://*.r2.cloudflarestorage.com${r2Origin ? ` ${r2Origin}` : ""};
   font-src 'self' data: https:;
   connect-src 'self' ${backendOrigin};

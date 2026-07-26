@@ -198,7 +198,7 @@ export function ScratchpadIde({ username, email, backendUrl }: ScratchpadIdeProp
           (compilerOutput || "โปรแกรมทำงานสำเร็จ (ไม่มี output)"),
       );
     } catch {
-      setOutput("Error: ไม่สามารถเชื่อมต่อ compiler ได้");
+      setOutput("เกิดข้อผิดพลาด: ไม่สามารถเชื่อมต่อกับระบบรันโค้ดได้");
     } finally {
       setRunning(false);
     }
@@ -428,7 +428,7 @@ export function ScratchpadIde({ username, email, backendUrl }: ScratchpadIdeProp
           />
           <section className={`flex min-h-[180px] flex-col overflow-hidden rounded-xl border ${darkMode ? "border-[#2d3442] bg-[#151b25]" : "border-[#e2d8cc] bg-white"}`}>
             <div className="border-b border-inherit px-4 py-3 text-sm font-bold">ผลลัพธ์ <span className="ml-1 text-xs font-normal opacity-60">stdout</span></div>
-            <pre aria-live="polite" className={`scratch-code-font min-h-0 flex-1 overflow-auto whitespace-pre-wrap p-4 ${output.startsWith("Error:") ? "text-[#f19a91]" : darkMode ? "text-[#a9dfb8]" : "text-[#18753c]"}`}>{output}</pre>
+            <pre aria-live="polite" className={`scratch-code-font min-h-0 flex-1 overflow-auto whitespace-pre-wrap p-4 ${output.startsWith("เกิดข้อผิดพลาด") ? "text-[#f19a91]" : darkMode ? "text-[#a9dfb8]" : "text-[#18753c]"}`}>{output}</pre>
           </section>
         </aside>
       </main>
