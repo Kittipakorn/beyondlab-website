@@ -75,7 +75,7 @@ export function BuildGrid() {
                 </div>
                 <div className="mt-4 flex flex-wrap items-center gap-3">
                   <a
-                    href="http://lin.ee/VbDTcyo"
+                    href={course.href}
                     target="_blank"
                     rel="noreferrer"
                     className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-2xl bg-[#ff681f] px-5 text-sm font-semibold text-white shadow-[0_14px_30px_rgba(255,104,31,0.24)] transition hover:-translate-y-0.5 hover:bg-[#ea5b16] sm:w-auto"

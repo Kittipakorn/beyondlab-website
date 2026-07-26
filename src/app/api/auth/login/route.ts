@@ -44,5 +44,10 @@ export async function POST(request: Request) {
 
   // Don't expose token to browser
   const { token: _, ...safeResult } = result;
-  return NextResponse.json({ ...safeResult, redirectTo: returnTo });
+  return NextResponse.json({
+    ...safeResult,
+    redirectTo: result.profileIncomplete
+      ? `/onboarding?returnTo=${encodeURIComponent(returnTo)}`
+      : returnTo,
+  });
 }

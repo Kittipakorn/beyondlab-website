@@ -31,17 +31,17 @@ export function Hero() {
           </p>
           <div className="mt-6 flex flex-col gap-3 sm:flex-row">
             <Link
-              href="/#services"
+              href="/courses"
               className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#303030] px-5 text-sm font-semibold text-white shadow-[0_10px_24px_rgba(48,48,48,0.18)] transition hover:-translate-y-0.5 sm:w-auto"
             >
-              ดูบริการ
+              ดูคอร์สเรียน
               <ArrowIcon />
             </Link>
             <Link
-              href="/#courses"
+              href="/#services"
               className="inline-flex h-11 w-full items-center justify-center rounded-xl border border-[#eeeeee] bg-white px-5 text-sm font-semibold text-[#303030] shadow-[0_10px_24px_rgba(48,48,48,0.07)] transition hover:-translate-y-0.5 sm:w-auto"
             >
-              ดูคอร์สเรียน
+              ดูบริการ
             </Link>
           </div>
           <div className="mt-5 flex flex-wrap">

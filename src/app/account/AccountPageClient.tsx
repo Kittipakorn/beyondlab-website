@@ -187,6 +187,7 @@ export function AccountPageClient({ username, email, backendUrl, courses = [], o
   const [activeTab, setActiveTab] = useState<AccountTab>("overview");
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [courseProgress, setCourseProgress] = useState<Record<string, number>>({});
   const cancelLogoutButtonRef = useRef<HTMLButtonElement>(null);
 
   const showToast = useCallback((message: string, type: "success" | "error" = "success") => {
@@ -195,20 +196,42 @@ export function AccountPageClient({ username, email, backendUrl, courses = [], o
   }, []);
 
   const refreshSession = useCallback(async () => {
-    const response = await fetch(`${backendUrl}/auth/session`, { credentials: "include" });
+    const response = await fetch("/api/proxy/auth/session", { credentials: "same-origin" });
     if (!response.ok) throw new Error("session");
     const nextSession = (await response.json()) as SessionData;
     setSession(nextSession);
     setProfileUsername(nextSession.user?.username ?? username);
     setFirstName(nextSession.user?.firstName ?? "");
     setLastName(nextSession.user?.lastName ?? "");
-  }, [backendUrl, username]);
+  }, [username]);
 
   useEffect(() => {
     refreshSession()
       .catch(() => setSession({ authenticated: false }))
       .finally(() => setLoading(false));
   }, [refreshSession]);
+
+  useEffect(() => {
+    const nextProgress: Record<string, number> = {};
+
+    for (const course of courses) {
+      try {
+        const saved = window.localStorage.getItem(
+          `beyondlab-course-progress:${course.id}`,
+        );
+        const completedIds: unknown = saved ? JSON.parse(saved) : [];
+        if (Array.isArray(completedIds)) {
+          nextProgress[course.id] = new Set(
+            completedIds.filter((id): id is string => typeof id === "string"),
+          ).size;
+        }
+      } catch {
+        // Course access must remain available when local storage is unavailable.
+      }
+    }
+
+    setCourseProgress(nextProgress);
+  }, [courses]);
 
   useEffect(() => {
     if (!showLogoutConfirm) return;
@@ -293,12 +316,12 @@ export function AccountPageClient({ username, email, backendUrl, courses = [], o
     event.preventDefault();
     const nextUsername = profileUsername.trim();
     if (!/^[a-zA-Z0-9._-]{3,32}$/.test(nextUsername)) {
-      showToast("Username ต้องมี 3–32 ตัว ใช้ a-z, 0-9, จุด, ขีดกลาง หรือขีดล่าง", "error");
+      showToast("ชื่อผู้ใช้ต้องมี 3–32 ตัว ใช้ a-z, 0-9, จุด, ขีดกลาง หรือขีดล่าง", "error");
       return;
     }
     setSavingProfile(true);
     try {
-      const response = await fetch(`${backendUrl}/api/user/profile`, {
+      const response = await fetch("/api/user/profile", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -406,7 +429,7 @@ export function AccountPageClient({ username, email, backendUrl, courses = [], o
                 </div>
                 <div className="mt-4 flex items-center justify-between rounded-xl bg-[#faf5ef] px-3 py-2.5">
                   <span className="text-xs font-semibold text-[#766b63]">แพ็กเกจปัจจุบัน</span>
-                  <span className={`rounded-full px-2.5 py-1 text-[11px] font-bold ${isPro ? "bg-emerald-100 text-emerald-800" : "bg-[#ffe7d6] text-[#a84313]"}`}>{isPro ? "PRO" : "FREE"}</span>
+                  <span className={`rounded-full px-2.5 py-1 text-[11px] font-bold ${isPro ? "bg-yellow-100 text-yellow-900" : "bg-[#ffe7d6] text-[#a84313]"}`}>{isPro ? "PRO" : "FREE"}</span>
                 </div>
               </div>
 
@@ -436,12 +459,12 @@ export function AccountPageClient({ username, email, backendUrl, courses = [], o
               <div className="relative grid gap-8 p-6 sm:p-8 xl:grid-cols-[1fr_310px] xl:p-10">
                 <div className="pointer-events-none absolute -right-16 -top-24 h-64 w-64 rounded-full border-[48px] border-[#ea721f]/15" />
                 <div className="relative">
-                  <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.07] px-3 py-1.5 text-xs font-semibold text-white/75"><span className={`h-2 w-2 rounded-full ${isPro ? "bg-emerald-400" : "bg-[#f2a36d]"}`} />{isPro ? "สมาชิก PRO" : "สมาชิก FREE"}</span>
+                  <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.07] px-3 py-1.5 text-xs font-semibold text-white/75"><span className={`h-2 w-2 rounded-full ${isPro ? "bg-yellow-400" : "bg-[#f2a36d]"}`} />{isPro ? "สมาชิก PRO" : "สมาชิก FREE"}</span>
                   <h2 className="mt-6 max-w-xl text-3xl font-bold leading-tight tracking-[-0.035em] sm:text-4xl">ยินดีต้อนรับกลับมา<br /><span className="text-[#f2a36d]">{displayName}</span></h2>
                   <p className="mt-4 max-w-lg text-sm leading-6 text-white/60">ทุกคอร์ส เครื่องมือ และรายการสั่งซื้อของคุณจะถูกรวมไว้ที่นี่ในที่เดียว</p>
                   <div className="mt-7 flex flex-wrap gap-3">
                     <Link href="/grader" className="inline-flex min-h-11 items-center gap-2 rounded-xl bg-[#ea721f] px-5 py-2.5 text-sm font-bold text-white transition hover:bg-[#f1853c]">ฝึกเขียนโค้ด<Icon name="arrow" className="h-4 w-4" /></Link>
-                    <Link href="/#courses" className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-white/15 bg-white/[0.06] px-5 py-2.5 text-sm font-bold text-white transition hover:bg-white/10">ดูคอร์สทั้งหมด</Link>
+                    <Link href="/courses" className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-white/15 bg-white/[0.06] px-5 py-2.5 text-sm font-bold text-white transition hover:bg-white/10">ดูคอร์สทั้งหมด</Link>
                   </div>
                 </div>
                 <div className="relative grid grid-cols-2 gap-3 self-end">
@@ -459,15 +482,24 @@ export function AccountPageClient({ username, email, backendUrl, courses = [], o
             </div> : null}
 
             {activeTab === "courses" ? <section className="rounded-[28px] border border-[#e2d7cb] bg-white p-5 shadow-[0_14px_40px_rgba(70,52,38,.06)] sm:p-8">
-              <SectionHeading eyebrow="Learning" title="คอร์สของฉัน" description="กลับมาเรียนต่อและติดตามความคืบหน้าของทุกคอร์สได้จากที่นี่" action={<Link href="/#courses" className="inline-flex min-h-11 items-center gap-2 self-start rounded-xl border border-[#ded2c6] px-4 py-2.5 text-sm font-bold text-[#504841] transition hover:border-[#c65018] hover:text-[#c65018]">สำรวจคอร์ส<Icon name="arrow" className="h-4 w-4" /></Link>} />
-              {courses.length === 0 ? <EmptyState icon="book" title="ยังไม่มีคอร์สในบัญชีนี้" description="เมื่อคุณลงทะเบียนคอร์ส คอร์สและความคืบหน้าจะปรากฏตรงนี้โดยอัตโนมัติ" href="/#courses" action="เลือกดูคอร์ส" /> : (
-                <div className="mt-6 grid gap-4 xl:grid-cols-2">{courses.map((course) => <article key={course.id} className="overflow-hidden rounded-2xl border border-[#e5dbd0] bg-[#fbf8f4]"><div className="flex gap-4 p-4">{course.image ? <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-xl bg-[#eee5dc]"><Image src={course.image} alt="" fill sizes="96px" className="object-cover" /></div> : null}<div className="min-w-0 flex-1"><h3 className="font-bold text-[#292522]">{course.title}</h3><p className="mt-1 line-clamp-2 text-xs leading-5 text-[#776d65]">{course.description}</p><div className="mt-4 h-1.5 overflow-hidden rounded-full bg-[#e5d9cd]"><div className="h-full rounded-full bg-[#ea721f]" style={{ width: `${Math.min(100, Math.max(0, course.progress ?? 0))}%` }} /></div><div className="mt-2 flex items-center justify-between text-xs"><span className="text-[#776d65]">เรียนแล้ว {course.completedLessons ?? 0}/{course.totalLessons ?? 0} บท</span><Link href={course.href} className="font-bold text-[#c65018]">เรียนต่อ</Link></div></div></div></article>)}</div>
+              <SectionHeading eyebrow="Learning" title="คอร์สของฉัน" description="กลับมาเรียนต่อและติดตามความคืบหน้าของทุกคอร์สได้จากที่นี่" action={<Link href="/courses" className="inline-flex min-h-11 items-center gap-2 self-start rounded-xl border border-[#ded2c6] px-4 py-2.5 text-sm font-bold text-[#504841] transition hover:border-[#c65018] hover:text-[#c65018]">สำรวจคอร์ส<Icon name="arrow" className="h-4 w-4" /></Link>} />
+              {courses.length === 0 ? <EmptyState icon="book" title="ยังไม่มีคอร์สในบัญชีนี้" description="เมื่อคุณลงทะเบียนคอร์ส คอร์สและความคืบหน้าจะปรากฏตรงนี้โดยอัตโนมัติ" href="/courses" action="เลือกดูคอร์ส" /> : (
+                <div className="mt-6 grid gap-4 xl:grid-cols-2">{courses.map((course) => {
+                  const totalLessons = course.totalLessons ?? 0;
+                  const savedCompletedLessons = courseProgress[course.id] ?? course.completedLessons ?? 0;
+                  const completedLessons = totalLessons > 0
+                    ? Math.min(savedCompletedLessons, totalLessons)
+                    : savedCompletedLessons;
+                  const progress = totalLessons > 0 ? (completedLessons / totalLessons) * 100 : 0;
+
+                  return <article key={course.id} className="overflow-hidden rounded-2xl border border-[#e5dbd0] bg-[#fbf8f4]"><div className="flex gap-4 p-4">{course.image ? <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-xl bg-[#eee5dc]"><Image src={course.image} alt="" fill sizes="96px" className="object-cover" /></div> : null}<div className="min-w-0 flex-1"><h3 className="font-bold text-[#292522]">{course.title}</h3><p className="mt-1 line-clamp-2 text-xs leading-5 text-[#776d65]">{course.description}</p><div className="mt-4 h-1.5 overflow-hidden rounded-full bg-[#e5d9cd]"><div className="h-full rounded-full bg-[#ea721f]" style={{ width: `${Math.min(100, Math.max(0, progress))}%` }} /></div><div className="mt-2 flex items-center justify-between text-xs"><span className="text-[#776d65]">เรียนแล้ว {completedLessons}/{totalLessons} บท</span><Link href={course.href} className="font-bold text-[#c65018]">เรียนต่อ</Link></div></div></div></article>;
+                })}</div>
               )}
             </section> : null}
 
             {activeTab === "orders" ? <section className="rounded-[28px] border border-[#e2d7cb] bg-white p-5 shadow-[0_14px_40px_rgba(70,52,38,.06)] sm:p-8">
               <SectionHeading eyebrow="Billing" title="ประวัติการซื้อ" description="ตรวจสอบรายการชำระเงิน สถานะคำสั่งซื้อ และใบเสร็จของคุณ" />
-              {orders.length === 0 ? <EmptyState icon="receipt" title="ยังไม่มีประวัติการซื้อ" description="รายการซื้อคอร์สหรือบริการของ BeyondLab จะถูกเก็บไว้ตรงนี้เพื่อให้ตรวจสอบย้อนหลังได้ง่าย" href="/#courses" action="ดูสินค้าและคอร์ส" /> : (
+              {orders.length === 0 ? <EmptyState icon="receipt" title="ยังไม่มีประวัติการซื้อ" description="รายการซื้อคอร์สหรือบริการของ BeyondLab จะถูกเก็บไว้ตรงนี้เพื่อให้ตรวจสอบย้อนหลังได้ง่าย" href="/courses" action="ดูสินค้าและคอร์ส" /> : (
                 <div className="mt-6 overflow-hidden rounded-2xl border border-[#e5dbd0]">{orders.map((order) => <div key={order.id} className="grid gap-3 border-b border-[#eee5dc] p-4 last:border-0 sm:grid-cols-[1fr_auto_auto] sm:items-center"><div><p className="font-bold">{order.title}</p><p className="mt-1 text-xs text-[#776d65]">#{order.id} · {formatThaiDate(order.purchasedAt)}</p></div><span className="text-sm font-bold tabular-nums">{formatCurrency(order.amount)}</span><span className="w-fit rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700">{order.status === "paid" ? "ชำระแล้ว" : order.status === "pending" ? "รอตรวจสอบ" : "คืนเงินแล้ว"}</span></div>)}</div>
               )}
             </section> : null}
@@ -477,7 +509,7 @@ export function AccountPageClient({ username, email, backendUrl, courses = [], o
               <form onSubmit={handleSaveProfile} className="mt-6 w-full">
                 <div className="space-y-5">
                   <label className="block text-sm font-bold text-[#514840]">
-                    Username
+                    ชื่อผู้ใช้
                     <input type="text" autoComplete="username" required minLength={3} maxLength={32} pattern="[a-zA-Z0-9._-]+" value={profileUsername} onChange={(event) => setProfileUsername(event.target.value)} aria-describedby="profile-username-help" className="mt-2 min-h-12 w-full rounded-xl border border-[#ddcfc2] bg-white px-4 font-normal outline-none transition focus:border-[#ea721f] focus:ring-2 focus:ring-[#ea721f]/15" />
                     <span id="profile-username-help" className="mt-2 block text-xs font-normal leading-5 text-[#80756c]">3–32 ตัว: a-z, 0-9, จุด, - หรือ _</span>
                   </label>
@@ -499,7 +531,7 @@ export function AccountPageClient({ username, email, backendUrl, courses = [], o
                 </div>
                 <div className="mt-6 flex flex-col gap-4 border-t border-[#e4d9ce] pt-5 sm:flex-row sm:items-center sm:justify-between">
                   <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm">
-                    <span className="flex items-center gap-2 font-semibold text-[#514840]"><span className={`h-2 w-2 rounded-full ${isPro ? "bg-emerald-500" : "bg-[#ea721f]"}`} />แพ็กเกจ {isPro ? "PRO" : "FREE"}</span>
+                    <span className="flex items-center gap-2 font-semibold text-[#514840]"><span className={`h-2 w-2 rounded-full ${isPro ? "bg-yellow-400" : "bg-[#ea721f]"}`} />แพ็กเกจ {isPro ? "PRO" : "FREE"}</span>
                     <span className="text-[#766c64]">หมดอายุ: <strong className="text-[#514840]">{isPro ? formatThaiDate(user?.planExpiresAt) : "—"}</strong></span>
                   </div>
                   <button type="submit" disabled={savingProfile} className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-xl bg-[#ea721f] px-5 text-sm font-bold text-white transition hover:bg-[#d96217] disabled:cursor-wait disabled:opacity-60">{savingProfile ? <><span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />กำลังบันทึก</> : "บันทึกข้อมูล"}</button>

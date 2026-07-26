@@ -21,7 +21,7 @@ export function SiteHeaderFooter({ children }: { children: React.ReactNode }) {
   return (
     <>
       <Navbar />
-      <main id="main-content" className="min-h-screen">
+      <main id="main-content" className="min-h-[calc(100dvh-4rem)]">
         {children}
       </main>
       <Footer />

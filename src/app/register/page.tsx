@@ -19,26 +19,23 @@ export default async function RegisterPage({
   const { returnTo: requestedReturnTo } = await searchParams;
   const returnTo = getSafeReturnTo(requestedReturnTo);
   const session = await getSession();
-  const backendUrl =
-    process.env.NEXT_PUBLIC_BACKEND_URL ?? "http://localhost:4000";
-
   if (session) {
     redirect(returnTo);
   }
 
   return (
-    <section className="px-5 py-16 sm:px-8 sm:py-24">
-      <div className="mx-auto max-w-md rounded-[2rem] border border-[#eadfce] bg-white/95 p-7 shadow-[0_24px_70px_rgba(77,60,43,0.12)] sm:p-10">
-        <div className="inline-flex rounded-full bg-[#fff1e6] px-3 py-1 text-xs font-bold uppercase tracking-[0.18em] text-[#d55d11]">
-          Join BeyondLab
+    <section className="px-5 py-10 sm:px-8 sm:py-16">
+      <div className="mx-auto max-w-md rounded-[2rem] border border-[#eadfce] bg-white/95 p-6 shadow-[0_24px_70px_rgba(77,60,43,0.12)] sm:p-8">
+        <div className="inline-flex rounded-full bg-[#fff1e6] px-3 py-1 text-xs font-bold tracking-[0.08em] text-[#d55d11]">
+          ขั้นตอน 1 จาก 2
         </div>
-        <h1 className="mt-5 text-3xl font-bold tracking-tight text-[#303030]">
+        <h1 className="mt-4 text-3xl font-bold tracking-tight text-[#303030]">
           สมัครสมาชิก
         </h1>
-        <p className="mt-3 leading-7 text-[#6f655d]">
+        <p className="mt-2 leading-6 text-[#6f655d]">
           สร้างบัญชีเพื่อไปยัง {getReturnToLabel(returnTo)}
         </p>
-        <RegisterForm returnTo={returnTo} backendUrl={backendUrl} />
+        <RegisterForm returnTo={returnTo} />
       </div>
     </section>
   );

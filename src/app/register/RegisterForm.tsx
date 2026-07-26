@@ -6,10 +6,9 @@ import type { SafeReturnTo } from "@/lib/safeReturnTo";
 
 type RegisterFormProps = {
   returnTo: SafeReturnTo;
-  backendUrl: string;
 };
 
-export function RegisterForm({ returnTo, backendUrl }: RegisterFormProps) {
+export function RegisterForm({ returnTo }: RegisterFormProps) {
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -18,19 +17,12 @@ export function RegisterForm({ returnTo, backendUrl }: RegisterFormProps) {
     setError("");
 
     const formData = new FormData(event.currentTarget);
-    const firstName = String(formData.get("firstName") ?? "").trim();
-    const lastName = String(formData.get("lastName") ?? "").trim();
     const password = String(formData.get("password") ?? "");
     const confirmPassword = String(formData.get("confirmPassword") ?? "");
 
-    if (!firstName || !lastName) {
-      setError("กรุณากรอกชื่อและนามสกุล");
-      return;
-    }
-
     if (password.length < 8 || password.length > 12 ||
         !/[a-z]/.test(password) || !/[A-Z]/.test(password) || !/[0-9]/.test(password)) {
-      setError("รหัสผ่านต้องมี 8–12 ตัว และประกอบด้วยตัวเล็ก ตัวใหญ่ และตัวเลข");
+      setError("รหัสผ่านต้องมี 8–12 ตัว และประกอบด้วยตัวพิมพ์เล็ก ตัวพิมพ์ใหญ่ และตัวเลข");
       return;
     }
     if (password !== confirmPassword) {
@@ -45,9 +37,6 @@ export function RegisterForm({ returnTo, backendUrl }: RegisterFormProps) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          firstName,
-          lastName,
-          username: formData.get("username"),
           email: formData.get("email"),
           password,
           returnTo,
@@ -63,7 +52,7 @@ export function RegisterForm({ returnTo, backendUrl }: RegisterFormProps) {
         return;
       }
 
-      window.location.replace(returnTo);
+      window.location.replace(result.redirectTo ?? `/onboarding?returnTo=${encodeURIComponent(returnTo)}`);
     } catch {
       setError("เชื่อมต่อเซิร์ฟเวอร์ไม่ได้ กรุณาลองอีกครั้ง");
     } finally {
@@ -72,65 +61,11 @@ export function RegisterForm({ returnTo, backendUrl }: RegisterFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="mt-8 space-y-5">
-      <div>
-        <label htmlFor="username" className="mb-2 block text-sm font-semibold text-[#5c5148]">
-          Username <span className="font-normal text-[#766b61]">(ชื่อที่แสดง)</span>
-        </label>
-        <input
-          id="username"
-          name="username"
-          type="text"
-          autoComplete="username"
-          minLength={3}
-          maxLength={32}
-          pattern="[A-Za-z0-9._-]+"
-          required
-          autoFocus
-          className="h-12 w-full rounded-2xl border border-[#e4d7c6] bg-white px-4 text-[#303030] outline-none transition placeholder:text-[#a49a91] focus:border-[#ea721f] focus:ring-4 focus:ring-[#ea721f]/10"
-          placeholder="your-username"
-          aria-describedby="username-help"
-        />
-        <p id="username-help" className="mt-2 text-xs leading-5 text-[#766b61]">
-          ชื่อนี้จะแสดงบนโปรไฟล์และในพื้นที่การใช้งานของคุณ
-        </p>
-      </div>
-      <div className="grid gap-5 sm:grid-cols-2">
-        <div>
-          <label htmlFor="firstName" className="mb-2 block text-sm font-semibold text-[#5c5148]">
-            ชื่อ
-          </label>
-          <input
-            id="firstName"
-            name="firstName"
-            type="text"
-            autoComplete="given-name"
-            maxLength={80}
-            required
-            className="h-12 w-full rounded-2xl border border-[#e4d7c6] bg-white px-4 text-[#303030] outline-none transition placeholder:text-[#a49a91] focus:border-[#ea721f] focus:ring-4 focus:ring-[#ea721f]/10"
-            placeholder="ชื่อของคุณ"
-          />
-        </div>
-        <div>
-          <label htmlFor="lastName" className="mb-2 block text-sm font-semibold text-[#5c5148]">
-            นามสกุล
-          </label>
-          <input
-            id="lastName"
-            name="lastName"
-            type="text"
-            autoComplete="family-name"
-            maxLength={80}
-            required
-            className="h-12 w-full rounded-2xl border border-[#e4d7c6] bg-white px-4 text-[#303030] outline-none transition placeholder:text-[#a49a91] focus:border-[#ea721f] focus:ring-4 focus:ring-[#ea721f]/10"
-            placeholder="นามสกุลของคุณ"
-          />
-        </div>
-      </div>
+    <form onSubmit={handleSubmit} className="mt-6 space-y-4">
       <div>
         <label
           htmlFor="email"
-          className="mb-2 block text-sm font-semibold text-[#5c5148]"
+          className="mb-1.5 block text-sm font-semibold text-[#5c5148]"
         >
           อีเมล
         </label>
@@ -141,6 +76,7 @@ export function RegisterForm({ returnTo, backendUrl }: RegisterFormProps) {
           autoComplete="email"
           maxLength={254}
           required
+          autoFocus
           className="h-12 w-full rounded-2xl border border-[#e4d7c6] bg-white px-4 text-[#303030] outline-none transition placeholder:text-[#a49a91] focus:border-[#ea721f] focus:ring-4 focus:ring-[#ea721f]/10"
           placeholder="name@example.com"
         />
@@ -148,7 +84,7 @@ export function RegisterForm({ returnTo, backendUrl }: RegisterFormProps) {
       <div>
         <label
           htmlFor="password"
-          className="mb-2 block text-sm font-semibold text-[#5c5148]"
+          className="mb-1.5 block text-sm font-semibold text-[#5c5148]"
         >
           รหัสผ่าน
         </label>
@@ -160,19 +96,20 @@ export function RegisterForm({ returnTo, backendUrl }: RegisterFormProps) {
           minLength={8}
           maxLength={12}
           pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,12}"
+          title="รหัสผ่านต้องมี 8–12 ตัว และประกอบด้วยตัวพิมพ์เล็ก ตัวพิมพ์ใหญ่ และตัวเลข"
           required
           className="h-12 w-full rounded-2xl border border-[#e4d7c6] bg-white px-4 text-[#303030] outline-none transition placeholder:text-[#a49a91] focus:border-[#ea721f] focus:ring-4 focus:ring-[#ea721f]/10"
           placeholder="8–12 ตัว: a-z, A-Z และ 0-9"
           aria-describedby="password-requirements"
         />
-        <p id="password-requirements" className="mt-2 text-xs leading-5 text-[#766b61]">
-          รหัสผ่านต้องมี 8–12 ตัว และประกอบด้วยตัวพิมพ์เล็กตัว, พิมพ์ใหญ่, และตัวเลข
+        <p id="password-requirements" className="mt-1.5 text-xs leading-5 text-[#766b61]">
+          8–12 ตัว มี a-z, A-Z และ 0-9
         </p>
       </div>
       <div>
         <label
           htmlFor="confirmPassword"
-          className="mb-2 block text-sm font-semibold text-[#5c5148]"
+          className="mb-1.5 block text-sm font-semibold text-[#5c5148]"
         >
           ยืนยันรหัสผ่าน
         </label>
@@ -183,6 +120,8 @@ export function RegisterForm({ returnTo, backendUrl }: RegisterFormProps) {
           autoComplete="new-password"
           minLength={8}
           maxLength={12}
+          pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,12}"
+          title="รหัสผ่านต้องมี 8–12 ตัว และประกอบด้วยตัวพิมพ์เล็ก ตัวพิมพ์ใหญ่ และตัวเลข"
           required
           className="h-12 w-full rounded-2xl border border-[#e4d7c6] bg-white px-4 text-[#303030] outline-none transition placeholder:text-[#a49a91] focus:border-[#ea721f] focus:ring-4 focus:ring-[#ea721f]/10"
           placeholder="กรอกรหัสผ่านอีกครั้ง"

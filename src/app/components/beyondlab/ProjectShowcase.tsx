@@ -1,7 +1,7 @@
 import Link from "next/link";
-import Image from "next/image";
 import { ArrowIcon } from "./icons";
-import { portfolioPreview } from "./data";
+import { portfolioPreview, type PortfolioCategoryItem } from "./data";
+import { PortfolioCard } from "./PortfolioGrid";
 
 export function ProjectShowcase() {
   return (
@@ -19,61 +19,18 @@ export function ProjectShowcase() {
           </p>
         </div>
         <div className="grid gap-5 md:grid-cols-3">
-          {portfolioPreview.map((item) => {
-            const cardClassName =
-              "block overflow-hidden rounded-[22px] bg-white shadow-[0_12px_30px_rgba(48,48,48,0.07)] transition" +
-              (item.href ? " hover:-translate-y-0.5" : "");
-
-            const content = (
-              <>
-                {/* ส่วนหัวภาพผลงาน / Shimmer */}
-                <div className="relative aspect-[2/1] w-full overflow-hidden">
-                  {item.image ? (
-                    <Image
-                      src={item.image}
-                      alt={item.title}
-                      fill
-                      sizes="(min-width: 1280px) 30vw, (min-width: 768px) 45vw, 95vw"
-                      className="object-cover object-top"
-                    />
-                  ) : (
-                    <div className="absolute inset-0 animate-shimmer" />
-                  )}
-                  {/* ไล่สีขาวเฟดกลมกลืนด้านล่าง */}
-                  <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-white to-transparent pointer-events-none" />
-                </div>
-                <div className="min-h-[180px] bg-white p-5">
-                  <span
-                    className={`inline-flex items-center rounded-lg border px-3 py-1 text-xs font-semibold ${
-                      item.badge === "เร็วๆ นี้"
-                        ? "border-[#f0dfc8] bg-white text-[#8b8178]"
-                        : "border-[#f6c37f] bg-[#fff4df] text-[#ea721f]"
-                    }`}
-                  >
-                    {item.badge}
-                  </span>
-                  <h3 className="mt-3 text-xl font-semibold text-[#303030]">{item.title}</h3>
-                  <p className="mt-2 text-sm leading-6 text-[#555]">{item.text}</p>
-                  {item.href && (
-                    <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-[#ea721f]">
-                      ดูรายละเอียด
-                      <ArrowIcon />
-                    </span>
-                  )}
-                </div>
-              </>
-            );
-
-            return item.href ? (
-              <Link key={item.title} href={item.href} className={cardClassName}>
-                {content}
-              </Link>
-            ) : (
-              <div key={item.title} className={cardClassName}>
-                {content}
-              </div>
-            );
-          })}
+          {portfolioPreview.map((item) => (
+            <PortfolioCard
+              key={item.title}
+              item={{
+                title: item.title,
+                description: item.text,
+                badge: item.badge,
+                href: item.href,
+                image: item.image,
+              } satisfies PortfolioCategoryItem}
+            />
+          ))}
         </div>
         <div className="mt-10 text-center">
           <Link

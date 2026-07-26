@@ -42,5 +42,8 @@ export async function POST(request: Request) {
   }
 
   const { token: _, ...safeResult } = result;
-  return NextResponse.json({ ...safeResult, redirectTo: returnTo });
+  return NextResponse.json({
+    ...safeResult,
+    redirectTo: `/onboarding?returnTo=${encodeURIComponent(returnTo)}`,
+  });
 }

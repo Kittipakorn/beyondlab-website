@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { requireSession } from "@/lib/auth";
+import { requireCompleteProfile } from "@/lib/auth";
 import { GraderWorkspace } from "./GraderWorkspace";
 
 export const metadata: Metadata = {
@@ -38,7 +38,7 @@ export default async function GraderPage() {
     );
   }
 
-  const session = await requireSession("/grader");
+  const session = await requireCompleteProfile("/grader");
   return (
     <GraderWorkspace
       username={session.username}

@@ -42,7 +42,7 @@ export function LoginForm({ returnTo, backendUrl }: LoginFormProps) {
 
       // A full navigation remounts the persistent layout so Navbar and every
       // session-dependent client component read the newly issued cookie.
-      window.location.replace(returnTo);
+      window.location.replace(result.redirectTo ?? returnTo);
     } catch {
       setError("เชื่อมต่อเซิร์ฟเวอร์ไม่ได้ กรุณาลองอีกครั้ง");
     } finally {
@@ -57,7 +57,7 @@ export function LoginForm({ returnTo, backendUrl }: LoginFormProps) {
           htmlFor="identifier"
           className="mb-2 block text-sm font-semibold text-[#5c5148]"
         >
-          Username หรืออีเมล
+          ชื่อผู้ใช้หรืออีเมล
         </label>
         <input
           id="identifier"

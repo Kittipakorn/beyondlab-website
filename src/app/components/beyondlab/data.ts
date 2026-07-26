@@ -19,7 +19,7 @@ type ContactChannel = {
   logo?: string;
 };
 
-type CourseItem = {
+export type CourseItem = {
   title: string;
   label: string;
   subtitle: string;
@@ -32,6 +32,7 @@ type CourseItem = {
   students: string;
   image: string;
   cta: string;
+  href: string;
   status: "open" | "soon";
   points: string[];
 };
@@ -51,10 +52,10 @@ export type PortfolioCategory = {
 };
 
 export const navItems = [
-  { label: "คอร์สเรียน", href: "/#courses" },
+   { label: "หน้าแรก", href: "/" },
+  { label: "คอร์สเรียน", href: "/courses" },
   { label: "เข้าเรียน", href: "/learn" },
-  { label: "ผลงาน", href: "/#projects" },
-  { label: "ติดต่อเรา", href: "/#contact" },
+  { label: "ผลงาน", href: "/portfolio" },
   { label: "Grader", href: "/grader" },
 ];
 
@@ -164,6 +165,7 @@ export const courses: CourseItem[] = [
     students: "80+",
     image: "/courses/zero-to-code.png",
     cta: "สมัครเรียน 688.-",
+    href: "http://lin.ee/VbDTcyo",
     status: "open",
     points: ["เรียนซ้ำได้ในกลุ่ม Facebook", "ใช้แท็บเล็ตหรือ iPad เรียนได้"],
   },
@@ -177,27 +179,11 @@ export const portfolioPreview = [
     image: "/project/uv.jpg",
   },
   {
-    title: "ZERO TO CODE",
-    text: "ZERO TO CODE มีผู้เรียนแล้วกว่า 80+ คน",
-    badge: "ผู้เรียน 80+",
-    href: "/portfolio/zero-to-code",
-    image: "/courses/zero-to-code-landing.png",
-  },
-  {
     title: "QuizFlow",
     text: "เครื่องมือช่วยครูและติวเตอร์สร้างข้อสอบพร้อมเฉลย แก้ไข และส่งออกเป็น PDF ได้ทันที",
     badge: "Product",
     href: "https://quizflow.kittipakorn.com/",
     image: "/services/quizflow.png",
-  },
-];
-
-export const pastCourses = [
-  {
-    slug: "zero-to-code",
-    name: "ZERO TO CODE",
-    students: "80+",
-    description: "",
   },
 ];
 
@@ -259,19 +245,6 @@ export const portfolioCategories: PortfolioCategory[] = [
     ],
   },
   {
-    title: "Courses",
-    description: "คอร์สเรียนที่ BeyondLab ออกแบบเพื่อปูพื้นฐานและพาผู้เรียนต่อยอดไปสู่การสร้างผลงานจริง",
-    items: [
-      {
-        title: "ZERO TO CODE",
-        description: "",
-        badge: "ผู้เรียน 80+",
-        href: "/portfolio/zero-to-code",
-        image: "/courses/zero-to-code-landing.png",
-      },
-    ],
-  },
-  {
     title: "Products",
     description: "เครื่องมือและโปรดักต์ที่ BeyondLab สร้างเพื่อช่วยให้การเรียน การสอน และการทำงานสะดวกขึ้น",
     items: [
@@ -298,7 +271,7 @@ export const services: ServiceItem[] = [
       "ดูแลใกล้ชิดพร้อมกลุ่มคอมมูนิตี้คอยถามตอบ",
     ],
     status: "open",
-    href: "/#courses",
+    href: "/courses",
     cta: "ดูคอร์สเรียน",
     image: "/services/courses.png",
   },

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { requireSession } from "@/lib/auth";
+import { requireCompleteProfile } from "@/lib/auth";
 import { ScratchpadIde } from "./ScratchpadIde";
 
 export const metadata: Metadata = {
@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 };
 
 export default async function IdePage() {
-  const session = await requireSession("/ide");
+  const session = await requireCompleteProfile("/ide");
   return (
     <ScratchpadIde
       username={session.username}

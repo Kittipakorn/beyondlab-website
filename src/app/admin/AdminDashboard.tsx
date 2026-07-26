@@ -1187,7 +1187,7 @@ export function AdminDashboard({ backendUrl }: { backendUrl: string }) {
             <div>
               <input
                 type="text"
-                placeholder="ค้นหาผู้ใช้ตาม Username หรือ Email..."
+                placeholder="ค้นหาผู้ใช้ตามชื่อผู้ใช้หรืออีเมล..."
                 value={searchUserQuery}
                 onChange={(e) => setSearchUserQuery(e.target.value)}
                 className="w-full rounded-xl border border-[#eadfce] bg-white px-4 py-2.5 text-sm text-[#292725] placeholder-[#a3978c] focus:border-[#ea721f] focus:outline-none shadow-sm"
@@ -1211,7 +1211,7 @@ export function AdminDashboard({ backendUrl }: { backendUrl: string }) {
                   <table className="w-full text-left text-sm text-[#303030]">
                     <thead className="border-b border-[#eadfce] bg-[#faf6f0] text-xs uppercase font-bold text-[#5c5148]">
                       <tr>
-                        <th className="px-5 py-3.5">Username</th>
+                        <th className="px-5 py-3.5">ชื่อผู้ใช้</th>
                         <th className="px-5 py-3.5">Email</th>
                         <th className="px-5 py-3.5">สถานะ Plan</th>
                         <th className="px-5 py-3.5">สิทธิ์การใช้งาน (Role)</th>

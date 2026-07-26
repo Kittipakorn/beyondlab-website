@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { requireSession } from "@/lib/auth";
+import { requireCompleteProfile } from "@/lib/auth";
 import { getEnrolledCourseIds } from "@/lib/courseAccess";
 import { getR2Course } from "@/lib/r2Course";
 import { CourseLibrary } from "./CourseLibrary";
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 };
 
 export default async function LearnPage() {
-  const session = await requireSession("/learn");
+  const session = await requireCompleteProfile("/learn");
 
   let enrolledCourseIds: string[];
   try {

@@ -78,3 +78,34 @@ export async function requireSession(returnTo: SafeReturnTo) {
 
   return session;
 }
+
+type ProfileStatusResponse = {
+  user?: {
+    profileIncomplete?: boolean;
+  };
+};
+
+export async function requireCompleteProfile(returnTo: SafeReturnTo) {
+  const session = await requireSession(returnTo);
+
+  try {
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL ?? "http://localhost:4000";
+    const cookieHeader = (await cookies()).toString();
+    const response = await fetch(`${backendUrl}/auth/session`, {
+      headers: { Cookie: cookieHeader },
+      cache: "no-store",
+    });
+
+    if (response.ok) {
+      const profile = (await response.json()) as ProfileStatusResponse;
+      if (profile.user?.profileIncomplete) {
+        redirect(`/onboarding?returnTo=${encodeURIComponent(returnTo)}`);
+      }
+    }
+  } catch (error) {
+    if (error && typeof error === "object" && "digest" in error) throw error;
+    console.error("Unable to verify profile completion", error);
+  }
+
+  return session;
+}
