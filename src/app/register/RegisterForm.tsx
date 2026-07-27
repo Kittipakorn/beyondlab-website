@@ -17,12 +17,17 @@ export function RegisterForm({ returnTo }: RegisterFormProps) {
     setError("");
 
     const formData = new FormData(event.currentTarget);
+    const phone = String(formData.get("phone") ?? "").trim();
     const password = String(formData.get("password") ?? "");
     const confirmPassword = String(formData.get("confirmPassword") ?? "");
 
-    if (password.length < 8 || password.length > 12 ||
+    if (phone.length < 6 || phone.length > 32) {
+      setError("กรุณากรอกเบอร์โทรให้ถูกต้อง");
+      return;
+    }
+    if (password.length < 8 || password.length > 20 ||
         !/[a-z]/.test(password) || !/[A-Z]/.test(password) || !/[0-9]/.test(password)) {
-      setError("รหัสผ่านต้องมี 8–12 ตัว และประกอบด้วยตัวพิมพ์เล็ก ตัวพิมพ์ใหญ่ และตัวเลข");
+      setError("รหัสผ่านต้องมีอย่างน้อย 8 ตัว และประกอบด้วยตัวพิมพ์เล็ก ตัวพิมพ์ใหญ่ และตัวเลข");
       return;
     }
     if (password !== confirmPassword) {
@@ -38,6 +43,7 @@ export function RegisterForm({ returnTo }: RegisterFormProps) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email: formData.get("email"),
+          phone,
           password,
           returnTo,
         }),
@@ -83,6 +89,25 @@ export function RegisterForm({ returnTo }: RegisterFormProps) {
       </div>
       <div>
         <label
+          htmlFor="phone"
+          className="mb-1.5 block text-sm font-semibold text-[#5c5148]"
+        >
+          เบอร์โทร
+        </label>
+        <input
+          id="phone"
+          name="phone"
+          type="tel"
+          autoComplete="tel"
+          minLength={6}
+          maxLength={32}
+          required
+          className="h-12 w-full rounded-2xl border border-[#e4d7c6] bg-white px-4 text-[#303030] outline-none transition placeholder:text-[#a49a91] focus:border-[#ea721f] focus:ring-4 focus:ring-[#ea721f]/10"
+          placeholder="08x-xxx-xxxx"
+        />
+      </div>
+      <div>
+        <label
           htmlFor="password"
           className="mb-1.5 block text-sm font-semibold text-[#5c5148]"
         >
@@ -94,16 +119,16 @@ export function RegisterForm({ returnTo }: RegisterFormProps) {
           type="password"
           autoComplete="new-password"
           minLength={8}
-          maxLength={12}
-          pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,12}"
-          title="รหัสผ่านต้องมี 8–12 ตัว และประกอบด้วยตัวพิมพ์เล็ก ตัวพิมพ์ใหญ่ และตัวเลข"
+          maxLength={20}
+          pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,20}"
+          title="รหัสผ่านต้องมีอย่างน้อย 8 ตัว และประกอบด้วยตัวพิมพ์เล็ก ตัวพิมพ์ใหญ่ และตัวเลข"
           required
           className="h-12 w-full rounded-2xl border border-[#e4d7c6] bg-white px-4 text-[#303030] outline-none transition placeholder:text-[#a49a91] focus:border-[#ea721f] focus:ring-4 focus:ring-[#ea721f]/10"
-          placeholder="8–12 ตัว: a-z, A-Z และ 0-9"
+          placeholder="อย่างน้อย 8 ตัว: a-z, A-Z และ 0-9"
           aria-describedby="password-requirements"
         />
         <p id="password-requirements" className="mt-1.5 text-xs leading-5 text-[#766b61]">
-          8–12 ตัว มี a-z, A-Z และ 0-9
+          อย่างน้อย 8 ตัว มี a-z, A-Z และ 0-9
         </p>
       </div>
       <div>
@@ -119,9 +144,9 @@ export function RegisterForm({ returnTo }: RegisterFormProps) {
           type="password"
           autoComplete="new-password"
           minLength={8}
-          maxLength={12}
-          pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,12}"
-          title="รหัสผ่านต้องมี 8–12 ตัว และประกอบด้วยตัวพิมพ์เล็ก ตัวพิมพ์ใหญ่ และตัวเลข"
+          maxLength={20}
+          pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,20}"
+          title="รหัสผ่านต้องมีอย่างน้อย 8 ตัว และประกอบด้วยตัวพิมพ์เล็ก ตัวพิมพ์ใหญ่ และตัวเลข"
           required
           className="h-12 w-full rounded-2xl border border-[#e4d7c6] bg-white px-4 text-[#303030] outline-none transition placeholder:text-[#a49a91] focus:border-[#ea721f] focus:ring-4 focus:ring-[#ea721f]/10"
           placeholder="กรอกรหัสผ่านอีกครั้ง"

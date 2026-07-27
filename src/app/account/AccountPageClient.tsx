@@ -22,6 +22,7 @@ type SessionData = {
     role: string;
     firstName?: string;
     lastName?: string;
+    phone?: string;
     discordId?: string;
     discordUsername?: string;
     discordVerified?: boolean;
@@ -72,6 +73,7 @@ type IconName =
   | "clock"
   | "upload"
   | "student"
+  | "star"
   | "chevron"
   | "close";
 
@@ -89,6 +91,7 @@ const iconPaths: Record<IconName, ReactNode> = {
   clock: <><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></>,
   upload: <><path d="M12 16V4M7 9l5-5 5 5" /><path d="M5 14v6h14v-6" /></>,
   student: <><path d="m3 9 9-5 9 5-9 5-9-5Z" /><path d="M7 12v4c3 2 7 2 10 0v-4" /></>,
+  star: <path d="m12 3 2.7 5.5 6.1.9-4.4 4.3 1 6-5.4-2.9-5.4 2.9 1-6-4.4-4.3 6.1-.9L12 3Z" />,
   chevron: <path d="m8 10 4 4 4-4" />,
   close: <path d="M6 6l12 12M18 6 6 18" />,
 };
@@ -102,6 +105,10 @@ function Icon({ name, className = "h-5 w-5" }: { name: IconName; className?: str
 }
 
 type AccountTab = "overview" | "courses" | "orders" | "profile";
+type ReviewDraft = {
+  rating: number;
+  comment: string;
+};
 
 const navItems: Array<{ id: AccountTab; label: string; icon: IconName }> = [
   { id: "overview", label: "ภาพรวม", icon: "home" },
@@ -181,18 +188,19 @@ export function AccountPageClient({ username, email, backendUrl, courses = [], o
   const toastId = useRef(0);
   const [slipImage, setSlipImage] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
-  const [studentEmail, setStudentEmail] = useState("");
-  const [studentName, setStudentName] = useState("");
-  const [requestingCode, setRequestingCode] = useState(false);
   const [profileUsername, setProfileUsername] = useState(username);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [phone, setPhone] = useState("");
   const [savingProfile, setSavingProfile] = useState(false);
-  const [expandedSection, setExpandedSection] = useState<"payment" | "student" | null>(null);
+  const [expandedSection, setExpandedSection] = useState<"payment" | null>(null);
   const [activeTab, setActiveTab] = useState<AccountTab>("overview");
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [courseProgress, setCourseProgress] = useState<Record<string, number>>({});
+  const [reviewDrafts, setReviewDrafts] = useState<Record<string, ReviewDraft>>({});
+  const [expandedReviewCourseId, setExpandedReviewCourseId] = useState<string | null>(null);
+  const [submittingReviewCourseId, setSubmittingReviewCourseId] = useState<string | null>(null);
   const cancelLogoutButtonRef = useRef<HTMLButtonElement>(null);
 
   const showToast = useCallback((message: string, type: "success" | "error" = "success") => {
@@ -208,6 +216,7 @@ export function AccountPageClient({ username, email, backendUrl, courses = [], o
     setProfileUsername(nextSession.user?.username ?? username);
     setFirstName(nextSession.user?.firstName ?? "");
     setLastName(nextSession.user?.lastName ?? "");
+    setPhone(nextSession.user?.phone ?? "");
   }, [username]);
 
   useEffect(() => {
@@ -292,28 +301,31 @@ export function AccountPageClient({ username, email, backendUrl, courses = [], o
     }
   };
 
-  const handleRequestStudentCode = async (event: FormEvent) => {
+  const handleSubmitCourseReview = async (course: CourseEnrollment, event: FormEvent) => {
     event.preventDefault();
-    if (!studentEmail.trim() || !studentName.trim()) return showToast("กรุณากรอกข้อมูลให้ครบถ้วน", "error");
-    setRequestingCode(true);
+    const draft = reviewDrafts[course.id] ?? { rating: 5, comment: "" };
+    const comment = draft.comment.trim();
+
+    if (course.id !== "zero-to-code") return showToast("ตอนนี้เปิดรับรีวิวเฉพาะคอร์ส ZERO TO CODE", "error");
+    if (comment.length < 10) return showToast("กรุณาเขียนรีวิวอย่างน้อย 10 ตัวอักษร", "error");
+
+    setSubmittingReviewCourseId(course.id);
     try {
-      const response = await fetch(`${backendUrl}/api/user/request-student-code`, {
+      const response = await fetch(`${backendUrl}/api/user/course-reviews`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({ email: studentEmail.trim(), fullName: studentName.trim() }),
+        body: JSON.stringify({ courseId: course.id, rating: draft.rating, comment }),
       });
       const data = await response.json();
-      if (!response.ok) throw new Error(data.error || "ไม่สามารถยืนยันสิทธิ์ได้");
-      showToast(data.message || "ยืนยันสิทธิ์นักเรียนสำเร็จ");
-      setStudentEmail("");
-      setStudentName("");
-      setExpandedSection(null);
-      await refreshSession();
+      if (!response.ok) throw new Error(data.error || "ไม่สามารถบันทึกรีวิวได้");
+      showToast(data.message || "ขอบคุณสำหรับรีวิวครับ");
+      setReviewDrafts((current) => ({ ...current, [course.id]: { rating: draft.rating, comment: "" } }));
+      setExpandedReviewCourseId(null);
     } catch (error) {
       showToast(error instanceof Error ? error.message : "เกิดข้อผิดพลาดในการเชื่อมต่อ", "error");
     } finally {
-      setRequestingCode(false);
+      setSubmittingReviewCourseId(null);
     }
   };
 
@@ -330,7 +342,7 @@ export function AccountPageClient({ username, email, backendUrl, courses = [], o
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({ username: nextUsername, firstName: firstName.trim(), lastName: lastName.trim() }),
+        body: JSON.stringify({ username: nextUsername, firstName: firstName.trim(), lastName: lastName.trim(), phone: phone.trim() }),
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "บันทึกข้อมูลไม่สำเร็จ");
@@ -500,7 +512,105 @@ export function AccountPageClient({ username, email, backendUrl, courses = [], o
                     : savedCompletedLessons;
                   const progress = totalLessons > 0 ? (completedLessons / totalLessons) * 100 : 0;
 
-                  return <article key={course.id} className="overflow-hidden rounded-2xl border border-[#e5dbd0] bg-[#fbf8f4]"><div className="flex gap-4 p-4">{course.image ? <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-xl bg-[#eee5dc]"><Image src={course.image} alt="" fill sizes="96px" className="object-cover" /></div> : null}<div className="min-w-0 flex-1"><h3 className="font-bold text-[#292522]">{course.title}</h3><p className="mt-1 line-clamp-2 text-xs leading-5 text-[#776d65]">{course.description}</p><div className="mt-4 h-1.5 overflow-hidden rounded-full bg-[#e5d9cd]"><div className="h-full rounded-full bg-[#ea721f]" style={{ width: `${Math.min(100, Math.max(0, progress))}%` }} /></div><div className="mt-2 flex items-center justify-between text-xs"><span className="text-[#776d65]">เรียนแล้ว {completedLessons}/{totalLessons} บท</span><Link href={course.href} className="font-bold text-[#c65018]">เรียนต่อ</Link></div></div></div></article>;
+                  const isZeroToCode = course.id === "zero-to-code";
+                  const draft = reviewDrafts[course.id] ?? { rating: 5, comment: "" };
+                  const reviewExpanded = expandedReviewCourseId === course.id;
+                  const submittingReview = submittingReviewCourseId === course.id;
+
+                  return (
+                    <article key={course.id} className="overflow-hidden rounded-2xl border border-[#e5dbd0] bg-[#fbf8f4]">
+                      <div className="flex gap-4 p-4">
+                        {course.image ? (
+                          <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-xl bg-[#eee5dc]">
+                            <Image src={course.image} alt="" fill sizes="96px" className="object-cover" />
+                          </div>
+                        ) : null}
+                        <div className="min-w-0 flex-1">
+                          <h3 className="font-bold text-[#292522]">{course.title}</h3>
+                          <p className="mt-1 line-clamp-2 text-xs leading-5 text-[#776d65]">{course.description}</p>
+                          <div className="mt-4 h-1.5 overflow-hidden rounded-full bg-[#e5d9cd]">
+                            <div className="h-full rounded-full bg-[#ea721f]" style={{ width: `${Math.min(100, Math.max(0, progress))}%` }} />
+                          </div>
+                          <div className="mt-2 flex flex-wrap items-center justify-between gap-2 text-xs">
+                            <span className="text-[#776d65]">เรียนแล้ว {completedLessons}/{totalLessons} บท</span>
+                            <div className="flex items-center gap-3">
+                              {isZeroToCode ? (
+                                <button
+                                  type="button"
+                                  onClick={() => setExpandedReviewCourseId((value) => value === course.id ? null : course.id)}
+                                  className="inline-flex items-center gap-1.5 font-bold text-[#c65018] transition hover:text-[#a84313]"
+                                >
+                                  <Icon name="star" className="h-3.5 w-3.5" />
+                                  {reviewExpanded ? "ปิดรีวิว" : "เพิ่มรีวิว"}
+                                </button>
+                              ) : null}
+                              <Link href={course.href} className="font-bold text-[#c65018]">เรียนต่อ</Link>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      {reviewExpanded ? (
+                        <form onSubmit={(event) => handleSubmitCourseReview(course, event)} className="border-t border-[#e5dbd0] bg-white p-4">
+                          <div className="flex flex-col gap-3 sm:flex-row sm:items-start">
+                            <label className="w-full text-sm font-bold text-[#514840] sm:w-32">
+                              คะแนน
+                              <select
+                                value={draft.rating}
+                                onChange={(event) => {
+                                  const rating = Number(event.target.value);
+                                  setReviewDrafts((current) => ({
+                                    ...current,
+                                    [course.id]: { ...draft, rating },
+                                  }));
+                                }}
+                                className="mt-2 min-h-11 w-full rounded-xl border border-[#ddcfc2] bg-white px-3 text-sm font-normal outline-none transition focus:border-[#ea721f] focus:ring-2 focus:ring-[#ea721f]/15"
+                              >
+                                {[5, 4, 3, 2, 1].map((rating) => (
+                                  <option key={rating} value={rating}>{rating} ดาว</option>
+                                ))}
+                              </select>
+                            </label>
+                            <label className="flex-1 text-sm font-bold text-[#514840]">
+                              รีวิวของคุณ
+                              <textarea
+                                value={draft.comment}
+                                onChange={(event) => {
+                                  const comment = event.target.value;
+                                  setReviewDrafts((current) => ({
+                                    ...current,
+                                    [course.id]: { ...draft, comment },
+                                  }));
+                                }}
+                                required
+                                minLength={10}
+                                maxLength={800}
+                                rows={4}
+                                className="mt-2 w-full resize-none rounded-xl border border-[#ddcfc2] bg-white px-4 py-3 text-sm font-normal leading-6 outline-none transition focus:border-[#ea721f] focus:ring-2 focus:ring-[#ea721f]/15"
+                                placeholder="เล่าว่าคอร์สช่วยอะไรคุณบ้าง"
+                              />
+                            </label>
+                          </div>
+                          <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                            <p className="text-xs text-[#80756c]">
+                              รีวิวจะผูกกับบัญชี BeyondLab นี้
+                            </p>
+                            <button
+                              type="submit"
+                              disabled={submittingReview}
+                              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[#ea721f] px-5 py-2.5 text-sm font-bold text-white transition hover:bg-[#d96217] disabled:cursor-wait disabled:opacity-60"
+                            >
+                              {submittingReview ? (
+                                <>
+                                  <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />
+                                  กำลังบันทึก
+                                </>
+                              ) : "ส่งรีวิว"}
+                            </button>
+                          </div>
+                        </form>
+                      ) : null}
+                    </article>
+                  );
                 })}</div>
               )}
             </section> : null}
@@ -524,12 +634,10 @@ export function AccountPageClient({ username, email, backendUrl, courses = [], o
                   <label className="block text-sm font-bold text-[#514840]">
                     อีเมล
                     <input type="email" value={displayEmail} readOnly aria-readonly="true" className="mt-2 min-h-12 w-full cursor-not-allowed rounded-xl border border-[#e3d9cf] bg-[#f1ece6] px-4 font-normal text-[#766c64] outline-none" />
-                    <span className="mt-2 block text-xs font-normal leading-5 text-[#80756c]">ใช้อีเมลเดิมสำหรับเข้าสู่ระบบ</span>
                   </label>
                   <label className="block text-sm font-bold text-[#514840]">
                     Discord ID
                     <input type="text" value={displayDiscord} readOnly aria-readonly="true" className="mt-2 min-h-12 w-full cursor-not-allowed rounded-xl border border-[#e3d9cf] bg-[#f1ece6] px-4 font-normal text-[#766c64] outline-none" />
-                    <span className="mt-2 block text-xs font-normal leading-5 text-[#80756c]">ข้อมูลนี้ดึงจาก Discord ที่ยืนยันแล้วเท่านั้น ผู้ใช้แก้เองไม่ได้{user?.discordVerified && user.discordUsername ? ` · ${user.discordUsername}` : ""}</span>
                   </label>
                   <div className="grid gap-5 sm:grid-cols-2">
                     <label className="block text-sm font-bold text-[#514840]">
@@ -541,6 +649,10 @@ export function AccountPageClient({ username, email, backendUrl, courses = [], o
                       <input type="text" autoComplete="family-name" maxLength={80} value={lastName} onChange={(event) => setLastName(event.target.value)} className="mt-2 min-h-12 w-full rounded-xl border border-[#ddcfc2] bg-white px-4 font-normal outline-none transition focus:border-[#ea721f] focus:ring-2 focus:ring-[#ea721f]/15" />
                     </label>
                   </div>
+                  <label className="block text-sm font-bold text-[#514840]">
+                    เบอร์โทร
+                    <input type="tel" autoComplete="tel" maxLength={32} value={phone} onChange={(event) => setPhone(event.target.value)} className="mt-2 min-h-12 w-full rounded-xl border border-[#ddcfc2] bg-white px-4 font-normal outline-none transition focus:border-[#ea721f] focus:ring-2 focus:ring-[#ea721f]/15" />
+                  </label>
                 </div>
                 <div className="mt-6 flex flex-col gap-4 border-t border-[#e4d9ce] pt-5 sm:flex-row sm:items-center sm:justify-between">
                   <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm">
@@ -553,7 +665,7 @@ export function AccountPageClient({ username, email, backendUrl, courses = [], o
             </section>
 
             <section className="overflow-hidden rounded-[28px] border border-[#efc7a9] bg-[#fff7f0]">
-              <div className="p-5 sm:p-8"><div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center"><div><p className="text-xs font-bold uppercase tracking-[0.16em] text-[#c65018]">BeyondLab Pro</p><h2 className="mt-2 text-2xl font-bold">{isPro ? "จัดการสิทธิ์ PRO" : "ปลดล็อกโจทย์ทั้งหมด"}</h2><p className="mt-1 text-sm leading-6 text-[#6e645d]">PRO ราคา 99 บาท / 30 วัน หรือรับสิทธิ์ 6 เดือนสำหรับนักเรียน ZERO TO CODE</p></div><span className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-[#ea721f] text-white shadow-[0_10px_24px_rgba(234,114,31,.25)]"><Icon name="spark" className="h-6 w-6" /></span></div>
+              <div className="p-5 sm:p-8"><div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center"><div><p className="text-xs font-bold uppercase tracking-[0.16em] text-[#c65018]">BeyondLab Pro</p><h2 className="mt-2 text-2xl font-bold">{isPro ? "จัดการสิทธิ์ PRO" : "ปลดล็อกโจทย์ทั้งหมด"}</h2><p className="mt-1 text-sm leading-6 text-[#6e645d]">PRO ราคา 99 บาท / 30 วัน สำหรับปลดล็อกโจทย์เพิ่มเติมและเครื่องมือฝึกซ้อม</p></div><span className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-[#ea721f] text-white shadow-[0_10px_24px_rgba(234,114,31,.25)]"><Icon name="spark" className="h-6 w-6" /></span></div>
                 <div className="mt-6 grid gap-3">
                   <div className="overflow-hidden rounded-2xl border border-[#ebd3bf] bg-white">
                     <button
@@ -615,48 +727,6 @@ export function AccountPageClient({ username, email, backendUrl, courses = [], o
                           </div>
                         </div>
                       </div>
-                    ) : null}
-                  </div>
-                  <div className="overflow-hidden rounded-2xl border border-[#ebd3bf] bg-white">
-                    <button
-                      type="button"
-                      aria-expanded={expandedSection === "student"}
-                      onClick={() => setExpandedSection((value) => value === "student" ? null : "student")}
-                      className="flex min-h-16 w-full items-center justify-between gap-4 px-4 text-left transition hover:bg-[#fffbf8]"
-                    >
-                      <span className="flex items-center gap-3">
-                        <span className="grid h-10 w-10 place-items-center rounded-xl bg-emerald-50 text-emerald-700">
-                          <Icon name="student" />
-                        </span>
-                        <span>
-                          <span className="block text-sm font-bold">สิทธิ์นักเรียน ZERO TO CODE</span>
-                          <span className="block text-xs text-[#766c64]">รับ PRO ฟรี 6 เดือน</span>
-                        </span>
-                      </span>
-                      <Icon name="chevron" className={`h-5 w-5 transition-transform ${expandedSection === "student" ? "rotate-180" : ""}`} />
-                    </button>
-                    {expandedSection === "student" ? (
-                      <form onSubmit={handleRequestStudentCode} className="border-t border-[#eee2d7] p-4 sm:p-5">
-                        <p className="mb-4 text-sm leading-6 text-[#6e645d]">กรอกข้อมูลเดียวกับที่ใช้ลงทะเบียนคอร์ส ระบบจะตรวจสอบสิทธิ์ให้อัตโนมัติ</p>
-                        <div className="grid gap-4 sm:grid-cols-2">
-                          <label className="text-sm font-bold">
-                            อีเมลที่ลงทะเบียน
-                            <input type="email" autoComplete="email" required value={studentEmail} onChange={(event) => setStudentEmail(event.target.value)} className="mt-2 min-h-12 w-full rounded-xl border border-[#ddcfc2] bg-white px-4 font-normal outline-none transition focus:border-[#ea721f] focus:ring-2 focus:ring-[#ea721f]/15" placeholder="name@example.com" />
-                          </label>
-                          <label className="text-sm font-bold">
-                            ชื่อ–นามสกุลจริง
-                            <input type="text" autoComplete="name" required value={studentName} onChange={(event) => setStudentName(event.target.value)} className="mt-2 min-h-12 w-full rounded-xl border border-[#ddcfc2] bg-white px-4 font-normal outline-none transition focus:border-[#ea721f] focus:ring-2 focus:ring-[#ea721f]/15" placeholder="ไม่ต้องใส่คำนำหน้า" />
-                          </label>
-                        </div>
-                        <button type="submit" disabled={requestingCode} className="mt-4 inline-flex min-h-11 items-center gap-2 rounded-xl bg-emerald-700 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-emerald-800 disabled:cursor-not-allowed disabled:opacity-50">
-                          {requestingCode ? (
-                            <>
-                              <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />
-                              กำลังตรวจสอบ
-                            </>
-                          ) : "ยืนยันสิทธิ์นักเรียน"}
-                        </button>
-                      </form>
                     ) : null}
                   </div>
                 </div>

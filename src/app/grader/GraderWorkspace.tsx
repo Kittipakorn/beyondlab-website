@@ -134,7 +134,7 @@ function Icon({
   name,
   className = "h-5 w-5",
 }: {
-  name: "play" | "send" | "check" | "clock" | "chevron" | "terminal" | "lightbulb" | "reset" | "menu" | "search" | "book" | "close" | "sun" | "moon" | "download" | "upload";
+  name: "play" | "send" | "check" | "clock" | "chevron" | "terminal" | "lightbulb" | "star" | "reset" | "menu" | "search" | "book" | "close" | "sun" | "moon" | "download" | "upload";
   className?: string;
 }) {
   const paths: Record<string, React.ReactNode> = {
@@ -145,6 +145,7 @@ function Icon({
     chevron: <path d="m9 18 6-6-6-6" />,
     terminal: <><path d="m7 8 4 4-4 4" /><path d="M13 16h4" /></>,
     lightbulb: <><path d="M9 18h6" /><path d="M10 22h4" /><path d="M8.5 14.5A6 6 0 1 1 15.5 14.5c-.9.7-1.5 1.6-1.5 2.5h-4c0-.9-.6-1.8-1.5-2.5Z" /></>,
+    star: <path d="m12 3 2.7 5.5 6.1.9-4.4 4.3 1 6-5.4-2.9-5.4 2.9 1-6-4.4-4.3 6.1-.9L12 3Z" />,
     reset: <><path d="M3 12a9 9 0 1 0 3-6.7" /><path d="M3 4v6h6" /></>,
     menu: <><path d="M4 6h16" /><path d="M4 12h16" /><path d="M4 18h16" /></>,
     search: <><circle cx="11" cy="11" r="7" /><path d="m20 20-4-4" /></>,
@@ -216,15 +217,9 @@ export function GraderWorkspace({
   const [problemsReloadKey, setProblemsReloadKey] = useState(0);
   const [userPlan, setUserPlan] = useState<"free" | "pro">("free");
   const [planExpiresAt, setPlanExpiresAt] = useState<string | null>(null);
+  const [hasZeroToCodeCourse, setHasZeroToCodeCourse] = useState(false);
   const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
   const [upgrading, setUpgrading] = useState(false);
-  const [showStudentForm, setShowStudentForm] = useState(false);
-  const [studentEmail, setStudentEmail] = useState("");
-  const [studentFullName, setStudentFullName] = useState("");
-  const [requestingStudentCode, setRequestingStudentCode] = useState(false);
-  const [studentFormError, setStudentFormError] = useState("");
-  const [studentFormSuccess, setStudentFormSuccess] = useState("");
-
   const [showSlipForm, setShowSlipForm] = useState(false);
   const [slipPreview, setSlipPreview] = useState<string | null>(null);
   const [uploadingSlip, setUploadingSlip] = useState(false);
@@ -329,36 +324,6 @@ export function GraderWorkspace({
       setSlipError("ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้");
     } finally {
       setUploadingSlip(false);
-    }
-  }
-
-  async function handleRequestStudentCode(event: React.FormEvent) {
-    event.preventDefault();
-    if (!studentEmail.trim() || !studentFullName.trim()) return;
-    setRequestingStudentCode(true);
-    setStudentFormError("");
-    setStudentFormSuccess("");
-    try {
-      const response = await fetch(`/api/proxy/user/request-student-code`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: studentEmail.trim(), fullName: studentFullName.trim() }),
-      });
-      const data = await response.json();
-      if (response.ok && data?.success) {
-        setStudentFormSuccess(data.message || "ยืนยันสิทธิ์สำเร็จ! ได้รับสิทธิ์สมาชิก PRO ฟรี 6 เดือนเรียบร้อยแล้ว");
-        setUserPlan("pro");
-        if (data?.planExpiresAt) setPlanExpiresAt(data.planExpiresAt);
-        setTimeout(() => {
-          setUpgradeModalOpen(false);
-        }, 1800);
-      } else {
-        setStudentFormError(data?.error || "ไม่สามารถยืนยันสิทธิ์ได้");
-      }
-    } catch {
-      setStudentFormError("ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้");
-    } finally {
-      setRequestingStudentCode(false);
     }
   }
 
@@ -473,6 +438,25 @@ export function GraderWorkspace({
       })
       .finally(() => setProblemsLoading(false));
   }, [backendUrl, problemsReloadKey]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    fetch(`/api/proxy/user/courses`)
+      .then((response) => response.ok ? response.json() : null)
+      .then((result) => {
+        if (cancelled) return;
+        const courseIds = Array.isArray(result?.courseIds) ? result.courseIds : [];
+        setHasZeroToCodeCourse(courseIds.includes("zero-to-code"));
+      })
+      .catch(() => {
+        if (!cancelled) setHasZeroToCodeCourse(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [backendUrl]);
 
   useEffect(() => {
     const savedTheme = window.localStorage.getItem("beyondlab-grader-theme");
@@ -1511,6 +1495,30 @@ export function GraderWorkspace({
             <div className={`mt-4 rounded-xl border p-3.5 text-center transition-all ${
               darkMode ? "border-[#2e3c50] bg-[#111722]" : "border-[#ded6cc] bg-[#faf8f5]"
             }`}>
+              {hasZeroToCodeCourse ? (
+                <div className={`mb-2.5 rounded-lg border px-2.5 py-2 text-left ${
+                  darkMode ? "border-[#ea721f]/35 bg-[#2a211b] text-white" : "border-[#f1c9a8] bg-[#fff7ef] text-[#292725]"
+                }`}>
+                  <div className="flex items-center gap-2.5">
+                    <span className="grid h-7 w-7 shrink-0 place-items-center rounded-md bg-[#ea721f]/15 text-[#ea721f]">
+                      <Icon name="star" className="h-3.5 w-3.5" />
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-[11px] font-extrabold leading-4">รีวิว ZERO TO CODE รับ PRO ฟรี 6 เดือน</p>
+                      <p className={`text-[10px] leading-4 ${darkMode ? "text-[#d4bea9]" : "text-[#7c5d45]"}`}>
+                        สำหรับบัญชีที่มีคอร์สนี้
+                      </p>
+                    </div>
+                    <Link
+                      href="/account"
+                      className="inline-flex min-h-8 shrink-0 items-center rounded-md bg-[#ea721f] px-2.5 text-[10px] font-extrabold text-white transition hover:bg-[#d66113]"
+                    >
+                      รีวิว
+                    </Link>
+                  </div>
+                </div>
+              ) : null}
+
               <div className="flex items-baseline justify-center gap-1">
                 <span className="text-2xl font-black text-[#ea721f]">99.-</span>
                 <span className={`text-xs font-semibold ${darkMode ? "text-[#9aa8bb]" : "text-[#71675f]"}`}>/ 30 วัน</span>
@@ -1521,12 +1529,7 @@ export function GraderWorkspace({
 
               <button
                 type="button"
-                onClick={() => {
-                  if (!showSlipForm) {
-                    setShowStudentForm(false);
-                  }
-                  setShowSlipForm(!showSlipForm);
-                }}
+                onClick={() => setShowSlipForm(!showSlipForm)}
                 className="mt-2.5 inline-flex items-center justify-center gap-1.5 rounded-lg bg-[#ea721f] px-3.5 py-1.5 text-xs font-bold text-white transition hover:bg-[#d66113] cursor-pointer"
               >
                 <Icon name="upload" className="h-3.5 w-3.5" />
@@ -1608,102 +1611,6 @@ export function GraderWorkspace({
                 </form>
               )}
             </div>
-
-            {/* Zero to Code Student Promotion */}
-            <div className={`mt-3 rounded-xl border p-3.5 transition-colors ${
-              darkMode
-                ? "border-[#22c55e]/30 bg-[#22c55e]/10 text-[#4ade80]"
-                : "border-[#bbf7d0] bg-[#f0fdf4] text-[#15803d]"
-            }`}>
-              <div className="flex items-center justify-between">
-                <p className="text-xs font-bold">
-                  นักเรียน Zero to Code รับฟรี 6 เดือน
-                </p>
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (!showStudentForm) {
-                      setShowSlipForm(false);
-                    }
-                    setShowStudentForm(!showStudentForm);
-                  }}
-                  className="text-xs font-extrabold underline cursor-pointer hover:opacity-80"
-                >
-                  {showStudentForm ? "ซ่อน" : "ยืนยันรับสิทธิ์ PRO"}
-                </button>
-              </div>
-
-              {showStudentForm && (
-                <form onSubmit={handleRequestStudentCode} className="mt-3 space-y-2.5 border-t border-current/20 pt-3 text-left">
-                  <div className="rounded-lg bg-black/10 p-2.5 text-[11px] font-medium leading-relaxed">
-                    <p className="font-bold">ขั้นตอนการรับสิทธิ์:</p>
-                    <p className="mt-0.5">
-                      1. หากยังไม่ได้ทำแบบประเมินคอร์ส{" "}
-                      <a
-                        href={process.env.NEXT_PUBLIC_STUDENT_FORM_URL ?? "https://forms.gle/ugWPdQQ9LrWYxe9w7"}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="font-bold underline hover:opacity-80"
-                      >
-                        กรอกแบบประเมินคอร์ส (Feedback Form) ที่นี่
-                      </a>
-                    </p>
-                    <p className="mt-0.5">2. กรอกอีเมลและชื่อ-นามสกุลจริงล่างนี้เพื่อยืนยันรับสิทธิ์</p>
-                  </div>
-                  <div>
-                    <label className="block text-[11px] font-semibold opacity-90">
-                      อีเมลที่กรอกในแบบประเมิน
-                    </label>
-                    <input
-                      type="email"
-                      value={studentEmail}
-                      onChange={(event) => {
-                        setStudentEmail(event.target.value);
-                        setStudentFormError("");
-                      }}
-                      placeholder="name@example.com"
-                      required
-                      className={`mt-1 h-9 w-full rounded-lg border px-3 text-xs outline-none transition focus:border-[#ea721f] ${
-                        darkMode
-                          ? "border-[#2e3c50] bg-[#111722] text-white placeholder:text-[#556477]"
-                          : "border-[#ded6cc] bg-white text-[#292725] placeholder:text-[#a3978c]"
-                      }`}
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-[11px] font-semibold opacity-90">
-                      ชื่อ-นามสกุลจริง (ไม่ต้องใส่คำนำหน้า นาย/นาง/นางสาว)
-                    </label>
-                    <input
-                      type="text"
-                      value={studentFullName}
-                      onChange={(event) => {
-                        setStudentFullName(event.target.value);
-                        setStudentFormError("");
-                      }}
-                      placeholder="สมชาย ใจดี"
-                      required
-                      className={`mt-1 h-9 w-full rounded-lg border px-3 text-xs outline-none transition focus:border-[#ea721f] ${
-                        darkMode
-                          ? "border-[#2e3c50] bg-[#111722] text-white placeholder:text-[#556477]"
-                          : "border-[#ded6cc] bg-white text-[#292725] placeholder:text-[#a3978c]"
-                      }`}
-                    />
-                  </div>
-                  <button
-                    type="submit"
-                    disabled={requestingStudentCode || !studentEmail.trim() || !studentFullName.trim()}
-                    className="h-9 w-full cursor-pointer rounded-lg bg-[#22c55e] text-xs font-bold text-white transition hover:bg-[#16a34a] disabled:opacity-50"
-                  >
-                    {requestingStudentCode ? "กำลังยืนยันสิทธิ์..." : "ยืนยันรับสิทธิ์ PRO ฟรี 6 เดือน"}
-                  </button>
-                  {studentFormError && <p className="text-[11px] font-semibold text-[#ef4444]">{studentFormError}</p>}
-                  {studentFormSuccess && <p className="text-[11px] font-semibold text-[#22c55e]">{studentFormSuccess}</p>}
-                </form>
-              )}
-            </div>
-
-
 
             {/* Modal close handles via top-right close button */}
           </div>
