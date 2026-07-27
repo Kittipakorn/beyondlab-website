@@ -22,6 +22,10 @@ type SessionData = {
     role: string;
     firstName?: string;
     lastName?: string;
+    discordId?: string;
+    discordUsername?: string;
+    discordVerified?: boolean;
+    discordVerifiedAt?: string | null;
     planExpiresAt?: string | null;
   };
 };
@@ -374,6 +378,9 @@ export function AccountPageClient({ username, email, backendUrl, courses = [], o
   const user = session?.user;
   const displayName = user?.username || username;
   const displayEmail = user?.email || email;
+  const displayDiscord = user?.discordVerified
+    ? (user.discordId || "ยืนยันแล้ว")
+    : "ยังไม่ได้ยืนยัน Discord";
   const isPro = user?.plan?.toLowerCase() === "pro";
   const initials = displayName.trim().charAt(0).toUpperCase() || "B";
 
@@ -518,6 +525,11 @@ export function AccountPageClient({ username, email, backendUrl, courses = [], o
                     อีเมล
                     <input type="email" value={displayEmail} readOnly aria-readonly="true" className="mt-2 min-h-12 w-full cursor-not-allowed rounded-xl border border-[#e3d9cf] bg-[#f1ece6] px-4 font-normal text-[#766c64] outline-none" />
                     <span className="mt-2 block text-xs font-normal leading-5 text-[#80756c]">ใช้อีเมลเดิมสำหรับเข้าสู่ระบบ</span>
+                  </label>
+                  <label className="block text-sm font-bold text-[#514840]">
+                    Discord ID
+                    <input type="text" value={displayDiscord} readOnly aria-readonly="true" className="mt-2 min-h-12 w-full cursor-not-allowed rounded-xl border border-[#e3d9cf] bg-[#f1ece6] px-4 font-normal text-[#766c64] outline-none" />
+                    <span className="mt-2 block text-xs font-normal leading-5 text-[#80756c]">ข้อมูลนี้ดึงจาก Discord ที่ยืนยันแล้วเท่านั้น ผู้ใช้แก้เองไม่ได้{user?.discordVerified && user.discordUsername ? ` · ${user.discordUsername}` : ""}</span>
                   </label>
                   <div className="grid gap-5 sm:grid-cols-2">
                     <label className="block text-sm font-bold text-[#514840]">
